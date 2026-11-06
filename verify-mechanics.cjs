@@ -66,7 +66,7 @@ for(const d of defs){
 const {domHarness}=require('./tools/dom-harness.cjs');
 
 const html=fs.readFileSync('mechanics.html','utf8'),{sandbox,ids,downloads}=domHarness(html);
-for(const match of html.matchAll(/<script src="([^"]+)"/g)){const name=match[1];vm.runInContext(fs.readFileSync(name,'utf8'),sandbox,{filename:name})}
+for(const match of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g)){const name=match[1];vm.runInContext(fs.readFileSync(name,'utf8'),sandbox,{filename:name})}
 vm.runInContext(`
 for(const d of Mechanics.defs){selectExperiment(d.id,false);if(following)fitCamera();try{render()}catch(e){throw Error(d.id+": "+e.stack)}const bounds=sceneBounds();for(const s of plotSamples){const q=project(point(s));if(!q||q.x<bounds.left||q.x>bounds.right||q.y<bounds.top||q.y>bounds.bottom)throw Error('default fit clips '+d.id)}
  if(!$('plotPanel').hidden)throw Error('plot should start collapsed');
@@ -107,11 +107,11 @@ assert.equal(downloads.length,defs.length);for(const csv of downloads){assert.ok
 const thermalCsv=downloads.find(csv=>csv.includes('熱運動：固體晶格振動'));assert.ok(thermalCsv);const thermalRows=thermalCsv.replace(/^\ufeff/,'').split('\r\n').filter(line=>!line.startsWith('#')&&line.trim());assert.ok(thermalRows.length>200);const thermalData=thermalRows[2].split(',').map(Number);assert.ok(thermalData[0]>0&&thermalData[0]<1e-10);assert.ok(Math.abs(thermalData[1])>0&&Math.abs(thermalData[1])<1e-8);
 const mobile=domHarness(html,390,480);
 mobile.sandbox.location.hash='#experiment=half-lens';
-for(const m of html.matchAll(/<script src="([^"]+)"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),mobile.sandbox);
+for(const m of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),mobile.sandbox);
 assert.equal(vm.runInContext('def.id',mobile.sandbox),'half-lens');
 vm.runInContext(`for(const d of Mechanics.defs){selectExperiment(d.id,false);if(following)fitCamera();render();const bounds=sceneBounds();for(const s of plotSamples){const q=project(point(s));if(!q||q.x<bounds.left||q.x>bounds.right||q.y<bounds.top||q.y>bounds.bottom)throw Error('mobile fit clips '+d.id)}}`,mobile.sandbox);
 const libraryHtml=fs.readFileSync('library.html','utf8'),library=domHarness(libraryHtml);
-for(const match of libraryHtml.matchAll(/<script src="([^"]+)"/g))vm.runInContext(fs.readFileSync(match[1],'utf8'),library.sandbox);
+for(const match of libraryHtml.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(match[1],'utf8'),library.sandbox);
 const graph=library.ids['map-board'].children;
 assert.equal(graph.find(node=>node.className==='map-legend').children.length,4);
 assert.equal(graph.filter(node=>node.className==='map-point map-hub').length,19);

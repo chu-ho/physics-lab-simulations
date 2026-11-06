@@ -7,7 +7,7 @@ const {defs}=require('./mechanics-models.js');
 const html=fs.readFileSync('mechanics.html','utf8'),{sandbox,ids}=domHarness(html,1000,700),scene=createCanvas(1000,700),plot=createCanvas(240,118);
 ids.scene.getContext=()=>scene.getContext('2d');ids.plot.getContext=()=>plot.getContext('2d');
 const originalCreateElement=sandbox.document.createElement;sandbox.document.createElement=tag=>tag==='canvas'?createCanvas(1,1):originalCreateElement(tag);
-for(const m of html.matchAll(/<script src="([^"]+)"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),sandbox,{filename:m[1]});
+for(const m of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),sandbox,{filename:m[1]});
 fs.mkdirSync('artifacts',{recursive:true});
 for(let batch=0;batch<Math.ceil(defs.length/9);batch++){
  const sheet=createCanvas(1350,1050),c=sheet.getContext('2d');c.fillStyle='#101c25';c.fillRect(0,0,1350,1050);

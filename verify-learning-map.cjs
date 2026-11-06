@@ -18,7 +18,7 @@ function openMap(hash = '', state = null) {
     sandbox.history.state = value;
     sandbox.location.hash = fragment;
   };
-  for (const [,source] of html.matchAll(/<script src="([^"]+)"/g)) {
+  for (const [,source] of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g)) {
     vm.runInContext(read(source),sandbox,{filename:source});
   }
   return {ids,sandbox,listeners};

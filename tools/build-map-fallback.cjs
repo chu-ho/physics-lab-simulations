@@ -10,7 +10,7 @@ const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const html = read('library.html');
 const { sandbox } = domHarness(html);
-for (const [, source] of html.matchAll(/<script src="([^"]+)"/g)) {
+for (const [, source] of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g)) {
   vm.runInContext(read(source), sandbox, { filename: source });
 }
 

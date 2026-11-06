@@ -1,5 +1,5 @@
 'use strict';const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict'),{domHarness}=require('./tools/dom-harness.cjs'),html=fs.readFileSync('mechanics.html','utf8'),{sandbox}=domHarness(html);sandbox.assert=assert;
-for(const m of html.matchAll(/<script src="([^"]+)"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),sandbox,{filename:m[1]});
+for(const m of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),sandbox,{filename:m[1]});
 vm.runInContext(`
 selectExperiment('image-drawing',false);t=1.23;running=true;render();const timeBefore=t,simBefore=simulation;
 for(const [yaw,pitch,zoom]of [[-.65,.48,1],[0,.06,2],[.4,.3,.8]]){camera.yaw=yaw;camera.pitch=pitch;camera.zoom=zoom;updateCamera();for(const point of [[-2,4.5,0],[1,5,0],[0,3,0]]){const screen=project(point),world=annotationWorldPoint(screen.x,screen.y);assert.ok(world);for(let j=0;j<3;j++)assert.ok(Math.abs(world[j]-point[j])<1e-9);}}
