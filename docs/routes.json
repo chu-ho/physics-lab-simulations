@@ -1,0 +1,736 @@
+{
+  "version": 1,
+  "tasks": {
+    "new-experiment": {
+      "purpose": "新增共用實驗",
+      "read": [
+        "docs/PHYSICS.md",
+        "docs/WORKFLOWS.md"
+      ],
+      "sources": [
+        "mechanics-models.js",
+        "assets/mechanics-scenes.js",
+        "assets/mechanics-app.js",
+        "verify-mechanics.cjs",
+        "CURRICULUM.md"
+      ],
+      "symbols": [
+        "function add(",
+        "function apparatus(",
+        "function fitCamera("
+      ],
+      "checks": [
+        "node verify-mechanics.cjs",
+        "node tools/check-context.cjs"
+      ]
+    },
+    "physics": {
+      "purpose": "物理、數值或事件修正",
+      "read": [
+        "docs/PHYSICS.md"
+      ],
+      "sources": [
+        "mechanics-models.js",
+        "verify-mechanics.cjs"
+      ],
+      "symbols": [
+        "function trajectory(",
+        "function integrated("
+      ],
+      "checks": [
+        "node verify-mechanics.cjs"
+      ]
+    },
+    "scene": {
+      "purpose": "裝置、場景或取景",
+      "read": [
+        "docs/ARCHITECTURE.md"
+      ],
+      "sources": [
+        "assets/mechanics-scenes.js",
+        "assets/mechanics-app.js",
+        "assets/renderer.js"
+      ],
+      "symbols": [
+        "function apparatus(",
+        "function render(",
+        "function fitCamera(",
+        "function project("
+      ],
+      "checks": [
+        "node verify-all.cjs",
+        "node render-previews.cjs"
+      ]
+    },
+    "ui": {
+      "purpose": "共用頁介面與響應式版面",
+      "read": [],
+      "sources": [
+        "mechanics.html",
+        "assets/mechanics.css",
+        "assets/lab.css",
+        "assets/mechanics-controls.js",
+        "assets/mechanics-annotations.js"
+      ],
+      "symbols": [
+        ".workspace",
+        ".simulation-column",
+        ".fullscreen"
+      ],
+      "checks": [
+        "node verify-mechanics.cjs",
+        "node verify-annotations.cjs"
+      ]
+    },
+    "chart": {
+      "purpose": "圖表顯示、隱藏、位置及資料",
+      "read": [],
+      "sources": [
+        "mechanics.html",
+        "assets/mechanics.css",
+        "assets/mechanics-controls.js",
+        "assets/mechanics-app.js",
+        "verify-mechanics.cjs",
+        "assets/mechanics-plots.js"
+      ],
+      "symbols": [
+        "id=\"plotPanel\"",
+        "id=\"togglePlot\"",
+        ".plot-panel",
+        "function setPlotVisible(",
+        "function drawPlot(",
+        "show plot"
+      ],
+      "checks": [
+        "node verify-mechanics.cjs"
+      ]
+    },
+    "catalog": {
+      "purpose": "總覽、搜尋、分類與入口",
+      "read": [
+        "docs/ARCHITECTURE.md"
+      ],
+      "sources": [
+        "library.html",
+        "assets/library.js",
+        "bungee.html"
+      ],
+      "symbols": [
+        "const experiments=",
+        "function renderCards("
+      ],
+      "checks": [
+        "node verify-mechanics.cjs",
+        "node tools/check-context.cjs"
+      ]
+    },
+    "legacy-projectile": {
+      "purpose": "原始平面斜拋",
+      "read": [],
+      "sources": [
+        "index.html",
+        "verify-projectile.cjs"
+      ],
+      "symbols": [
+        "function model(",
+        "function render("
+      ],
+      "checks": [
+        "node verify-projectile.cjs"
+      ]
+    },
+    "legacy-stairs": {
+      "purpose": "階梯斜拋、反彈及紀錄",
+      "read": [],
+      "sources": [
+        "staircase-projectile.html",
+        "verify-stairs.cjs"
+      ],
+      "symbols": [
+        "function model(",
+        "const surfaces=",
+        "function updateUI("
+      ],
+      "checks": [
+        "node verify-stairs.cjs"
+      ]
+    },
+    "legacy-incline": {
+      "purpose": "斜面上的斜拋",
+      "read": [],
+      "sources": [
+        "inclined-projectile.html",
+        "verify-incline.cjs"
+      ],
+      "symbols": [
+        "function model(",
+        "function clearance("
+      ],
+      "checks": [
+        "node verify-incline.cjs"
+      ]
+    },
+    "bungee": {
+      "purpose": "高空彈跳模型、張力、標記與入口",
+      "read": [
+        "docs/PHYSICS.md"
+      ],
+      "sources": [
+        "mechanics-models.js",
+        "assets/mechanics-scenes.js",
+        "assets/mechanics-app.js",
+        "verify-mechanics.cjs",
+        "bungee.html"
+      ],
+      "symbols": [
+        "add('bungee'",
+        "function crossing(",
+        "function bungeeMarkers(",
+        "case 'bungee':",
+        "def.kind==='bungee'",
+        "bungee lowest point"
+      ],
+      "checks": [
+        "node verify-mechanics.cjs",
+        "node render-previews.cjs"
+      ]
+    },
+    "verify": {
+      "purpose": "驗證器或回歸失敗調查",
+      "read": [
+        "docs/PHYSICS.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "sources": [
+        "verify-all.cjs",
+        "verify-mechanics.cjs",
+        "verify-projectile.cjs",
+        "verify-stairs.cjs",
+        "verify-incline.cjs",
+        "render-previews.cjs",
+        "tools/dom-harness.cjs"
+      ],
+      "symbols": [
+        "function domHarness("
+      ],
+      "checks": [
+        "node verify-all.cjs"
+      ]
+    },
+    "long-plan": {
+      "purpose": "長計畫開始、繼續與交接",
+      "read": [
+        "docs/WORKFLOWS.md",
+        "docs/plans/INDEX.md"
+      ],
+      "sources": [
+        "docs/plans/TEMPLATE.md"
+      ],
+      "symbols": [],
+      "checks": [
+        "node tools/check-context.cjs"
+      ]
+    },
+    "replication": {
+      "purpose": "全站逐項重建與原站內容查閱",
+      "read": [
+        "docs/plans/2026-10-20-full-site-rebuild.md"
+      ],
+      "sources": [
+        "research/haha90-audit/implementation-plan.json",
+        "research/haha90-audit/IMPLEMENTATION.md",
+        "research/haha90-audit/REPORT.md"
+      ],
+      "symbols": [],
+      "checks": [
+        "node tools/build-source-audit.cjs",
+        "node tools/check-context.cjs"
+      ]
+    },
+    "audio": {
+      "purpose": "可選聲音、使用者啟用與播放生命週期",
+      "read": [
+        "docs/PHYSICS.md"
+      ],
+      "sources": [
+        "assets/mechanics-audio.js",
+        "assets/mechanics-app.js",
+        "assets/mechanics-controls.js",
+        "mechanics.html",
+        "verify-audio.cjs"
+      ],
+      "symbols": [
+        "enableFromGesture",
+        "setExperiment",
+        "toggleSound"
+      ],
+      "checks": [
+        "node verify-audio.cjs",
+        "node verify-mechanics.cjs"
+      ]
+    }
+  },
+  "aliases": {
+    "圖表": "chart",
+    "介面": "ui",
+    "總覽": "catalog",
+    "高空彈跳": "bungee",
+    "階梯": "legacy-stairs",
+    "斜面斜拋": "legacy-incline",
+    "projectile": "legacy-projectile",
+    "stairs": "legacy-stairs",
+    "inclined-projectile": "legacy-incline",
+    "plan": "long-plan",
+    "聲音": "audio"
+  },
+  "legacy": [
+    {
+      "id": "projectile",
+      "title": "平面斜拋",
+      "entry": "index.html",
+      "task": "legacy-projectile"
+    },
+    {
+      "id": "stairs",
+      "title": "階梯斜拋與反彈",
+      "entry": "staircase-projectile.html",
+      "task": "legacy-stairs"
+    },
+    {
+      "id": "inclined-projectile",
+      "title": "斜面上的斜拋",
+      "entry": "inclined-projectile.html",
+      "task": "legacy-incline"
+    }
+  ],
+  "entryOverrides": {
+    "optical-polarizers": "optical-polarizers.html",
+    "hydrostatic-buoyancy": "hydrostatic-buoyancy.html",
+    "nuclear-binding": "nuclear-binding.html",
+    "rutherford-scattering": "rutherford-scattering.html",
+    "generator-transformer": "generator-transformer.html",
+    "charged-particle": "charged-particle.html",
+    "wire-magnetic-field": "wire-magnetic-field.html",
+    "rlc-resonance": "rlc-resonance.html",
+    "eddy-current": "eddy-current.html",
+    "carnot-engine": "carnot-engine.html",
+    "pn-junction": "pn-junction.html",
+    "quantum-well": "quantum-well.html",
+    "hydrogen-orbitals": "hydrogen-orbitals.html",
+    "matter-wave": "matter-wave.html",
+    "parallel-capacitor": "parallel-capacitor.html",
+    "gauss-surface": "gauss-surface.html",
+    "thin-film": "thin-film.html",
+    "blackbody-radiation": "blackbody-radiation.html",
+    "hydrogen-spectrum": "hydrogen-spectrum.html",
+    "radioactive-decay": "radioactive-decay.html",
+    "pv-path": "pv-path.html",
+    "magnetic-induction": "magnetic-induction.html",
+    "circuit-rc": "circuit-rc.html",
+    "photoelectric": "photoelectric.html",
+    "bungee": "bungee.html",
+    "massive-spring": "massive-spring.html",
+    "double-slit": "double-slit.html",
+    "bicycle-friction": "bicycle-friction.html",
+    "airplane-drop": "airplane-drop.html",
+    "safe-parabola": "safe-parabola.html",
+    "relative-motion": "relative-motion.html",
+    "shoot-monkey": "shoot-monkey.html",
+    "incline-shadow": "incline-shadow.html",
+    "optimal-projectile": "optimal-projectile.html",
+    "shm-projection": "shm-projection.html",
+    "vertical-spring": "vertical-spring.html",
+    "belt-wheels": "belt-wheels.html",
+    "slip-or-tip": "slip-or-tip.html",
+    "spring": "spring.html",
+    "block-stack": "block-stack.html",
+    "self-pull": "self-pull.html",
+    "moving-atwood": "moving-atwood.html",
+    "conveyor-friction": "conveyor-friction.html",
+    "bike-turn": "bike-turn.html",
+    "projectile-explosion": "projectile-explosion.html",
+    "recoiling-wedge": "recoiling-wedge.html",
+    "person-boat": "person-boat.html",
+    "ring-ball": "ring-ball.html",
+    "half-circle": "half-circle.html",
+    "pulled-spool": "pulled-spool.html",
+    "conical": "conical.html",
+    "noninertial": "noninertial.html",
+    "hole-table": "hole-table.html",
+    "collision": "collision.html",
+    "collision-2d": "collision-2d.html",
+    "orbit": "orbit.html",
+    "binary-stars": "binary-stars.html",
+    "intercontinental": "intercontinental.html",
+    "projectile-cone": "projectile-cone.html",
+    "wall-spring-pair": "wall-spring-pair.html",
+    "spring-wire-cut": "spring-wire-cut.html",
+    "falling-spring": "falling-spring.html",
+    "vertical-spring-pair": "vertical-spring-pair.html",
+    "damped": "damped.html",
+    "resonance-bank": "resonance-bank.html",
+    "coupled-oscillators": "coupled-oscillators.html",
+    "spring-atwood": "spring-atwood.html",
+    "ball-rod": "ball-rod.html",
+    "rough-bounce": "rough-bounce.html",
+    "joule-experiment": "joule-experiment.html",
+    "thermal-lattice": "thermal-lattice.html",
+    "ideal-gas": "ideal-gas.html",
+    "maxwell-distribution": "maxwell-distribution.html",
+    "equipartition": "equipartition.html",
+    "adiabatic-pistons": "adiabatic-pistons.html",
+    "basic-waves": "basic-waves.html",
+    "standing-waves": "standing-waves.html",
+    "longitudinal-tube": "longitudinal-tube.html",
+    "string-interface": "string-interface.html",
+    "wave-polarization": "wave-polarization.html",
+    "wave-function": "wave-function.html",
+    "string-wave-energy": "string-wave-energy.html",
+    "two-source-interference": "two-source-interference.html",
+    "resonance-column": "resonance-column.html",
+    "vacuum-bell": "vacuum-bell.html",
+    "sound-speed": "sound-speed.html",
+    "echo": "echo.html",
+    "doppler": "doppler.html",
+    "sound-elements": "sound-elements.html",
+    "fourier-square": "fourier-square.html",
+    "plane-mirror": "plane-mirror.html",
+    "shared-mirror": "shared-mirror.html",
+    "double-mirror": "double-mirror.html",
+    "conic-mirror": "conic-mirror.html",
+    "image-drawing": "image-drawing.html",
+    "refraction-cart": "refraction-cart.html",
+    "layered-refraction": "layered-refraction.html",
+    "straw-cup": "straw-cup.html",
+    "apparent-depth": "apparent-depth.html",
+    "sphere-lens": "sphere-lens.html",
+    "fresnel": "fresnel.html",
+    "eye-lens": "eye-lens.html",
+    "dancing-image": "dancing-image.html",
+    "half-lens": "half-lens.html",
+    "optical-parallax": "optical-parallax.html",
+    "optical-instruments": "optical-instruments.html",
+    "rainbow": "rainbow.html",
+    "dolly-zoom": "dolly-zoom.html",
+    "diffraction-amplitudes": "diffraction-amplitudes.html",
+    "aperture-pattern": "aperture-pattern.html",
+    "rgb-lights": "rgb-lights.html",
+    "optical-grating": "optical-grating.html",
+    "electroscope": "electroscope.html",
+    "two-charges": "two-charges.html",
+    "floating-block-shm": "floating-block-shm.html",
+    "pendulum-angle-comparison": "pendulum-angle-comparison.html",
+    "violin-fourier": "violin-fourier.html",
+    "celestial-sphere": "celestial-sphere.html",
+    "moon-earth": "moon-earth.html",
+    "sun-earth": "sun-earth.html",
+    "sun-earth-moon": "sun-earth-moon.html"
+  },
+  "excludeByDefault": [
+    "artifacts/",
+    ".git/",
+    "inactive plan files",
+    "full QA history",
+    "unrelated standalone HTML"
+  ],
+  "sceneExtensions": {
+    "optical-polarizers": "assets/scenes-optical-polarizers.js",
+    "hydrostatic-buoyancy": "assets/scenes-hydrostatic-buoyancy.js",
+    "nuclear-binding": "assets/scenes-nuclear-binding.js",
+    "rutherford-scattering": "assets/scenes-rutherford-scattering.js",
+    "generator-transformer": "assets/scenes-generator-transformer.js",
+    "charged-particle": "assets/scenes-charged-particle.js",
+    "wire-magnetic-field": "assets/scenes-wire-magnetic-field.js",
+    "rlc-resonance": "assets/scenes-rlc-resonance.js",
+    "eddy-current": "assets/scenes-eddy-current.js",
+    "carnot-engine": "assets/scenes-carnot-engine.js",
+    "pn-junction": "assets/scenes-pn-junction.js",
+    "quantum-well": "assets/scenes-quantum-well.js",
+    "hydrogen-orbitals": "assets/scenes-hydrogen-orbitals.js",
+    "matter-wave": "assets/scenes-matter-wave.js",
+    "parallel-capacitor": "assets/scenes-parallel-capacitor.js",
+    "gauss-surface": "assets/scenes-gauss-surface.js",
+    "thin-film": "assets/scenes-thin-film.js",
+    "blackbody-radiation": "assets/scenes-blackbody-radiation.js",
+    "hydrogen-spectrum": "assets/scenes-hydrogen-spectrum.js",
+    "radioactive-decay": "assets/scenes-radioactive-decay.js",
+    "pv-path": "assets/scenes-pv-path.js",
+    "magnetic-induction": "assets/scenes-magnetic-induction.js",
+    "circuit-rc": "assets/scenes-circuit-rc.js",
+    "photoelectric": "assets/scenes-photoelectric.js",
+    "airplane-drop": "assets/scenes-airplane-drop.js",
+    "safe-parabola": "assets/scenes-safe-parabola.js",
+    "relative-motion": "assets/scenes-relative-motion.js",
+    "shoot-monkey": "assets/scenes-shoot-monkey.js",
+    "incline-shadow": "assets/scenes-incline-shadow.js",
+    "optimal-projectile": "assets/scenes-optimal-projectile.js",
+    "shm-projection": "assets/scenes-shm-projection.js",
+    "vertical-spring": "assets/scenes-vertical-spring.js",
+    "belt-wheels": "assets/scenes-belt-wheels.js",
+    "slip-or-tip": "assets/scenes-slip-or-tip.js",
+    "block-stack": "assets/scenes-block-stack.js",
+    "self-pull": "assets/scenes-self-pull.js",
+    "moving-atwood": "assets/scenes-moving-atwood.js",
+    "conveyor-friction": "assets/scenes-conveyor-friction.js",
+    "bike-turn": "assets/scenes-bike-turn.js",
+    "projectile-explosion": "assets/scenes-projectile-explosion.js",
+    "recoiling-wedge": "assets/scenes-recoiling-wedge.js",
+    "person-boat": "assets/scenes-person-boat.js",
+    "ring-ball": "assets/scenes-ring-ball.js",
+    "half-circle": "assets/scenes-half-circle.js",
+    "pulled-spool": "assets/scenes-pulled-spool.js",
+    "conical": "assets/scenes-conical-angular.js",
+    "noninertial": "assets/scenes-noninertial.js",
+    "hole-table": "assets/scenes-hole-table.js",
+    "binary-stars": "assets/scenes-binary-stars.js",
+    "intercontinental": "assets/scenes-intercontinental.js",
+    "projectile-cone": "assets/scenes-projectile-cone.js",
+    "wall-spring-pair": "assets/scenes-wall-spring-pair.js",
+    "spring-wire-cut": "assets/scenes-spring-wire-cut.js",
+    "falling-spring": "assets/scenes-falling-spring.js",
+    "vertical-spring-pair": "assets/scenes-vertical-spring-pair.js",
+    "damped": "assets/scenes-damped-vertical.js",
+    "resonance-bank": "assets/scenes-resonance-bank.js",
+    "coupled-oscillators": "assets/scenes-coupled-oscillators.js",
+    "spring-atwood": "assets/scenes-spring-atwood.js",
+    "ball-rod": "assets/scenes-ball-rod.js",
+    "rough-bounce": "assets/scenes-rough-bounce.js",
+    "joule-experiment": "assets/scenes-joule-experiment.js",
+    "thermal-lattice": "assets/scenes-thermal-lattice.js",
+    "ideal-gas": "assets/scenes-ideal-gas.js",
+    "maxwell-distribution": "assets/scenes-maxwell-distribution.js",
+    "equipartition": "assets/scenes-equipartition.js",
+    "adiabatic-pistons": "assets/scenes-adiabatic-pistons.js",
+    "basic-waves": "assets/scenes-basic-waves.js",
+    "standing-waves": "assets/scenes-standing-waves.js",
+    "longitudinal-tube": "assets/scenes-longitudinal-tube.js",
+    "string-interface": "assets/scenes-string-interface.js",
+    "wave-polarization": "assets/scenes-wave-polarization.js",
+    "wave-function": "assets/scenes-wave-function.js",
+    "string-wave-energy": "assets/scenes-string-wave-energy.js",
+    "two-source-interference": "assets/scenes-two-source-interference.js",
+    "resonance-column": "assets/scenes-resonance-column.js",
+    "vacuum-bell": "assets/scenes-vacuum-bell.js",
+    "sound-speed": "assets/scenes-sound-speed.js",
+    "echo": "assets/scenes-echo.js",
+    "doppler": "assets/scenes-doppler.js",
+    "sound-elements": "assets/scenes-sound-elements.js",
+    "fourier-square": "assets/scenes-fourier-square.js",
+    "plane-mirror": "assets/scenes-plane-mirror.js",
+    "shared-mirror": "assets/scenes-shared-mirror.js",
+    "double-mirror": "assets/scenes-double-mirror.js",
+    "conic-mirror": "assets/scenes-conic-mirror.js",
+    "image-drawing": "assets/scenes-image-drawing.js",
+    "refraction-cart": "assets/scenes-refraction-cart.js",
+    "layered-refraction": "assets/scenes-layered-refraction.js",
+    "straw-cup": "assets/scenes-straw-cup.js",
+    "apparent-depth": "assets/scenes-apparent-depth.js",
+    "sphere-lens": "assets/scenes-sphere-lens.js",
+    "fresnel": "assets/scenes-fresnel.js",
+    "eye-lens": "assets/scenes-eye-lens.js",
+    "dancing-image": "assets/scenes-dancing-image.js",
+    "half-lens": "assets/scenes-half-lens.js",
+    "optical-parallax": "assets/scenes-optical-parallax.js",
+    "optical-instruments": "assets/scenes-optical-instruments.js",
+    "rainbow": "assets/scenes-rainbow.js",
+    "dolly-zoom": "assets/scenes-dolly-zoom.js",
+    "diffraction-amplitudes": "assets/scenes-diffraction-amplitudes.js",
+    "aperture-pattern": "assets/scenes-aperture-pattern.js",
+    "rgb-lights": "assets/scenes-rgb-lights.js",
+    "optical-grating": "assets/scenes-optical-grating.js",
+    "electroscope": "assets/scenes-electroscope.js",
+    "two-charges": "assets/scenes-two-charges.js",
+    "floating-block-shm": "assets/scenes-floating-block-shm.js",
+    "pendulum-angle-comparison": "assets/scenes-pendulum-angle-comparison.js",
+    "violin-fourier": "assets/scenes-violin-fourier.js",
+    "celestial-sphere": "assets/scenes-celestial-sphere.js",
+    "moon-earth": "assets/scenes-moon-earth.js",
+    "sun-earth": "assets/scenes-sun-earth.js",
+    "sun-earth-moon": "assets/scenes-sun-earth-moon.js"
+  },
+  "modelVerifiers": {
+    "optical-polarizers": "verify-optical-polarizers.cjs",
+    "hydrostatic-buoyancy": "verify-hydrostatic-buoyancy.cjs",
+    "nuclear-binding": "verify-nuclear-binding.cjs",
+    "rutherford-scattering": "verify-rutherford-scattering.cjs",
+    "generator-transformer": "verify-generator-transformer.cjs",
+    "charged-particle": "verify-charged-particle.cjs",
+    "wire-magnetic-field": "verify-wire-magnetic-field.cjs",
+    "rlc-resonance": "verify-rlc-resonance.cjs",
+    "eddy-current": "verify-eddy-current.cjs",
+    "carnot-engine": "verify-carnot-engine.cjs",
+    "pn-junction": "verify-pn-junction.cjs",
+    "quantum-well": "verify-quantum-well.cjs",
+    "hydrogen-orbitals": "verify-hydrogen-orbitals.cjs",
+    "matter-wave": "verify-matter-wave.cjs",
+    "parallel-capacitor": "verify-parallel-capacitor.cjs",
+    "gauss-surface": "verify-gauss-surface.cjs",
+    "thin-film": "verify-thin-film.cjs",
+    "blackbody-radiation": "verify-blackbody-radiation.cjs",
+    "hydrogen-spectrum": "verify-hydrogen-spectrum.cjs",
+    "radioactive-decay": "verify-radioactive-decay.cjs",
+    "pv-path": "verify-pv-path.cjs",
+    "magnetic-induction": "verify-magnetic-induction.cjs",
+    "circuit-rc": "verify-circuit-rc.cjs",
+    "photoelectric": "verify-photoelectric.cjs",
+    "airplane-drop": "verify-airplane-drop.cjs",
+    "safe-parabola": "verify-safe-parabola.cjs",
+    "relative-motion": "verify-relative-motion.cjs",
+    "shoot-monkey": "verify-shoot-monkey.cjs",
+    "incline-shadow": "verify-incline-shadow.cjs",
+    "optimal-projectile": "verify-optimal-projectile.cjs",
+    "shm-projection": "verify-shm-projection.cjs",
+    "vertical-spring": "verify-vertical-spring.cjs",
+    "belt-wheels": "verify-belt-wheels.cjs",
+    "spring": "verify-spring-energy.cjs",
+    "slip-or-tip": "verify-slip-or-tip.cjs",
+    "block-stack": "verify-block-stack.cjs",
+    "self-pull": "verify-self-pull.cjs",
+    "moving-atwood": "verify-moving-atwood.cjs",
+    "conveyor-friction": "verify-conveyor-friction.cjs",
+    "bike-turn": "verify-bike-turn.cjs",
+    "projectile-explosion": "verify-projectile-explosion.cjs",
+    "recoiling-wedge": "verify-recoiling-wedge.cjs",
+    "person-boat": "verify-person-boat.cjs",
+    "ring-ball": "verify-ring-ball.cjs",
+    "half-circle": "verify-half-circle.cjs",
+    "pulled-spool": "verify-pulled-spool.cjs",
+    "conical": "verify-conical-angular.cjs",
+    "noninertial": "verify-noninertial.cjs",
+    "hole-table": "verify-hole-table.cjs",
+    "collision": "verify-contact-collision.cjs",
+    "collision-2d": "verify-collision-2d.cjs",
+    "orbit": "verify-orbit-power.cjs",
+    "binary-stars": "verify-binary-stars.cjs",
+    "intercontinental": "verify-intercontinental.cjs",
+    "projectile-cone": "verify-projectile-cone.cjs",
+    "wall-spring-pair": "verify-wall-spring-pair.cjs",
+    "spring-wire-cut": "verify-spring-wire-cut.cjs",
+    "falling-spring": "verify-falling-spring.cjs",
+    "vertical-spring-pair": "verify-vertical-spring-pair.cjs",
+    "damped": "verify-damped-vertical.cjs",
+    "resonance-bank": "verify-resonance-bank.cjs",
+    "coupled-oscillators": "verify-coupled-oscillators.cjs",
+    "spring-atwood": "verify-spring-atwood.cjs",
+    "ball-rod": "verify-ball-rod.cjs",
+    "rough-bounce": "verify-rough-bounce.cjs",
+    "joule-experiment": "verify-joule-experiment.cjs",
+    "thermal-lattice": "verify-thermal-lattice.cjs",
+    "ideal-gas": "verify-ideal-gas.cjs",
+    "maxwell-distribution": "verify-maxwell-distribution.cjs",
+    "equipartition": "verify-equipartition.cjs",
+    "adiabatic-pistons": "verify-adiabatic-pistons.cjs",
+    "basic-waves": "verify-basic-waves.cjs",
+    "standing-waves": "verify-standing-waves.cjs",
+    "longitudinal-tube": "verify-longitudinal-tube.cjs",
+    "string-interface": "verify-string-interface.cjs",
+    "wave-polarization": "verify-wave-polarization.cjs",
+    "wave-function": "verify-wave-function.cjs",
+    "string-wave-energy": "verify-string-wave-energy.cjs",
+    "two-source-interference": "verify-two-source-interference.cjs",
+    "resonance-column": "verify-resonance-column.cjs",
+    "vacuum-bell": "verify-vacuum-bell.cjs",
+    "sound-speed": "verify-sound-speed.cjs",
+    "echo": "verify-echo.cjs",
+    "doppler": "verify-doppler.cjs",
+    "sound-elements": "verify-sound-elements.cjs",
+    "fourier-square": "verify-fourier-square.cjs",
+    "plane-mirror": "verify-plane-mirror.cjs",
+    "shared-mirror": "verify-shared-mirror.cjs",
+    "double-mirror": "verify-double-mirror.cjs",
+    "conic-mirror": "verify-conic-mirror.cjs",
+    "image-drawing": "verify-image-drawing.cjs",
+    "refraction-cart": "verify-refraction-cart.cjs",
+    "layered-refraction": "verify-layered-refraction.cjs",
+    "straw-cup": "verify-straw-cup.cjs",
+    "apparent-depth": "verify-apparent-depth.cjs",
+    "sphere-lens": "verify-sphere-lens.cjs",
+    "fresnel": "verify-fresnel.cjs",
+    "eye-lens": "verify-eye-lens.cjs",
+    "dancing-image": "verify-dancing-image.cjs",
+    "half-lens": "verify-half-lens.cjs",
+    "optical-parallax": "verify-optical-parallax.cjs",
+    "optical-instruments": "verify-optical-instruments.cjs",
+    "rainbow": "verify-rainbow.cjs",
+    "dolly-zoom": "verify-dolly-zoom.cjs",
+    "double-slit": "verify-double-slit.cjs",
+    "diffraction-amplitudes": "verify-diffraction-amplitudes.cjs",
+    "aperture-pattern": "verify-aperture-pattern.cjs",
+    "rgb-lights": "verify-rgb-lights.cjs",
+    "optical-grating": "verify-optical-grating.cjs",
+    "electroscope": "verify-electroscope.cjs",
+    "two-charges": "verify-two-charges.cjs",
+    "floating-block-shm": "verify-floating-block-shm.cjs",
+    "pendulum-angle-comparison": "verify-pendulum-angle-comparison.cjs",
+    "violin-fourier": "verify-violin-fourier.cjs",
+    "celestial-sphere": "verify-celestial-sphere.cjs",
+    "moon-earth": "verify-moon-earth.cjs",
+    "sun-earth": "verify-sun-earth.cjs",
+    "sun-earth-moon": "verify-sun-earth-moon.cjs"
+  },
+  "modelDependencies": {
+    "basic-waves": [
+      "models/wave-core.js"
+    ],
+    "standing-waves": [
+      "models/wave-core.js"
+    ],
+    "longitudinal-tube": [
+      "models/wave-core.js"
+    ],
+    "string-interface": [
+      "models/wave-core.js"
+    ],
+    "wave-polarization": [
+      "models/wave-core.js"
+    ],
+    "wave-function": [
+      "models/wave-core.js"
+    ],
+    "string-wave-energy": [
+      "models/wave-core.js"
+    ],
+    "resonance-column": [
+      "models/acoustic-core.js"
+    ],
+    "sound-speed": [
+      "models/acoustic-core.js"
+    ],
+    "echo": [
+      "models/acoustic-core.js"
+    ],
+    "doppler": [
+      "models/acoustic-core.js"
+    ],
+    "apparent-depth": [
+      "models/straw-cup.js"
+    ],
+    "sphere-lens": [
+      "models/straw-cup.js"
+    ],
+    "fresnel": [
+      "models/fresnel-core.js"
+    ],
+    "eye-lens": [
+      "models/image-drawing.js"
+    ],
+    "dancing-image": [
+      "models/image-drawing.js"
+    ],
+    "half-lens": [
+      "models/image-drawing.js",
+      "models/eye-lens.js"
+    ],
+    "optical-parallax": [
+      "models/image-drawing.js"
+    ],
+    "optical-instruments": [
+      "models/ray-matrix.js"
+    ],
+    "rainbow": [
+      "models/straw-cup.js",
+      "models/sphere-lens.js",
+      "models/fresnel-core.js"
+    ]
+  }
+}

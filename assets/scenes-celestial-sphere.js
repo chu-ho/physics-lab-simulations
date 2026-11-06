@@ -1,0 +1,12 @@
+'use strict';function drawCelestialSphere(s){const sim=simulation,p=params,R=sim.radius,pole=sim.pole,origin=[0,0,0];const curve=(fn,color,width=1,dashed=false)=>{let a=fn(0);for(let i=1;i<=120;i++){const b=fn(TAU*i/120);segment(a,b,color,width,dashed);a=b;}};
+// Transparent wire sphere, with local horizon kept fixed as the sky rotates.
+curve(a=>[R*Math.cos(a),0,R*Math.sin(a)],'#608d83',2);curve(a=>[0,R*Math.cos(a),R*Math.sin(a)],'#9ab5bd',1,true);
+for(const [v,name]of [[[0,0,R+0.5],'北 N'],[[R+.5,0,0],'東 E'],[[0,0,-R-.5],'南 S'],[[-R-.5,0,0],'西 W']])label(v,name,'#567b77',12);
+label([0,R+.5,0],'天頂 Z','#728999',12);label([0,-R-.3,0],'天底','#728999',10);label([0,0,R*.7],'地平圈','#608d83',10);
+segment(pole.map(v=>-R*v),pole.map(v=>R*v),'#a887b1',2,true);sphere(pole.map(v=>R*v),.09,'#ad8ab3');label(pole.map(v=>(R+.3)*v),'天北極','#936c9a',11);label(pole.map(v=>-(R+.3)*v),'天南極','#936c9a',11);
+curve(a=>sim.point(0,a*180/Math.PI),'#be9654',2);label(sim.point(0,35),'天赤道','#af8b4f',11);
+if(p.grid){for(const dec of [-60,-30,30,60])curve(a=>sim.point(dec,a*180/Math.PI),'#b6b7c5',.7,true);for(let ra=0;ra<24;ra+=3){curve(a=>{const d=90*Math.sin(a),h=15*(s.sidereal-ra)+(Math.cos(a)<0?180:0);return sim.point(d,h);},'#c0c2cf',.6,true);label(sim.point(0,15*(s.sidereal-ra)),ra+'h','#9a8b6f',9);}}
+if(p.track){let a=sim.point(p.declination,0);for(let j=1;j<=180;j++){const b=sim.point(p.declination,j*2);segment(a,b,(a[1]+b[1])/2>=0?'#d08b4b':'#cfb99e',2,(a[1]+b[1])<0);a=b;}}
+sphere(origin,.13,'#517b8b');label([0,.25,0],'觀測者','#537789',10);const star=[s.x,s.y,s.z];sphere(star,.16,s.altitude>=0?'#edb04c':'#b5a497');label(star,'示意恆星'+(s.altitude<0?'（地平線下）':''),'#b5863e',11);
+if(p.angles){const A=s.azimuth*Math.PI/180,h=s.altitude*Math.PI/180,k=2;segment(origin,star,'#d1a66a',1,true);curve(a=>[k*Math.sin(A*a/TAU),0,k*Math.cos(A*a/TAU)],'#508f9c',1.5);let a=[k*Math.sin(A),0,k*Math.cos(A)];for(let i=1;i<=40;i++){const angle=h*i/40,b=[k*Math.cos(angle)*Math.sin(A),k*Math.sin(angle),k*Math.cos(angle)*Math.cos(A)];segment(a,b,'#b57894',2);a=b;}label(a,'高度 '+s.altitude.toFixed(1)+'°','#b57894',10);if(!s.azimuthDefined)label([0,R-.5,0],'此處方位角無定義','#a45f5a',11);}
+const names={'circumpolar':'拱極：整日地平線上','never-rises':'永不升起','rises-sets':'每日東升西落','grazes-below':'下中天恰掠地平線','grazes-above':'上中天恰掠地平線','always-horizon':'整日位於地平線'};label([0,6,0],names[sim.classification.kind]+' · 地平線上 '+sim.classification.hours.toFixed(2)+' 恆星小時','#5a7786',12);}

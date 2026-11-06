@@ -6,3 +6,9 @@
 @media(max-width:580px){.plot-panel{padding:8px 12px}.plot-panel canvas{height:85px}.plot-heading>span:last-child{display:none}.plot-choice select{max-width:175px;font-size:11px}.sidebar .intro{margin-bottom:10px}.sidebar .experiment-picker{display:flex;gap:10px;align-items:center;white-space:nowrap}.experiment-picker select{margin:0}.sidebar #controls{display:contents}.formula,#scaleNote,#events,.sidebar>.section{grid-column:1/-1}.camera-buttons{max-width:95%}.scene-top .view-title{max-width:65%}.status{max-width:35%;font-size:9px}.metric strong{font-size:14px}.metric small{font-size:8px}.metric span{margin-left:2px;font-size:8px}.header-actions button{padding:5px 6px}.library-link{font-size:10px}header h1{font-size:13px}.overline{font-size:8px!important}}
 @media(max-height:600px){.plot-panel{padding:6px 12px}.plot-panel canvas{height:65px}.sidebar .control{margin-bottom:10px}}
 header>div:first-child{min-width:0}header h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.overline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.header-actions{flex-shrink:0}.camera-buttons button[aria-pressed=true]{background:#8ee0c0;color:#15392f;border-color:#168579}
+
+#referencePanel[hidden]{display:none}#referencePanel select{width:100%;margin-top:8px}
+
+.plot-choice[hidden]{display:none}
+
+.annotation-panel{margin:12px 0;padding:12px;border:1px solid var(--line,#ccd9da);border-radius:12px}.annotation-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.annotation-actions label{display:flex;align-items:center;gap:6px}.annotation-actions button[aria-pressed="true"]{background:#d7e9e6;color:#215852}

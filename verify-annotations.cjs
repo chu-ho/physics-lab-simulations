@@ -1,0 +1,18 @@
+'use strict';const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict'),{domHarness}=require('./tools/dom-harness.cjs'),html=fs.readFileSync('mechanics.html','utf8'),{sandbox}=domHarness(html);sandbox.assert=assert;
+for(const m of html.matchAll(/<script src="([^"]+)"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),sandbox,{filename:m[1]});
+vm.runInContext(`
+selectExperiment('image-drawing',false);t=1.23;running=true;render();const timeBefore=t,simBefore=simulation;
+for(const [yaw,pitch,zoom]of [[-.65,.48,1],[0,.06,2],[.4,.3,.8]]){camera.yaw=yaw;camera.pitch=pitch;camera.zoom=zoom;updateCamera();for(const point of [[-2,4.5,0],[1,5,0],[0,3,0]]){const screen=project(point),world=annotationWorldPoint(screen.x,screen.y);assert.ok(world);for(let j=0;j<3;j++)assert.ok(Math.abs(world[j]-point[j])<1e-9);}}
+camera.yaw=-.65;camera.pitch=.48;camera.zoom=1;render();$('annotationToggle').onclick();assert.equal(annotationEnabled,true);assert.equal($('annotationToggle').attrs['aria-pressed'],'true');
+const event=(type,id,point)=>{const screen=project(point);return{type,pointerId:id,clientX:screen.x,clientY:screen.y,button:0,preventDefault(){}};};
+const from=[-2,4.5,0],to=[1,5,0],yawBefore=camera.yaw;
+canvas.listeners.pointerdown(event('pointerdown',1,from));canvas.listeners.pointerdown(event('pointerdown',2,[0,4,0]));canvas.listeners.pointermove(event('pointermove',2,to));assert.equal(annotationDraft.points.length,1);canvas.listeners.pointermove(event('pointermove',1,to));canvas.listeners.pointerup(event('pointerup',1,to));assert.equal(annotationStrokes.length,1);assert.equal(camera.yaw,yawBefore);assert.equal(t,timeBefore);assert.equal(running,true);assert.equal(simulation,simBefore);
+const saved=JSON.stringify(annotationStrokes);camera.yaw=.3;camera.zoom=1.4;render();assert.equal(JSON.stringify(annotationStrokes),saved);
+canvas.listeners.pointerdown(event('pointerdown',3,from));canvas.listeners.pointermove(event('pointermove',3,to));canvas.listeners.pointercancel({type:'pointercancel',pointerId:3});assert.equal(annotationStrokes.length,1);assert.equal(annotationDraft,null);
+canvas.listeners.pointerdown(event('pointerdown',4,from));canvas.listeners.pointermove(event('pointermove',4,to));canvas.listeners.lostpointercapture({type:'lostpointercapture',pointerId:4});assert.equal(annotationStrokes.length,1);
+$('annotationToggle').onclick();assert.equal(annotationEnabled,false);const oldYaw=camera.yaw;canvas.listeners.pointerdown(event('pointerdown',5,from));canvas.listeners.pointermove(event('pointermove',5,to));canvas.listeners.pointerup({type:'pointerup',pointerId:5});assert.notEqual(camera.yaw,oldYaw);
+selectExperiment('friction',false);assert.equal($('annotationPanel').hidden,true);assert.equal(annotationEnabled,false);selectExperiment('image-drawing',false);assert.equal(annotationStrokes.length,1);assert.equal($('annotationPanel').hidden,false);$('annotationUndo').onclick();assert.equal(annotationStrokes.length,0);assert.equal($('annotationUndo').disabled,true);
+$('annotationToggle').onclick();render();canvas.listeners.pointerdown(event('pointerdown',6,from));canvas.listeners.pointermove(event('pointermove',6,to));canvas.listeners.pointerup(event('pointerup',6,to));assert.equal(annotationStrokes.length,1);$('annotationClear').onclick();assert.equal(annotationStrokes.length,0);assert.equal(annotationDraft,null);
+camera.yaw=Math.PI/2;camera.pitch=0;updateCamera();const b=sceneBounds();assert.equal(annotationWorldPoint(W/2,(b.top+b.bottom)/2),null);
+`,sandbox);
+console.log('PASS annotations: actual HTML/scripts, inverse perspective on 3 cameras, world-attached strokes, pointer isolation/cancel/lost capture, undo/clear, orbit restoration, experiment scope and playback preservation.');

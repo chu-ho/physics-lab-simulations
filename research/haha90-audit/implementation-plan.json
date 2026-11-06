@@ -1,0 +1,5190 @@
+{
+  "objective": "逐一重建原站全部116個不重複動畫，並加入使用者新增10個方向；依既有架構、語言、規範與UI設計實作。",
+  "sourceCount": 116,
+  "userRequestCount": 10,
+  "completionRule": "只有功能對照、模型、互動、驗證與入口都具備才可標完成；既有相近題目不能自動算完成。",
+  "items": [
+    {
+      "id": "site-001",
+      "sourceId": "001",
+      "title": "飛機投彈",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/airplaneBoom2024/airplaneBoom2024.html",
+      "sourceScreenshot": "screenshots/001-airplaneBoom2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "飛機投彈\n動畫全螢幕\n\n飛機投彈\n\n說明影片：",
+      "relatedModelIds": [
+        "airplane-drop"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "airplane-drop"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "39個共用模型、775組參數與播放／回放／圖表／匯出控制驗證",
+        "verify-airplane-drop.cjs：獨立物理參考及邊界驗證",
+        "原生Canvas離線場景已檢視；非實際瀏覽器驗收",
+        "airplane-drop.html獨立入口及總覽卡片"
+      ],
+      "nextAction": "原站 x1/x10/x20 行為尚未互動確認；目前提供1至20球數拉桿，原站視角按鈕以共用自由視角替代。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "airplane-drop"
+        ],
+        "covered": "已新增等速飛機、多顆球分次投放、逐球解析落地、飛行與落點軌跡。",
+        "remaining": "原站 x1/x10/x20 行為尚未互動確認；目前提供1至20球數拉桿，原站視角按鈕以共用自由視角替代。",
+        "basis": [
+          "models/airplane-drop.js",
+          "assets/scenes-airplane-drop.js",
+          "verify-airplane-drop.cjs",
+          "screenshots/001-airplaneBoom2024.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-002",
+      "sourceId": "002",
+      "title": "安全拋物線",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/safeParabola2023/safeParabola2023.html",
+      "sourceScreenshot": "screenshots/002-safeParabola2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "安全拋物線\n動畫全螢幕\n\n↑安全拋物線，同時圓，頂點橢圓\n\n說明影片：",
+      "relatedModelIds": [
+        "safe-parabola"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "safe-parabola"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "39個共用模型、775組參數與播放／回放／圖表／匯出控制驗證",
+        "verify-safe-parabola.cjs：獨立物理參考及邊界驗證",
+        "原生Canvas離線場景已檢視；非實際瀏覽器驗收",
+        "safe-parabola.html獨立入口及總覽卡片"
+      ],
+      "nextAction": "原站爆炸／單一顯示等控制尚未逐項互動驗收；目前使用同時發射族與角度選擇。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "safe-parabola"
+        ],
+        "covered": "已新增72顆等初速拋體、安全包絡、同時圓、頂點橢圓、指定角度與三個可保留時間的顯示開關。",
+        "remaining": "原站爆炸／單一顯示等控制尚未逐項互動驗收；目前使用同時發射族與角度選擇。",
+        "basis": [
+          "models/safe-parabola.js",
+          "assets/scenes-safe-parabola.js",
+          "verify-safe-parabola.cjs",
+          "screenshots/002-safeParabola2023.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-003",
+      "sourceId": "003",
+      "title": "相對運動",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/relativeMotion2023/relativeMotion2023.html",
+      "sourceScreenshot": "screenshots/003-relativeMotion2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "相對運動\n動畫全螢幕\n\n↑相對運動，當攝影機對準紅球時，藍球是作什麼運動呢？\n\n說明影片：",
+      "relatedModelIds": [
+        "river",
+        "pursuit",
+        "relative-motion"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "relative-motion"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "39個共用模型、775組參數與播放／回放／圖表／匯出控制驗證",
+        "verify-relative-motion.cjs：獨立物理參考及邊界驗證",
+        "原生Canvas離線場景已檢視；非實際瀏覽器驗收",
+        "relative-motion.html獨立入口及總覽卡片"
+      ],
+      "nextAction": "目前從同一平台同時拋出，首次回到平台高度即結束；原站週期反彈與特定初始條件尚未重建及操作核對。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "relative-motion"
+        ],
+        "covered": "已新增紅藍雙球、地面／平台／紅球／藍球四參考系；座標、速度、軌跡、圖表與CSV隨參考系變換，切換保留時間與播放。",
+        "remaining": "目前從同一平台同時拋出，首次回到平台高度即結束；原站週期反彈與特定初始條件尚未重建及操作核對。",
+        "basis": [
+          "models/relative-motion.js",
+          "assets/scenes-relative-motion.js",
+          "verify-relative-motion.cjs",
+          "screenshots/003-relativeMotion2023.jpg"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-004",
+      "sourceId": "004",
+      "title": "射猴子",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/shootMonkey2023/shootMonkey2023.html",
+      "sourceScreenshot": "screenshots/004-shootMonkey2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "射猴子\n動畫全螢幕\n\n↑獵槍射猴子，應該瞄準哪裡呢？\n\n說明影片：",
+      "relatedModelIds": [
+        "shoot-monkey"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "shoot-monkey"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "39個共用模型、775組參數與播放／回放／圖表／匯出控制驗證",
+        "verify-shoot-monkey.cjs：獨立物理參考及邊界驗證",
+        "原生Canvas離線場景已檢視；非實際瀏覽器驗收",
+        "shoot-monkey.html獨立入口及總覽卡片",
+        "使用者追加碰撞：兩個1kg物體黏合，驗證動量、動能損失、位置連續、共同觸地；實際畫圖流程覆蓋碰撞當下及倒回碰前。"
+      ],
+      "nextAction": "原站角色預設視角以共用自由視角替代；完整原站控制與本機瀏覽器驗收待做。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "shoot-monkey"
+        ],
+        "covered": "已新增同時射擊／猴子自由落下、初始瞄準線偏角、解析相遇與最接近事件、各自觸地停止。 命中後完全非彈性黏合、動量守恆、共同拋體與0.4秒撞擊光圈／星芒，均支援時間回放。",
+        "remaining": "原站角色預設視角以共用自由視角替代；完整原站控制與本機瀏覽器驗收待做。",
+        "basis": [
+          "models/shoot-monkey.js",
+          "assets/scenes-shoot-monkey.js",
+          "verify-shoot-monkey.cjs",
+          "screenshots/004-shootMonkey2023.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-005",
+      "sourceId": "005",
+      "title": "斜面上的斜拋",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/projectileOnBevel2023/projectileOnBevel2023.html",
+      "sourceScreenshot": "screenshots/005-projectileOnBevel2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "斜面上的斜拋\n動畫全螢幕\n\n↑斜面上的斜拋，換個角度，你可以用不同的方式來分析。\n\n說明影片：",
+      "relatedModelIds": [
+        "inclined-projectile"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "inclined-projectile"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "2026-10-20 現有程式比對：斜面角、相對坡面發射角、初速、方位角、落點與離面高度已有實作。"
+      ],
+      "nextAction": "原站的輔助分解／顯示模式仍須逐項驗收；不能視為畫面功能完全一致。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "inclined-projectile"
+        ],
+        "covered": "斜面角、相對坡面發射角、初速、方位角、落點與離面高度已有實作。",
+        "remaining": "原站的輔助分解／顯示模式仍須逐項驗收；不能視為畫面功能完全一致。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/005-projectileOnBevel2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-006",
+      "sourceId": "006",
+      "title": "斜面上的投影",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/shadowOnBevel2023/shadowOnBevel2023.html",
+      "sourceScreenshot": "screenshots/006-shadowOnBevel2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "斜面上的投影\n動畫全螢幕\n\n↑斜面上的投影，光照射，影子做甚麼運動？\n\n說明影片：",
+      "relatedModelIds": [
+        "incline-shadow"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "incline-shadow"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "42個共用模型、850組參數及45題整合檢查通過",
+        "verify-incline-shadow.cjs：獨立物理及邊界驗證",
+        "原生Canvas離線場景已檢視；非實際瀏覽器驗收",
+        "incline-shadow.html及總覽入口"
+      ],
+      "nextAction": "原站反彈、其他平面投影模式仍待補；本版於首次觸坡結束。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "incline-shadow"
+        ],
+        "covered": "可調坡角、平行光方向、發射角與初速；線面交點、影子軌跡／速度／加速度已實作。",
+        "remaining": "原站反彈、其他平面投影模式仍待補；本版於首次觸坡結束。",
+        "basis": [
+          "models/incline-shadow.js",
+          "assets/scenes-incline-shadow.js",
+          "verify-incline-shadow.cjs",
+          "screenshots/006-shadowOnBevel2023.jpg"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-007",
+      "sourceId": "007",
+      "title": "斜拋幾度拋最遠",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/howToProjectleFar2026/howToProjectleFar2026.html",
+      "sourceScreenshot": "screenshots/007-howToProjectleFar2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "斜拋幾度拋最遠\n動畫全螢幕\n\n說明影片：\n\n計算證明：",
+      "relatedModelIds": [
+        "projectile",
+        "inclined-projectile",
+        "optimal-projectile"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "optimal-projectile"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "42個共用模型、850組參數及45題整合檢查通過",
+        "verify-optimal-projectile.cjs：獨立物理及邊界驗證",
+        "原生Canvas離線場景已檢視；非實際瀏覽器驗收",
+        "optimal-projectile.html及總覽入口"
+      ],
+      "nextAction": "原站按鈕操作改為共用拉桿與同步對照；掃描資料已計算但獨立角度－射程圖尚未另設顯示。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "optimal-projectile"
+        ],
+        "covered": "解析最佳向前仰角與射程，選定／最佳球同步；高度、坡角及完整角度落點掃描已提供。",
+        "remaining": "原站按鈕操作改為共用拉桿與同步對照；掃描資料已計算但獨立角度－射程圖尚未另設顯示。",
+        "basis": [
+          "models/optimal-projectile.js",
+          "assets/scenes-optimal-projectile.js",
+          "verify-optimal-projectile.cjs",
+          "screenshots/007-howToProjectleFar2026.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-008",
+      "sourceId": "008",
+      "title": "簡諧運動",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/SHM2022/SHM2022.html",
+      "sourceScreenshot": "screenshots/008-SHM2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "簡諧運動\n動畫全螢幕\n\n↑簡諧運動是等速率圓周運動在直徑的投影",
+      "relatedModelIds": [
+        "spring",
+        "circular",
+        "shm-projection"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "shm-projection"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "42個共用模型、850組參數及45題整合檢查通過",
+        "verify-shm-projection.cjs：獨立物理及邊界驗證",
+        "原生Canvas離線場景已檢視；非實際瀏覽器驗收",
+        "shm-projection.html及總覽入口"
+      ],
+      "nextAction": "原站速度拉桿以週期參數替代；垂直投影數據可CSV，圖表目前以水平讀值為主。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "shm-projection"
+        ],
+        "covered": "圓周、水平與垂直正交投影同步；可調振幅、週期、初相位、質量及保留時間的顯示開關。",
+        "remaining": "原站速度拉桿以週期參數替代；垂直投影數據可CSV，圖表目前以水平讀值為主。",
+        "basis": [
+          "models/shm-projection.js",
+          "assets/scenes-shm-projection.js",
+          "verify-shm-projection.cjs",
+          "screenshots/008-SHM2022.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-009",
+      "sourceId": "009",
+      "title": "鉛直彈簧SHM",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/vSHM2024/vSHM2024.html",
+      "sourceScreenshot": "screenshots/009-vSHM2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "鉛直彈簧SHM\n動畫全螢幕\n\n分析鉛直彈簧簡諧運動，比水平彈簧簡諧運動複雜一些，因為鉛直的同時牽涉重力位能與彈力位能。\n不過，我們可以把重力位能與彈力位能合在一起看成是〝神奇的彈力位能〞。\n觀察動畫，想一想，彈力位能 與神奇的彈力位能，相同點是什麼？不同點又是什麼？\n\n說明影片：",
+      "relatedModelIds": [
+        "spring",
+        "bungee",
+        "vertical-spring"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "vertical-spring"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "45個共用模型、917組參數與48題整合流程",
+        "verify-vertical-spring.cjs：獨立物理與邊界驗證",
+        "原生Canvas離線場景已檢視，非實際瀏覽器驗收",
+        "vertical-spring.html及總覽入口"
+      ],
+      "nextAction": "原站專屬位置／受力／能量單選模式由本專案通用控制與圖表替代；原站全部控制及實際瀏覽器驗收仍待核對。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "vertical-spring"
+        ],
+        "covered": "鉛直雙向彈簧、原長／平衡參考與同步水平等效振子；Us、Ug、合成位能及平衡點等效位能、動能皆可選圖表。",
+        "remaining": "原站專屬位置／受力／能量單選模式由本專案通用控制與圖表替代；原站全部控制及實際瀏覽器驗收仍待核對。",
+        "basis": [
+          "models/vertical-spring.js",
+          "assets/scenes-vertical-spring.js",
+          "verify-vertical-spring.cjs",
+          "screenshots/009-vSHM2024.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-010",
+      "sourceId": "010",
+      "title": "彈簧力學能守恆",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/springEnergy/springEnergy.html",
+      "sourceScreenshot": "screenshots/010-springEnergy.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "彈簧力學能守恆\n[這個動畫需要 FlashPlayer]\n\n這是水平彈簧的簡諧運動，你可以看出振盪物體在各位置的\n動能與彈力位能之關係，雖然每個地方的動能與位能不同，\n但是相加後的總力學能卻是保持不變的。\n\n想一想：\n動能最大的地方在哪裡？位能最大的地方在哪裡？\n動能與位能相等的地方距離平衡點有多遠？\n是什麼條件讓力學能保持不變？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "spring"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "spring"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "2026-10-20 現有程式比對：水平無阻尼彈簧解析解，state 提供 K、U、E；可用下方圖表比較能量。",
+        "verify-spring-energy.cjs：27組位置能量參考、等分點、極值與同步狀態；DOM驗證圖形切換保留時間／播放／同一simulation。"
+      ],
+      "nextAction": "Flash原圖內容已按位能／動能／總能對位置重建；原站互動無法執行，保留本機實際瀏覽器驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "spring"
+        ],
+        "covered": "沿用spring解析模型，新增下方位置—能量圖；K、U、E三曲線與當前位置游標同步，亦可選各能量時間圖。",
+        "remaining": "Flash原圖內容已按位能／動能／總能對位置重建；原站互動無法執行，保留本機實際瀏覽器驗收。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/010-springEnergy.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-011",
+      "sourceId": "011",
+      "title": "飛輪組",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/rotationWheel/rotationWheel.html",
+      "sourceScreenshot": "screenshots/011-rotationWheel.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "飛輪組\n[這個動畫需要 FlashPlayer]\n\n在學習轉動的單元裡，這是一個常常出現的題目：\n畫面中A、B輪用黃色皮帶相連，C、D輪用藍色皮帶相連，B、C輪則固定在同一個軸心上，\n已知各輪的半徑比，且皮帶與輪之間不會滑動，如果A轉一圈，D會轉幾圈？\n\n提示：仔細觀察，用皮帶相連的輪子，什麼會相同？\n            同一軸心的輪子，又是什麼會相同？(角速度？輪邊的速率？)\n\n你可以改變各輪的半徑，也可以調整轉動的速率。\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "belt-wheels"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "belt-wheels"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "45個共用模型、917組參數與48題整合流程",
+        "verify-belt-wheels.cjs：獨立物理與邊界驗證",
+        "原生Canvas離線場景已檢視，非實際瀏覽器驗收",
+        "belt-wheels.html及總覽入口"
+      ],
+      "nextAction": "依Flash說明及截圖重建運動學；不含皮帶滑動、啟動力矩或耗能，實際瀏覽器驗收仍待完成。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "belt-wheels"
+        ],
+        "covered": "四輪可調半徑、AB及CD無滑動皮帶、BC同軸、指定主動角速度、輪上色標與皮帶標記、角速度／圈數比已實作。",
+        "remaining": "依Flash說明及截圖重建運動學；不含皮帶滑動、啟動力矩或耗能，實際瀏覽器驗收仍待完成。",
+        "basis": [
+          "models/belt-wheels.js",
+          "assets/scenes-belt-wheels.js",
+          "verify-belt-wheels.cjs",
+          "screenshots/011-rotationWheel.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-012",
+      "sourceId": "012",
+      "title": "終端速度",
+      "category": "運動學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/terminalVelocity2023/terminalVelocity2023.html",
+      "sourceScreenshot": "screenshots/012-terminalVelocity2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "終端速度\n動畫全螢幕\n\n↑自由落下的物體，若受到空氣阻力，且阻力大小與速度成正比(f=kv)\n 物體落下速度越快，阻力就越大，物體就越難以加速。\n 物體能達到的最大速度，就稱為終端速度(terminal velocity)。\n\n說明影片：",
+      "relatedModelIds": [
+        "drag"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "drag"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "2026-10-20 現有程式比對：由靜止下落、線性阻力 bv、可調質量／阻力係數／重力，含終端速率與速度圖。"
+      ],
+      "nextAction": "原站角色、釋放及圖形呈現不同；物理核心已具備，完整操作對照尚待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "drag"
+        ],
+        "covered": "由靜止下落、線性阻力 bv、可調質量／阻力係數／重力，含終端速率與速度圖。",
+        "remaining": "原站角色、釋放及圖形呈現不同；物理核心已具備，完整操作對照尚待驗收。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/012-terminalVelocity2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-013",
+      "sourceId": "013",
+      "title": "滑下或倒下",
+      "category": "靜力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/slipOrFall2023/slipOrFall2023.html",
+      "sourceScreenshot": "screenshots/013-slipOrFall2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "滑下或倒下\n動畫全螢幕\n\n↑先滑下或先倒下呢？\n\n說明影片：",
+      "relatedModelIds": [
+        "incline",
+        "slip-or-tip"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "slip-or-tip"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "45個共用模型、917組參數與48題整合流程",
+        "verify-slip-or-tip.cjs：獨立物理與邊界驗證",
+        "原生Canvas離線場景已檢視，非實際瀏覽器驗收",
+        "slip-or-tip.html及總覽入口"
+      ],
+      "nextAction": "固定坡角釋放，兩門檻皆超過時依首次失穩分支並檢查接觸；不是一般多接觸剛體求解，失去接觸／側面接坡後碰撞未做。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "slip-or-tip"
+        ],
+        "covered": "有限矩形塊、滑動與翻倒臨界、支持點／質心投影、底面滑動及繞坡下角轉動；接觸失效精確停止。",
+        "remaining": "固定坡角釋放，兩門檻皆超過時依首次失穩分支並檢查接觸；不是一般多接觸剛體求解，失去接觸／側面接坡後碰撞未做。",
+        "basis": [
+          "models/slip-or-tip.js",
+          "assets/scenes-slip-or-tip.js",
+          "verify-slip-or-tip.cjs",
+          "screenshots/013-slipOrFall2023.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-014",
+      "sourceId": "014",
+      "title": "堆木塊",
+      "category": "靜力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/stackBlock2023/stackBlock2023.html",
+      "sourceScreenshot": "screenshots/014-stackBlock2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "堆木塊\n動畫全螢幕\n\n↑堆木塊，推木塊，你能把木塊推多遠呢？\n\n說明影片：",
+      "relatedModelIds": [
+        "block-stack"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "block-stack"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "49個共用模型、1031組參數與52題整合檢查通過",
+        "verify-block-stack.cjs：獨立物理／邊界驗證",
+        "原生Canvas離線場景已檢視，非本機瀏覽器驗收",
+        "block-stack.html及總覽入口"
+      ],
+      "nextAction": "播放為靜力推移掃描，失穩臨界停止；原站掉落與剛體倒塌動力尚未做。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "block-stack"
+        ],
+        "covered": "2至10層、每層獨立偏移、選層推移、子堆質心與實際支持重疊、最大懸伸及首個臨界推距已實作。",
+        "remaining": "播放為靜力推移掃描，失穩臨界停止；原站掉落與剛體倒塌動力尚未做。",
+        "basis": [
+          "models/block-stack.js",
+          "assets/scenes-block-stack.js",
+          "verify-block-stack.cjs",
+          "screenshots/014-stackBlock2023.jpg"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-015",
+      "sourceId": "015",
+      "title": "把自己拉起來",
+      "category": "靜力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/pullSelf2024/pullSelf2024.html",
+      "sourceScreenshot": "screenshots/015-pullSelf2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "小明能把自己拉上去嗎？\n動畫全螢幕\n\n小明能把自己拉上去嗎？\n\n說明影片(1/2)：\n\n說明影片(2/2)：",
+      "relatedModelIds": [
+        "self-pull"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "self-pull"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "49個共用模型、1031組參數與52題整合檢查通過",
+        "verify-self-pull.cjs：獨立物理／邊界驗證",
+        "原生Canvas離線場景已檢視，非本機瀏覽器驗收",
+        "self-pull.html及總覽入口"
+      ],
+      "nextAction": "原站彈簧、人1、人2模式尚未逐項重建；本版平台連接為明示理想化，人台所需支持力為負則停止，不含離台後運動。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "self-pull"
+        ],
+        "covered": "依原站截圖辨識腳下動滑輪的自拉裝置，聯立人／平台分力、離地門檻、接觸支持力、繩長與有限拉繩行程；另有頂端定滑輪比較。",
+        "remaining": "原站彈簧、人1、人2模式尚未逐項重建；本版平台連接為明示理想化，人台所需支持力為負則停止，不含離台後運動。",
+        "basis": [
+          "models/self-pull.js",
+          "assets/scenes-self-pull.js",
+          "verify-self-pull.cjs",
+          "screenshots/015-pullSelf2024.jpg"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-016",
+      "sourceId": "016",
+      "title": "阿特伍機",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/atwoodMachine2024/atwoodMachine2024.html",
+      "sourceScreenshot": "screenshots/016-atwoodMachine2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "會動的阿特伍機\n動畫全螢幕\n\n會動的阿特伍機，你會算嗎？\n\n說明影片：",
+      "relatedModelIds": [
+        "atwood",
+        "massive-pulley",
+        "moving-atwood"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "moving-atwood"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "49個共用模型、1031組參數與52題整合檢查通過",
+        "verify-moving-atwood.cjs：獨立物理／邊界驗證",
+        "原生Canvas離線場景已檢視，非本機瀏覽器驗收",
+        "moving-atwood.html及總覽入口"
+      ],
+      "nextAction": "原站換組態與輪質量相關控制仍待互動核對；目前三輪無質量。另可調支點加速度是拓展，預設固定。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "moving-atwood"
+        ],
+        "covered": "已確認原站為頂端大輪下懸兩個小動滑輪、四重物；三繩約束、四物體受力、上下繩張力、支承外力作功及接觸停止已實作。",
+        "remaining": "原站換組態與輪質量相關控制仍待互動核對；目前三輪無質量。另可調支點加速度是拓展，預設固定。",
+        "basis": [
+          "models/moving-atwood.js",
+          "assets/scenes-moving-atwood.js",
+          "verify-moving-atwood.cjs",
+          "screenshots/016-atwoodMachine2024.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-017",
+      "sourceId": "017",
+      "title": "輸送帶與摩擦力",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/conveyorFriction2023/conveyorFriction2023.html",
+      "sourceScreenshot": "screenshots/017-conveyorFriction2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "輸送帶與摩擦力\n動畫全螢幕\n\n↑輸送帶與摩擦力\n\n說明影片：",
+      "relatedModelIds": [
+        "conveyor-friction"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "conveyor-friction"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "49個共用模型、1031組參數與52題整合檢查通過",
+        "verify-conveyor-friction.cjs：獨立物理／邊界驗證",
+        "原生Canvas離線場景已檢視，非本機瀏覽器驗收",
+        "conveyor-friction.html及總覽入口"
+      ],
+      "nextAction": "原站鉗子升降／放箱尚未做；本版箱子全程接觸無限長輸送帶，示意窗延伸而不模擬帶端掉落。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "conveyor-friction"
+        ],
+        "covered": "可調等加速／正弦帶速與靜動摩擦，分段解析滑動、捕獲黏住／再脫離，提供帶速／箱速／摩擦、熱量與驅動功。",
+        "remaining": "原站鉗子升降／放箱尚未做；本版箱子全程接觸無限長輸送帶，示意窗延伸而不模擬帶端掉落。",
+        "basis": [
+          "models/conveyor-friction.js",
+          "assets/scenes-conveyor-friction.js",
+          "verify-conveyor-friction.cjs",
+          "screenshots/017-conveyorFriction2023.jpg"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-018",
+      "sourceId": "018",
+      "title": "過彎摔車",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/bikeAndDriver2023/bikeAndDriver2023.html",
+      "sourceScreenshot": "screenshots/018-bikeAndDriver2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "過彎摔車\n動畫全螢幕\n\n車輛轉彎時，怎樣會摔車呢？\n\n說明影片：",
+      "relatedModelIds": [
+        "banked",
+        "bicycle-friction",
+        "bike-turn"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "bike-turn"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "53個共用模型、1137組參數與56題整合檢查通過",
+        "verify-bike-turn.cjs：獨立物理及邊界驗證",
+        "原生Canvas離線場景已檢視，非實際瀏覽器驗收",
+        "bike-turn.html與總覽入口"
+      ],
+      "nextAction": "本版為指定圓形接觸路徑的點質量支架模型，未含輪胎、陀螺及轉向自穩；原站多車型、自由轉向與失效後滑出／撞地尚未做。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "bike-turn"
+        ],
+        "covered": "可調速度、半徑、質心高度、摩擦與初傾角；圓形接觸路徑下的傾倒方程、平衡傾身、摩擦圓與接觸失效時刻已實作，預設跟隨人車。",
+        "remaining": "本版為指定圓形接觸路徑的點質量支架模型，未含輪胎、陀螺及轉向自穩；原站多車型、自由轉向與失效後滑出／撞地尚未做。",
+        "basis": [
+          "models/bike-turn.js",
+          "assets/scenes-bike-turn.js",
+          "verify-bike-turn.cjs",
+          "screenshots/018-bikeAndDriver2023.jpg"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-019",
+      "sourceId": "019",
+      "title": "斜拋空中爆",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/projectileAndExplode2024/projectileAndExplode2024.html",
+      "sourceScreenshot": "screenshots/019-projectileAndExplode2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "斜拋空中爆\n動畫全螢幕\n\n斜拋空中爆\n\n說明影片：",
+      "relatedModelIds": [
+        "projectile-explosion"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "projectile-explosion"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "53個共用模型、1137組參數與56題整合檢查通過",
+        "verify-projectile-explosion.cjs：獨立物理及邊界驗證",
+        "原生Canvas離線場景已檢視，非實際瀏覽器驗收",
+        "projectile-explosion.html與總覽入口"
+      ],
+      "nextAction": "原站多碎塊模式及右側獨立比較視窗尚未做；本版為兩點質量，任一落地後不再套用自由拋體質心。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "projectile-explosion"
+        ],
+        "covered": "兩碎塊瞬時爆炸、可調質量比例／方向／相對速度／時刻，另有B瞬停對照；空中動量與質心、內能轉動能、各塊落地停止已實作。",
+        "remaining": "原站多碎塊模式及右側獨立比較視窗尚未做；本版為兩點質量，任一落地後不再套用自由拋體質心。",
+        "basis": [
+          "models/projectile-explosion.js",
+          "assets/scenes-projectile-explosion.js",
+          "verify-projectile-explosion.cjs",
+          "screenshots/019-projectileAndExplode2024.jpg"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-020",
+      "sourceId": "020",
+      "title": "光滑斜面向後滑",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/bevelSlideBack2024/bevelSlideBack2024.html",
+      "sourceScreenshot": "screenshots/020-bevelSlideBack2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "光滑斜面向後滑\n動畫全螢幕\n\n小球向前滾下來，光滑斜面向後滑\n\n說明影片：",
+      "relatedModelIds": [
+        "recoiling-wedge"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "recoiling-wedge"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "53個共用模型、1137組參數與56題整合檢查通過",
+        "verify-recoiling-wedge.cjs：獨立物理及邊界驗證",
+        "原生Canvas離線場景已檢視，非實際瀏覽器驗收",
+        "recoiling-wedge.html與總覽入口"
+      ],
+      "nextAction": "目前直線坡面，未加入原站曲面坡道／視角快捷模式；明示光滑質點無自轉，不以純滾動冒充。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "recoiling-wedge"
+        ],
+        "covered": "自由楔形與滑下質點聯立，解析反衝、接觸力、坡底時刻、水平動量及能量；可比較固定斜面。",
+        "remaining": "目前直線坡面，未加入原站曲面坡道／視角快捷模式；明示光滑質點無自轉，不以純滾動冒充。",
+        "basis": [
+          "models/recoiling-wedge.js",
+          "assets/scenes-recoiling-wedge.js",
+          "verify-recoiling-wedge.cjs",
+          "screenshots/020-bevelSlideBack2024.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-021",
+      "sourceId": "021",
+      "title": "雙體運動",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/twoBodyMotion2024/twoBodyMotion2024.html",
+      "sourceScreenshot": "screenshots/021-twoBodyMotion2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "雙體運動\n動畫全螢幕\n\n人在船上向前走，船在腳下向後退，質心維持不移動，輕者多去重少回。\n\n說明影片：",
+      "relatedModelIds": [
+        "center-of-mass",
+        "person-boat"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "person-boat"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "53個共用模型、1137組參數與56題整合檢查通過",
+        "verify-person-boat.cjs：獨立物理及邊界驗證",
+        "原生Canvas離線場景已檢視，非實際瀏覽器驗收",
+        "person-boat.html與總覽入口"
+      ],
+      "nextAction": "目前主模式人船運動；原站其他雙體裝置、起始牆壁與獨立跟隨質心／船體視角仍待做；腳底摩擦假設足夠，不模擬船俯仰及腳步衝擊。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "person-boat"
+        ],
+        "covered": "人物在船內以平滑指定行程走動，船反向平移；可調質量、行程、時間、共同漂移及往返，提供相對岸速度、合質心、內力及內部作功。",
+        "remaining": "目前主模式人船運動；原站其他雙體裝置、起始牆壁與獨立跟隨質心／船體視角仍待做；腳底摩擦假設足夠，不模擬船俯仰及腳步衝擊。",
+        "basis": [
+          "models/person-boat.js",
+          "assets/scenes-person-boat.js",
+          "verify-person-boat.cjs",
+          "screenshots/021-twoBodyMotion2024.jpg"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "site-022",
+      "sourceId": "022",
+      "title": "錐動擺的角動量",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/angularMomentumOfCircle2023/angularMomentumOfCircle2023.html",
+      "sourceScreenshot": "screenshots/022-angularMomentumOfCircle2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "錐動擺的角動量守恆嗎\n動畫全螢幕\n\n錐動擺的角動量守恆嗎？\n\n說明影片：",
+      "relatedModelIds": [
+        "conical"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "conical"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "mechanics-models.js",
+        "assets/scenes-conical-angular.js",
+        "verify-conical-angular.cjs",
+        "conical.html"
+      ],
+      "nextAction": "原站右手定則圖解與實際瀏覽器操作仍待對照；本地提供可旋轉3D向量與數值圖表。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "conical"
+        ],
+        "covered": "沿用現有圓錐擺，新增懸點／圓心兩組角動量與力矩、受力分解、圖表及CSV；顯示切換保留時間。81組獨立參考點、叉積、dL/dt與守恆檢查通過。",
+        "remaining": "原站右手定則圖解與實際瀏覽器操作仍待對照；本地提供可旋轉3D向量與數值圖表。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/022-angularMomentumOfCircle2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "擴充現有conical，未新增重複模型"
+    },
+    {
+      "id": "site-023",
+      "sourceId": "023",
+      "title": "鉛直半圓軌道運動",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/verticalHalfCircle2023/verticalHalfCircle2023.html",
+      "sourceScreenshot": "screenshots/023-verticalHalfCircle2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "鉛直半圓軌道運動\n動畫全螢幕\n\n↑鉛直半圓軌道運動，初速Vo至少應為多少，才能讓質點走完半圓軌道而不在途中落下？\n\n說明影片：",
+      "relatedModelIds": [
+        "vertical-circle"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "half-circle"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/half-circle.js",
+        "assets/scenes-half-circle.js",
+        "verify-half-circle.cjs",
+        "half-circle.html"
+      ],
+      "nextAction": "目前在首次再接觸或觸地前停止；原站後續反彈／再接觸模式與互動控制仍需逐項對照。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "half-circle"
+        ],
+        "covered": "已有專用單面半圓軌道：正向力非負、低速回轉、N=0 脫離、頂端飛出、後續拋體與首次再接觸／觸地事件。117組獨立物理檢查通過。",
+        "remaining": "目前在首次再接觸或觸地前停止；原站後續反彈／再接觸模式與互動控制仍需逐項對照。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/023-verticalHalfCircle2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "專用模型已整合，繼續補原站差異與互動驗收"
+    },
+    {
+      "id": "site-024",
+      "sourceId": "024",
+      "title": "環球碰撞",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/ringBall2024/ringBall2024.html",
+      "sourceScreenshot": "screenshots/024-ringBall2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "環球碰撞\n動畫全螢幕\n\n環與球碰撞\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "ring-ball"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/ring-ball.js",
+        "assets/scenes-ring-ball.js",
+        "verify-ring-ball.cjs",
+        "ring-ball.html"
+      ],
+      "nextAction": "補原站跟隨圓環／合質心視角與實際瀏覽器功能對照。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "ring-ball"
+        ],
+        "covered": "自由平移圓環內有限半徑球的多次精確碰撞；可調質量比、初速、偏心與恢復係數；合質心、碰撞標示、圖表與回放。225 組獨立檢查涵蓋幾何、衝量、線／角動量、能量與合質心。",
+        "remaining": "補原站跟隨圓環／合質心視角與實際瀏覽器功能對照。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/024-ringBall2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已有專用模型，補顯示模式與原站互動驗收"
+    },
+    {
+      "id": "site-025",
+      "sourceId": "025",
+      "title": "向左滾？向右滾？",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/theAxis/theAxis.html",
+      "sourceScreenshot": "screenshots/025-theAxis.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "向左滾？向右滾？\n[這個動畫需要 FlashPlayer]\n\n這是一個拉線軸的動畫，線軸的外圈只能在地上純滾動，你的手拉著纏在內圈的繩子，\n\n試試看，當繩子向右拉時，線軸往哪邊滾？當繩子向上拉時，線軸又往哪邊滾？\n\n當繩子向某個角度拉時，線軸既不向右也不像左滾？\n\n想一想，這個特殊的角度符合怎樣的條件？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "rolling",
+        "torque"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "pulled-spool"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/pulled-spool.js",
+        "assets/scenes-pulled-spool.js",
+        "verify-pulled-spool.cjs",
+        "pulled-spool.html"
+      ],
+      "nextAction": "依Flash截圖與文字重建，未執行Flash；待瀏覽器視覺操作驗收。模型不推演打滑、離地或繩長耗盡。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "pulled-spool"
+        ],
+        "covered": "內外圈線軸、下側繞線切點、可調拉力仰角、左右純滾動與臨界角；聯立平動、轉動及靜摩擦可行性。972組驗證涵蓋功—能與無滑動條件。",
+        "remaining": "依Flash截圖與文字重建，未執行Flash；待瀏覽器視覺操作驗收。模型不推演打滑、離地或繩長耗盡。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/025-theAxis.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "專用模型已整合，繼續補原站差異與互動驗收"
+    },
+    {
+      "id": "site-026",
+      "sourceId": "026",
+      "title": "離心力與柯氏力",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/centrifugalForce2022/centrifugalForce2022.html",
+      "sourceScreenshot": "screenshots/026-centrifugalForce2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "離心力與柯氏力\n動畫全螢幕\n\n↑假想力、離心力、柯氏力\n\n1.加速座標看見假想力\n2.旋轉座標看見離心力\n3.旋轉座標看有速度的物體，看見柯氏力。\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "noninertial"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/noninertial.js",
+        "assets/scenes-noninertial.js",
+        "verify-noninertial.cjs",
+        "noninertial.html"
+      ],
+      "nextAction": "補原站彈簧約束裝置、人物跟隨／慣性系觀察切換，並核對四種原站模式與瀏覽器操作。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "noninertial"
+        ],
+        "covered": "自由質點的精確平移加速／等角速旋轉座標轉換，三項假想力、可調慣性初速、向量、時間圖與CSV。108組獨立檢查涵蓋相對F=ma、反轉換、柯氏力零功與極限情況。",
+        "remaining": "補原站彈簧約束裝置、人物跟隨／慣性系觀察切換，並核對四種原站模式與瀏覽器操作。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/026-centrifugalForce2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "專用自由質點模型已整合；原站約束裝置與觀察模式仍需擴充"
+    },
+    {
+      "id": "site-027",
+      "sourceId": "027",
+      "title": "桌子上有洞",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/holeOnTable2024/holeOnTable2024.html",
+      "sourceScreenshot": "screenshots/027-holeOnTable2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "桌子上有洞\n動畫全螢幕\n\n桌子上有洞，下一句你會嗎？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "hole-table"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/hole-table.js",
+        "assets/scenes-hole-table.js",
+        "verify-hole-table.cjs",
+        "hole-table.html"
+      ],
+      "nextAction": "補原站手拉與敲擊兩模式、控制項與實際瀏覽器對照；懸掛物導向與原站幾何仍需核實。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "hole-table"
+        ],
+        "covered": "已實作桌面球與懸掛重物的繩長耦合、徑向與角向運動、張力與能量圖表；81組獨立檢查涵蓋繩長、角動量、總機械能、兩物體受力及圓周平衡。",
+        "remaining": "補原站手拉與敲擊兩模式、控制項與實際瀏覽器對照；懸掛物導向與原站幾何仍需核實。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/027-holeOnTable2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "專用懸掛模式已整合，手拉／敲擊模式待補"
+    },
+    {
+      "id": "site-028",
+      "sourceId": "028",
+      "title": "轉動的Y形桿",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/rotatingY2024/rotatingY2024.html",
+      "sourceScreenshot": "screenshots/028-rotatingY2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "轉動的Y形桿\n動畫全螢幕\n\n轉動的Y形桿，穩定平衡嗎？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "截圖可確認Y形旋轉桿、紅球與彈簧、固定轉速／自由轉動選項；尚不能確定紅球與桿的滑動／鉸接約束及彈簧端點，需查原站模型或操作證據後建立運動方程，不以推測裝置冒充。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "截圖可確認Y形旋轉桿、紅球與彈簧、固定轉速／自由轉動選項；尚不能確定紅球與桿的滑動／鉸接約束及彈簧端點，需查原站模型或操作證據後建立運動方程，不以推測裝置冒充。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/028-rotatingY2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-029",
+      "sourceId": "029",
+      "title": "直線碰撞",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/linearCollision2023/linearCollision2023.html",
+      "sourceScreenshot": "screenshots/029-linearCollision2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "直線碰撞\n動畫全螢幕\n\n↑直線碰撞\n\n說明影片：",
+      "relatedModelIds": [
+        "collision"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "collision"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "mechanics-models.js",
+        "assets/mechanics-scenes.js",
+        "verify-contact-collision.cjs",
+        "collision.html"
+      ],
+      "nextAction": "核對原站彈簧參數、顯示選項及實際瀏覽器操作；本地有限接觸模式為完全彈性，恢復係數僅作用於瞬時模式。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "collision"
+        ],
+        "covered": "沿用既有collision，新增無質量彈簧的有限接觸解析解、連續速度、接觸力、最大壓縮與分離事件、彈性位能及總機械能圖表。162組獨立檢查通過，原瞬時恢復係數模式保留。",
+        "remaining": "核對原站彈簧參數、顯示選項及實際瀏覽器操作；本地有限接觸模式為完全彈性，恢復係數僅作用於瞬時模式。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/029-linearCollision2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已擴充現有模型，待原站控制與操作驗收"
+    },
+    {
+      "id": "site-030",
+      "sourceId": "030",
+      "title": "平面彈性碰撞",
+      "category": "動力學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/collision2D2023/collision2D2023.html",
+      "sourceScreenshot": "screenshots/030-collision2D2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "平面彈性碰撞\n動畫全螢幕\n\n↑平面彈性碰撞\n\n說明影片：\n\n深度講解：有摩擦力的平面彈性碰撞",
+      "relatedModelIds": [
+        "collision-2d"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "collision-2d"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "mechanics-models.js",
+        "assets/mechanics-scenes.js",
+        "verify-collision-2d.cjs",
+        "collision-2d.html"
+      ],
+      "nextAction": "待原站視角（球1／球2／地面）、控制選項及實際瀏覽器對照；本地已加兩球任意入射與粗糙接觸，地面不提供水平摩擦。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "collision-2d"
+        ],
+        "covered": "已擴充原模型：兩球各自初速／方向、帶正負偏心、初始自轉、精確碰撞或未命中、光滑／有限摩擦／切向不滑衝量，轉動動能與總角動量。432組獨立檢查（108命中、324未命中）通過。",
+        "remaining": "待原站視角（球1／球2／地面）、控制選項及實際瀏覽器對照；本地已加兩球任意入射與粗糙接觸，地面不提供水平摩擦。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/030-collision2D2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已有核心擴充，待觀察視角與原站互動驗收"
+    },
+    {
+      "id": "site-031",
+      "sourceId": "031",
+      "title": "行星軌道N次方",
+      "category": "萬有引力",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/orbitalGravityN2024/orbitalGravityN2024.html",
+      "sourceScreenshot": "screenshots/031-orbitalGravityN2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "行星軌道N次方\n動畫全螢幕\n\n如果萬有引力不是距離平方反比，軌道仍是橢圓形嗎？\n\n說明影片：",
+      "relatedModelIds": [
+        "orbit"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "orbit"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "mechanics-models.js",
+        "assets/mechanics-scenes.js",
+        "verify-orbit-power.cjs",
+        "orbit.html"
+      ],
+      "nextAction": "原站等面積速率的面積扇區、彈簧示意及控制顯示仍待對照；實際瀏覽器驗收待完成。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "orbit"
+        ],
+        "covered": "沿用orbit，距離指數N可調−1到4，含N=1對數位能、初始引力正規化、非平方反比軌道進動、自適應RK4及內外界線。48組守恆／力學檢查與N=−1解析簡諧橢圓交叉驗證通過。",
+        "remaining": "原站等面積速率的面積扇區、彈簧示意及控制顯示仍待對照；實際瀏覽器驗收待完成。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/031-orbitalGravityN2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "擴充既有中心力模型，保留原N=2功能"
+    },
+    {
+      "id": "site-032",
+      "sourceId": "032",
+      "title": "洲際斜拋",
+      "category": "萬有引力",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/intercontinentalProjectile2024/intercontinentalProjectile2024.html",
+      "sourceScreenshot": "screenshots/032-intercontinentalProjectile2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "洲際斜拋\n動畫全螢幕\n\n洲際斜拋\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "intercontinental"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/intercontinental.js",
+        "assets/scenes-intercontinental.js",
+        "verify-intercontinental.cjs",
+        "intercontinental.html"
+      ],
+      "nextAction": "原站真實地圖、軌道焦點顯示及攝影機跟隨仍待補；實際瀏覽器與控制項對照待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "intercontinental"
+        ],
+        "covered": "球面星球平方反比引力、可調圓軌道速率比與當地仰角，通用Kepler橢圓／拋物／雙曲解，首次返回地表停止、球面落點及大圓弧讀值；60組獨立檢查通過。",
+        "remaining": "原站真實地圖、軌道焦點顯示及攝影機跟隨仍待補；實際瀏覽器與控制項對照待驗收。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/032-intercontinentalProjectile2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增球面發射模型、場景與入口"
+    },
+    {
+      "id": "site-033",
+      "sourceId": "033",
+      "title": "雙星互繞",
+      "category": "萬有引力",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/twoStar2024/twoStar2024.html",
+      "sourceScreenshot": "screenshots/033-twoStar2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "雙星互繞\n動畫全螢幕\n\n↑雙星互繞，總力學能是多少呢？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "binary-stars"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/binary-stars.js",
+        "assets/scenes-binary-stars.js",
+        "verify-binary-stars.cjs",
+        "binary-stars.html"
+      ],
+      "nextAction": "原站控制與實際瀏覽器視覺操作仍待核對；本地採教學SI尺度、質點兩星與精確橢圓解。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "binary-stars"
+        ],
+        "covered": "兩顆星繞共同質心，質量比0.001–1、近日／遠日比、軌道尺度、重力與質心漂移可調；兩星軌跡、速度、引力、動能／位能及質心系機械能。81組獨立Kepler、力學與守恆檢查通過。",
+        "remaining": "原站控制與實際瀏覽器視覺操作仍待核對；本地採教學SI尺度、質點兩星與精確橢圓解。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/033-twoStar2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增專用雙體模型、場景與入口"
+    },
+    {
+      "id": "site-034",
+      "sourceId": "034",
+      "title": "平拋與圓錐",
+      "category": "萬有引力",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/projectileCone2025/projectileCone2025.html",
+      "sourceScreenshot": "screenshots/034-projectileCone2025.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "平拋與圓錐曲線\n動畫全螢幕\n\n平拋與圓錐曲線\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "projectile-cone"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/projectile-cone.js",
+        "assets/scenes-projectile-cone.js",
+        "verify-projectile-cone.cjs",
+        "projectile-cone.html"
+      ],
+      "nextAction": "原站地圖、完整講解標記與實際瀏覽器操作對照尚待補；本地已有星球／圓錐切換及切平面。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "projectile-cone"
+        ],
+        "covered": "重用洲際斜拋Kepler核心，水平初速平方比1–2對應圓／橢圓／拋物線；軌道等距嵌入45°圓錐切平面，球體／圓錐顯示切換不重設時間。36組獨立幾何與力學檢查通過。",
+        "remaining": "原站地圖、完整講解標記與實際瀏覽器操作對照尚待補；本地已有星球／圓錐切換及切平面。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/034-projectileCone2025.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增圓錐截線場景，重用既有Kepler解"
+    },
+    {
+      "id": "site-035",
+      "sourceId": "035",
+      "title": "水平彈簧雙振子",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/springBlockAH/springBlockAH.html",
+      "sourceScreenshot": "screenshots/035-springBlockAH.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "水平彈簧雙振子\n動畫全螢幕\n\n↑水平彈簧雙振子",
+      "relatedModelIds": [
+        "center-of-mass"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "wall-spring-pair"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/wall-spring-pair.js",
+        "assets/scenes-wall-spring-pair.js",
+        "verify-wall-spring-pair.cjs",
+        "wall-spring-pair.html"
+      ],
+      "nextAction": "原站壓／放按鈕與實際瀏覽器操作待對照；本地以初始壓縮量拉桿及播放／重設完成壓縮釋放。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "wall-spring-pair"
+        ],
+        "covered": "修正初始對照：截圖035顯示左塊貼牆、內部彈簧連接兩塊，不能據此宣稱有牆端彈簧。已新增單面牆支撐與離牆後自由雙體兩階段解析解，含支撐力、外部衝量、動量及能量。81組獨立檢查通過。",
+        "remaining": "原站壓／放按鈕與實際瀏覽器操作待對照；本地以初始壓縮量拉桿及播放／重設完成壓縮釋放。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/035-springBlockAH.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增單面接觸題型，重用自由雙體解析結構"
+    },
+    {
+      "id": "site-036",
+      "sourceId": "036",
+      "title": "彈簧木塊細線",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/springBlockAndWire2024/springBlockAndWire2024.html",
+      "sourceScreenshot": "screenshots/036-springBlockAndWire2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "彈簧木塊與細線\n動畫全螢幕\n\n彈簧與細線，有何不同？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "spring-wire-cut"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/spring-wire-cut.js",
+        "assets/scenes-spring-wire-cut.js",
+        "verify-spring-wire-cut.cjs",
+        "spring-wire-cut.html"
+      ],
+      "nextAction": "補原站其他側向／支撐配置、剪線按鈕語意及實際瀏覽器驗收；目前完成主畫面的雙木塊鉛直比較。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "spring-wire-cut"
+        ],
+        "covered": "已新增並排彈簧／細線兩組雙木塊，靜力平衡後同步剪掉上方支撐，精確比較加速度、張力、質心與能量；81組獨立檢查與接觸前停止。",
+        "remaining": "補原站其他側向／支撐配置、剪線按鈕語意及實際瀏覽器驗收；目前完成主畫面的雙木塊鉛直比較。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/036-springBlockAndWire2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "主畫面鉛直比較已整合，其他配置待擴充"
+    },
+    {
+      "id": "site-037",
+      "sourceId": "037",
+      "title": "落下物體壓彈簧",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/springBlockCV/springBlockCV.html",
+      "sourceScreenshot": "screenshots/037-springBlockCV.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "落下物體壓彈簧\n動畫全螢幕\n\n↑落下物體壓彈簧",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "falling-spring"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/falling-spring.js",
+        "assets/scenes-falling-spring.js",
+        "verify-falling-spring.cjs",
+        "falling-spring.html"
+      ],
+      "nextAction": "原站兩組隱藏質量／彈簧參數與剪線按鈕語意、實際瀏覽器操作仍待對照；本地提供可調兩質量的同高比較。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "falling-spring"
+        ],
+        "covered": "兩組同高釋放、單面彈簧接觸、解析壓縮回彈、自然長分離及重複拋上／下落；可調兩質量、k、h、g，附接觸／最大壓縮／分離／最高點事件與能量圖。54組獨立檢查通過。",
+        "remaining": "原站兩組隱藏質量／彈簧參數與剪線按鈕語意、實際瀏覽器操作仍待對照；本地提供可調兩質量的同高比較。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/037-springBlockCV.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增落體與單面彈簧的精確分段模型"
+    },
+    {
+      "id": "site-038",
+      "sourceId": "038",
+      "title": "鉛直雙振子壓放",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/springBlockDVPress/springBlockDVPress.html",
+      "sourceScreenshot": "screenshots/038-springBlockDVPress.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "鉛直雙振子壓放\n動畫全螢幕\n\n↑鉛直雙振子壓放\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "vertical-spring-pair"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/vertical-spring-pair.js",
+        "assets/scenes-vertical-spring-pair.js",
+        "verify-vertical-spring-pair.cjs",
+        "vertical-spring-pair.html"
+      ],
+      "nextAction": "原站壓／放操作、受力合成顯示與實際瀏覽器對照待完成；本地下塊落地採不反彈假設，需核對原站接觸慣例。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "vertical-spring-pair"
+        ],
+        "covered": "上下木塊與內部彈簧、額外壓力與總重量之比、單面地面支撐、精確離地時刻、自由雙體、再次落地及重複跳動；分別記錄機械能與落地耗能，90組獨立檢查通過。",
+        "remaining": "原站壓／放操作、受力合成顯示與實際瀏覽器對照待完成；本地下塊落地採不反彈假設，需核對原站接觸慣例。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/038-springBlockDVPress.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增貼地／離地／塑性落地的分段解析模型"
+    },
+    {
+      "id": "site-039",
+      "sourceId": "039",
+      "title": "阻尼振盪",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/dampingOscillation2022/dampingOscillation2022.html",
+      "sourceScreenshot": "screenshots/039-dampingOscillation2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "阻尼振盪\n動畫全螢幕\n\n↑阻尼振盪",
+      "relatedModelIds": [
+        "damped"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "damped"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "mechanics-models.js",
+        "assets/scenes-damped-vertical.js",
+        "verify-damped-vertical.cjs",
+        "damped.html"
+      ],
+      "nextAction": "待核對原站阻尼比滑桿的範圍及實際瀏覽器操作；本地直接調c，另提供ζ與臨界c讀值。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "damped"
+        ],
+        "covered": "修正先前對照：039截圖是鉛直彈簧與阻尼器並聯，不是單擺。已沿用damped線性模型並改為對應鉛直幾何、平衡位移、彈簧／重力／阻尼分解、阻尼比與耗能。36組獨立三種阻尼解析驗證通過。",
+        "remaining": "待核對原站阻尼比滑桿的範圍及實際瀏覽器操作；本地直接調c，另提供ζ與臨界c讀值。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/039-dampingOscillation2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "擴充既有damped，未新增重複模型"
+    },
+    {
+      "id": "site-040",
+      "sourceId": "040",
+      "title": "受迫振盪",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/forcedOscillation2022/forcedOscillation2022.html",
+      "sourceScreenshot": "screenshots/040-forcedOscillation2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "受迫振盪\n動畫全螢幕\n\n↑受迫振盪",
+      "relatedModelIds": [
+        "driven"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "resonance-bank"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/resonance-bank.js",
+        "assets/scenes-resonance-bank.js",
+        "verify-resonance-bank.cjs",
+        "resonance-bank.html"
+      ],
+      "nextAction": "原站SHM選項、自然頻率範圍與實際瀏覽器互動仍待核對；本地為十振子同底板驅動，完整顯示暫態。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "resonance-bank"
+        ],
+        "covered": "已新增十個不同自然頻率振子同步底板驅動，頻率／振幅／阻尼可調，逐振子位移圖與CSV、共振增幅、底板功與阻尼耗能；18組×10振子的獨立解析檢查通過。單一driven另保留。",
+        "remaining": "原站SHM選項、自然頻率範圍與實際瀏覽器互動仍待核對；本地為十振子同底板驅動，完整顯示暫態。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/040-forcedOscillation2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增原站並排比較裝置，重用線性振子核心"
+    },
+    {
+      "id": "site-041",
+      "sourceId": "041",
+      "title": "耦合振盪",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/couplingOscillation2022/couplingOscillation2022.html",
+      "sourceScreenshot": "screenshots/041-couplingOscillation2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "耦合振盪\n動畫全螢幕\n\n↑耦合振盪",
+      "relatedModelIds": [
+        "center-of-mass",
+        "massive-spring"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "coupled-oscillators"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/coupled-oscillators.js",
+        "assets/scenes-coupled-oscillators.js",
+        "verify-coupled-oscillators.cjs",
+        "coupled-oscillators.html"
+      ],
+      "nextAction": "原站特徵模式選項與實際瀏覽器控制待對照；本地可用獨立初值設定同／反相模式，並提供兩模態能量與下方位移相圖。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "coupled-oscillators"
+        ],
+        "covered": "兩端固定彈簧與中央耦合彈簧、獨立初始位移／速度、不同質量、精確正常模態疊加、能量交換與左右位移相圖；162組獨立模態／力學驗證及圖形切換DOM檢查通過。",
+        "remaining": "原站特徵模式選項與實際瀏覽器控制待對照；本地可用獨立初值設定同／反相模式，並提供兩模態能量與下方位移相圖。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/041-couplingOscillation2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增原站三彈簧耦合裝置，不以自由雙體代替"
+    },
+    {
+      "id": "site-042",
+      "sourceId": "042",
+      "title": "彈簧阿特伍機",
+      "category": "彈簧與木塊",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/springAtwood2023/springAtwood2023.html",
+      "sourceScreenshot": "screenshots/042-springAtwood2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "彈簧阿特伍機\n動畫全螢幕\n\n↑彈簧阿特伍機",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "spring-atwood"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/spring-atwood.js",
+        "assets/scenes-spring-atwood.js",
+        "verify-spring-atwood.cjs",
+        "spring-atwood.html"
+      ],
+      "nextAction": "待原站分解顯示與實際瀏覽器對照；本地圖表已分別提供滑輪與相對運動座標。繩鬆弛、輪慣量不在目前理想模型內。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "spring-atwood"
+        ],
+        "covered": "無質量滑輪由上方彈簧支承，兩側重物固定繩長；精確支點振動及相對阿特伍運動、動態平衡初值、張力／彈力及能量，81組獨立檢查通過。",
+        "remaining": "待原站分解顯示與實際瀏覽器對照；本地圖表已分別提供滑輪與相對運動座標。繩鬆弛、輪慣量不在目前理想模型內。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/042-springAtwood2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增可動支點的彈簧阿特伍專用模型"
+    },
+    {
+      "id": "site-043",
+      "sourceId": "043",
+      "title": "質點撞棒",
+      "category": "剛體碰撞",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/ballHitRod/ballHitRod.html",
+      "sourceScreenshot": "screenshots/043-ballHitRod.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "質點撞棒\n動畫全螢幕\n\n↑質點撞棒",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "ball-rod"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/ball-rod.js",
+        "assets/scenes-ball-rod.js",
+        "verify-ball-rod.cjs",
+        "ball-rod.html"
+      ],
+      "nextAction": "原站操作與實際瀏覽器驗收待完成；本地以質點／零厚度棒處理，彈性模式再次接觸前停止，未模擬多次碰撞。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "ball-rod"
+        ],
+        "covered": "自由棒／上端固定×彈性／合體四組合，質量、長度、初速及撞擊位置可調；平動與轉動動能、合體耗能、角動量及支點衝量，108組獨立檢查通過。",
+        "remaining": "原站操作與實際瀏覽器驗收待完成；本地以質點／零厚度棒處理，彈性模式再次接觸前停止，未模擬多次碰撞。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/043-ballHitRod.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增質點與剛棒碰撞專用模型"
+    },
+    {
+      "id": "site-044",
+      "sourceId": "044",
+      "title": "彈跳球",
+      "category": "剛體碰撞",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/superBall2022/superBall2022.html",
+      "sourceScreenshot": "screenshots/044-superBall2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "彈跳球\n動畫全螢幕\n\n↑彈跳球\n\n關鍵字：Ball bouncing under a table 、 ultra elastic rough ball",
+      "relatedModelIds": [
+        "stairs"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "rough-bounce"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/rough-bounce.js",
+        "assets/scenes-rough-bounce.js",
+        "verify-rough-bounce.cjs",
+        "rough-bounce.html"
+      ],
+      "nextAction": "原站初始發射、跟隨選項與實際瀏覽器操作待對照；本地表面為無限平行面，不含桌緣或桌腳碰撞。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "rough-bounce"
+        ],
+        "covered": "已新增桌底／地面多次精確碰撞、光滑／理想粗糙彈性切換、切向速度反向的平動自轉耦合、初始自轉與法向恢復係數、能量分解；108組獨立檢查通過，未以階梯球替代。",
+        "remaining": "原站初始發射、跟隨選項與實際瀏覽器操作待對照；本地表面為無限平行面，不含桌緣或桌腳碰撞。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/044-superBall2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增粗糙彈性球的事件驅動模型"
+    },
+    {
+      "id": "site-045",
+      "sourceId": "045",
+      "title": "焦耳實驗",
+      "category": "熱學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/JouleExperiment/JouleExperiment.html",
+      "sourceScreenshot": "screenshots/045-JouleExperiment.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "焦耳實驗\n[這個動畫需要 FlashPlayer]\n\n焦耳的實驗，當兩旁重錘落下時，釋放出重力位能(重力作功)，帶動桶內攪拌器克服水的\n阻力而攪拌水，水溫因此升高(水吸熱)，這說明了功與熱其實是相當的東西，稱為 熱功當量。\n\n請問：1卡 = _____ 焦耳。\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "joule-experiment"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/joule-experiment.js",
+        "assets/scenes-joule-experiment.js",
+        "verify-joule-experiment.cjs",
+        "joule-experiment.html"
+      ],
+      "nextAction": "由Flash截圖及說明重建，未執行Flash／EXE；原站隱藏參數及實際瀏覽器驗收仍待對照。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "joule-experiment"
+        ],
+        "covered": "兩側重錘、繞線輪、攪拌器與溫度計；解析下降／轉軸減速，水與容器吸熱、卡焦換算、動能及落地損失收支。36組獨立動力學／量熱檢查通過。",
+        "remaining": "由Flash截圖及說明重建，未執行Flash／EXE；原站隱藏參數及實際瀏覽器驗收仍待對照。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/045-JouleExperiment.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "依Flash截圖與文字新增現代3D模型，未執行舊程式"
+    },
+    {
+      "id": "site-046",
+      "sourceId": "046",
+      "title": "熱運動",
+      "category": "熱學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/thermal3D/thermal3D.html",
+      "sourceScreenshot": "screenshots/046-thermal3D.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "熱運動\n[這個動畫需要 FlashPlayer]\n\n什麼是熱，熱就是分子的振動，讓我們來看看是不是這樣。\n\n太陽靠近時(溫度高)，分子振動快或慢？\n\n冰棒靠近時(溫度低)，分子振動快或慢？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "thermal-lattice"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/thermal-lattice.js",
+        "assets/scenes-thermal-lattice.js",
+        "verify-thermal-lattice.cjs",
+        "thermal-lattice.html"
+      ],
+      "nextAction": "由Flash截圖／文字重建；原站加熱／降溫按鈕的漸變過程未確認。本地溫度拉桿設定新系綜，不模擬熱傳導；實際瀏覽器待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "thermal-lattice"
+        ],
+        "covered": "64粒子三維固體諧振系綜、可調溫度與質量／彈簧常數、rms速度及振幅、均分能量、零溫極限；nm顯示與ps慢放而CSV保留SI。36組物理與微觀播放／CSV檢查通過。",
+        "remaining": "由Flash截圖／文字重建；原站加熱／降溫按鈕的漸變過程未確認。本地溫度拉桿設定新系綜，不模擬熱傳導；實際瀏覽器待驗收。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/046-thermal3D.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "依Flash截圖新增固體晶格振動，非自由氣體動畫"
+    },
+    {
+      "id": "site-047",
+      "sourceId": "047",
+      "title": "理想氣體模型",
+      "category": "熱學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/airDynamics2024/airDynamics2024.html",
+      "sourceScreenshot": "screenshots/047-airDynamics2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "理想氣體模型\n動畫全螢幕\n\n氣體動力論的理想氣體模型\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "ideal-gas"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/ideal-gas.js",
+        "assets/scenes-ideal-gas.js",
+        "verify-ideal-gas.cjs",
+        "ideal-gas.html"
+      ],
+      "nextAction": "原站顯示選項及實際瀏覽器操作仍待核對；本地有限半徑硬球近似理想氣體，壓力量測有有限時間與排除體積差異。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "ideal-gas"
+        ],
+        "covered": "100至1000粒子、箱壁彈性反射、可開關等質量硬球互撞、碰撞標記、粒子0跟隨／CSV、Gaussian初速與精確溫度正規化、壁面衝量壓力及理想值比較。獨立解析／守恆／壓力與1000粒子8022事件壓力測試通過。",
+        "remaining": "原站顯示選項及實際瀏覽器操作仍待核對；本地有限半徑硬球近似理想氣體，壓力量測有有限時間與排除體積差異。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/047-airDynamics2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增事件堆與版本失效機制的多粒子碰撞核心"
+    },
+    {
+      "id": "site-048",
+      "sourceId": "048",
+      "title": "氣體分子速率分布",
+      "category": "熱學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/MaxwellBoltzmannDistribution2024/MaxwellBoltzmannDistribution2024.html",
+      "sourceScreenshot": "screenshots/048-MaxwellBoltzmannDistribution2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "氣體分子速率分布(Maxwell–Boltzmann distribution)\n動畫全螢幕\n\n氣體分子速率分布(Maxwell–Boltzmann distribution)\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "maxwell-distribution"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/maxwell-distribution.js",
+        "assets/scenes-maxwell-distribution.js",
+        "verify-maxwell-distribution.cjs",
+        "maxwell-distribution.html"
+      ],
+      "nextAction": "原站顯示與能量均分選項的操作仍待實際瀏覽器對照。本地無互撞粒子保持速率分布，未模擬非平衡熱化。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "maxwell-distribution"
+        ],
+        "covered": "重用ideal-gas壁面核心，100–5000粒子、Gaussian分量／Maxwell速率／動能分布、有限樣本正規化直方圖與理論曲線、全部速度對照、位置／速度空間及三方向平均動能。6組與5000粒子獨立機率／矩檢查通過。",
+        "remaining": "原站顯示與能量均分選項的操作仍待實際瀏覽器對照。本地無互撞粒子保持速率分布，未模擬非平衡熱化。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/048-MaxwellBoltzmannDistribution2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "重用氣體核心，新增分布與速度空間觀察"
+    },
+    {
+      "id": "site-049",
+      "sourceId": "049",
+      "title": "能量均分定理",
+      "category": "熱學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/equipartitionTheorem2024/equipartitionTheorem2024.html",
+      "sourceScreenshot": "screenshots/049-equipartitionTheorem2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "能量均分定理\n動畫全螢幕\n\n能量均分定理(Equipartition Theorem)\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "equipartition"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/equipartition.js",
+        "assets/scenes-equipartition.js",
+        "verify-equipartition.cjs",
+        "equipartition.html"
+      ],
+      "nextAction": "原站操作及實際瀏覽器驗收待完成。本地為已平衡的經典解耦模態系綜，未推演碰撞熱化、量子凍結或轉動振動高階耦合。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "equipartition"
+        ],
+        "covered": "單原子／剛性雙原子／含伸縮雙原子、100–5000分子、單分子放大、3D轉動與伸縮構型、平動／轉動／振動能量柱圖及理論均分值；12組及5000分子獨立模態檢查通過。",
+        "remaining": "原站操作及實際瀏覽器驗收待完成。本地為已平衡的經典解耦模態系綜，未推演碰撞熱化、量子凍結或轉動振動高階耦合。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/049-equipartitionTheorem2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "重用氣體質心核心，新增轉子與諧振模態及能量柱圖"
+    },
+    {
+      "id": "site-050",
+      "sourceId": "050",
+      "title": "鉛直汽缸壓縮",
+      "category": "熱學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/verticalPiston2025/verticalPiston2025.html",
+      "sourceScreenshot": "screenshots/050-verticalPiston2025.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "鉛直絕熱汽缸壓縮\n動畫全螢幕\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "adiabatic-pistons"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/adiabatic-pistons.js",
+        "assets/scenes-adiabatic-pistons.js",
+        "verify-adiabatic-pistons.cjs",
+        "adiabatic-pistons.html"
+      ],
+      "nextAction": "本地先完成均勻、內部可逆絕熱的雙活塞比較；尚需原站粒子／薄片模型、快速非均勻壓縮與控制語意對照，以及實際瀏覽器驗收。不能把PVγ模型宣稱成完整微觀快壓。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "adiabatic-pistons"
+        ],
+        "covered": "汽缸＋彈簧／汽缸＋汽缸、左右獨立加壓時間、活塞慣性與可選外部阻尼、非線性均勻絕熱狀態、溫度及作功耗能收支。24組熱力學／受力／對稱／準靜態極限檢查通過。",
+        "remaining": "本地先完成均勻、內部可逆絕熱的雙活塞比較；尚需原站粒子／薄片模型、快速非均勻壓縮與控制語意對照，以及實際瀏覽器驗收。不能把PVγ模型宣稱成完整微觀快壓。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/050-verticalPiston2025.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "已新增均勻絕熱雙活塞核心，原站微觀模型待補"
+    },
+    {
+      "id": "site-051",
+      "sourceId": "051",
+      "title": "基礎波動",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/wave2DBasic/wave2DBasic.html",
+      "sourceScreenshot": "screenshots/051-wave2DBasic.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "基礎波動\n動畫全螢幕\n\n↑各種基本的波動",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "basic-waves"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "models/basic-waves.js",
+        "models/wave-core.js",
+        "assets/scenes-basic-waves.js",
+        "verify-basic-waves.cjs",
+        "basic-waves.html"
+      ],
+      "nextAction": "原站各模式隱藏參數、控鍵及實際瀏覽器互動待對照；本地水波採深水線性近似，脈衝與粗細比值已在介面明示。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "basic-waves"
+        ],
+        "covered": "波浪舞、橫波、縱波、深水波、固定端／自由端反射、粗入細／細入粗8模式；共用解析波核、追蹤點、入射反射分色、深度軌跡與能量係數。32組獨立運動／邊界／介面能量檢查通過。",
+        "remaining": "原站各模式隱藏參數、控鍵及實際瀏覽器互動待對照；本地水波採深水線性近似，脈衝與粗細比值已在介面明示。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/051-wave2DBasic.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增共用波動核心與多模式教學場景"
+    },
+    {
+      "id": "site-052",
+      "sourceId": "052",
+      "title": "駐波的產生",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/wave2DStandingWave/wave2DStandingWave.html",
+      "sourceScreenshot": "screenshots/052-wave2DStandingWave.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "駐波的產生\n動畫全螢幕\n\n↑駐波是由兩個反向的週期波疊加而成的",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "standing-waves"
+      ],
+      "requirements": [
+        "兩反向波及合成波分列顯示",
+        "同向／反向脈衝干涉與週期駐波",
+        "振幅比、波長、波速、初相位與追蹤位置可調",
+        "等幅永久波節／波腹、不等幅極小點區分"
+      ],
+      "evidence": [
+        "models/standing-waves.js：解析反向行波與平滑脈衝疊加",
+        "assets/scenes-standing-waves.js：分量、合成波、節腹與追蹤質點",
+        "verify-standing-waves.cjs：24組、導數、波動方程、節點與獨立能量積分",
+        "standing-waves.html：可直接開啟入口"
+      ],
+      "nextAction": "原站下拉選單與隱藏控制語意仍待互動核對；真實瀏覽器驗收未完成。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "standing-waves"
+        ],
+        "covered": "兩反向波疊加、建設／破壞脈衝干涉、週期駐波，振幅比、相位、節腹與三列分量比較。",
+        "remaining": "原站下拉選單與隱藏控制語意仍待互動核對；真實瀏覽器驗收未完成。",
+        "basis": [
+          "原站052截圖及文字",
+          "本地解析模型、場景及獨立驗證"
+        ]
+      },
+      "implementationAction": "新增專用模型、場景與入口"
+    },
+    {
+      "id": "site-053",
+      "sourceId": "053",
+      "title": "管內縱波",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/wave2DLongitudinal/wave2DLongitudinal.html",
+      "sourceScreenshot": "screenshots/053-wave2DLongitudinal.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "管內的縱波\n動畫全螢幕\n\n↑各種在管內傳遞的縱波",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "longitudinal-tube"
+      ],
+      "requirements": [
+        "六種管內縱波模式",
+        "管長、位移振幅、波長、聲速、模態序號、密度與追蹤位置可調",
+        "閉口位移節／開口壓力節，位移與壓力四分之一波長關係",
+        "慢速播放、位移倍率與壓力顏色不改SI"
+      ],
+      "evidence": [
+        "models/longitudinal-tube.js：專用解析模型",
+        "assets/scenes-longitudinal-tube.js：3D專用場景",
+        "verify-longitudinal-tube.cjs：72組獨立物理檢查及空間能量積分",
+        "longitudinal-tube.html：直接開啟入口"
+      ],
+      "nextAction": "原站完整控制範圍與隱藏互動仍待逐項核對；真實瀏覽器驗收未完成。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "longitudinal-tube"
+        ],
+        "covered": "六模式：縱波、反向波駐波、閉口／開口反射、一端閉管／兩端開管駐波；位移與壓力、頻率、模態序號及節腹。",
+        "remaining": "原站完整控制範圍與隱藏互動仍待逐項核對；真實瀏覽器驗收未完成。",
+        "basis": [
+          "原站053截圖與文字說明",
+          "專用解析模型、3D場景與獨立驗證"
+        ]
+      },
+      "implementationAction": "新增專用模型、場景與入口"
+    },
+    {
+      "id": "site-054",
+      "sourceId": "054",
+      "title": "A繩入B繩",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/wave2DAtoB/wave2DAtoB.html",
+      "sourceScreenshot": "screenshots/054-wave2DAtoB.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "A繩入B繩\n動畫全螢幕\n\n↑A繩入B繩，B繩密度可調\n\n說明影片：\n\n透射波與反射波振幅能量計算",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "string-interface"
+      ],
+      "requirements": [
+        "B繩密度可調",
+        "入射、反射與透射脈衝",
+        "振幅係數與能量比例算式顯示",
+        "接點位移／斜率／速度連續與能量守恆"
+      ],
+      "evidence": [
+        "models/string-interface.js：專用解析模型",
+        "assets/scenes-string-interface.js：3D專用場景",
+        "verify-string-interface.cjs：40組獨立物理檢查及空間能量積分",
+        "string-interface.html：直接開啟入口"
+      ],
+      "nextAction": "原站完整控制範圍與隱藏互動仍待逐項核對；真實瀏覽器驗收未完成。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "string-interface"
+        ],
+        "covered": "可調B/A線密度比、A波速、脈衝振幅／半寬、追蹤位置；分量、振幅算式／能量算式、反射透射讀值。",
+        "remaining": "原站完整控制範圍與隱藏互動仍待逐項核對；真實瀏覽器驗收未完成。",
+        "basis": [
+          "原站054截圖與文字說明",
+          "專用解析模型、3D場景與獨立驗證"
+        ]
+      },
+      "implementationAction": "新增專用模型、場景與入口"
+    },
+    {
+      "id": "site-055",
+      "sourceId": "055",
+      "title": "橫波變縱波",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/waveT2WaveL/waveT2WaveL.html",
+      "sourceScreenshot": "screenshots/055-waveT2WaveL.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "橫波變縱波\n動畫全螢幕\n\n↑橫波變縱波",
+      "relatedModelIds": [
+        "basic-waves",
+        "longitudinal-tube"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "wave-polarization"
+      ],
+      "requirements": [
+        "連續轉動質點振動方向，波傳播方向獨立",
+        "單排／多排粒子、行波與全體同相SHM",
+        "A、λ、c、相位、追蹤位置與傳播方向可調",
+        "SHM圓投影及保留時間的角度轉換"
+      ],
+      "evidence": [
+        "models/wave-polarization.js：重用wave-core的解析模型",
+        "assets/scenes-wave-polarization.js：來源專屬3D場景",
+        "verify-wave-polarization.cjs：96組獨立物理檢查",
+        "wave-polarization.html：直接入口"
+      ],
+      "nextAction": "原站SHM與方向按鈕的完整語意、控制範圍仍待互動確認；真實瀏覽器尚未驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "wave-polarization"
+        ],
+        "covered": "同一相位下連續調整振動角0–90°，粒子陣列、全體同相SHM、圓投影與雙向行波；角度保留t/播放並更新物理向量。",
+        "remaining": "原站SHM與方向按鈕的完整語意、控制範圍仍待互動確認；真實瀏覽器尚未驗收。",
+        "basis": [
+          "原站055截圖及文字",
+          "專用模型／場景及獨立檢查"
+        ]
+      },
+      "implementationAction": "重用解析波核，新增專用互動、場景與入口"
+    },
+    {
+      "id": "site-056",
+      "sourceId": "056",
+      "title": "橫波波函數",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/waveFunction/waveFunction.html",
+      "sourceScreenshot": "screenshots/056-waveFunction.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "橫波的波函數\n動畫全螢幕\n\n↑橫波的波函數",
+      "relatedModelIds": [
+        "basic-waves"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "wave-function"
+      ],
+      "requirements": [
+        "y(x,t)曲面",
+        "固定t的y-x及固定x的y-t比較",
+        "曲面／y-x／y-t顯示開關保留時間與播放",
+        "明確區別顯示時間軸與物理z，所有位置／速度／CSV採SI"
+      ],
+      "evidence": [
+        "models/wave-function.js：重用wave-core的解析模型",
+        "assets/scenes-wave-function.js：來源專屬3D場景",
+        "verify-wave-function.cjs：48組獨立物理檢查",
+        "wave-function.html：直接入口"
+      ],
+      "nextAction": "原站看波／看面／俯瞰相機預設與未標籤控制待核對；真實瀏覽器尚未驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "wave-function"
+        ],
+        "covered": "y(x,t)三維時空曲面、目前t空間波形與固定x時間曲線，獨立視覺開關、雙向波、初相位與追蹤點。",
+        "remaining": "原站看波／看面／俯瞰相機預設與未標籤控制待核對；真實瀏覽器尚未驗收。",
+        "basis": [
+          "原站056截圖及文字",
+          "專用模型／場景及獨立檢查"
+        ]
+      },
+      "implementationAction": "重用解析波核，新增專用互動、場景與入口"
+    },
+    {
+      "id": "site-057",
+      "sourceId": "057",
+      "title": "橫波的力學能",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/waveEnergyOnString/waveEnergyOnString.html",
+      "sourceScreenshot": "screenshots/057-waveEnergyOnString.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "橫波的力學能\n動畫全螢幕\n\n↑行進波與駐波傳遞時，動能與彈力位能是如何分佈的呢？\n\n說明影片：",
+      "relatedModelIds": [
+        "standing-waves",
+        "wave-function"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "string-wave-energy"
+      ],
+      "requirements": [
+        "左右行波與駐波",
+        "eK=μut²/2、eU=Tux²/2、能流−Tutux",
+        "動態空間能量分布位於3D下方，圖表預設隱藏",
+        "速度／張力箭頭及Ek/U/總E開關",
+        "短材料段F=ma與區間能量守恆"
+      ],
+      "evidence": [
+        "models/string-wave-energy.js：專用物理／教學模型",
+        "assets/scenes-string-wave-energy.js：專用3D場景",
+        "verify-string-wave-energy.cjs：48組獨立檢查",
+        "string-wave-energy.html：直接入口"
+      ],
+      "nextAction": "原站播放倍率、張力／速度圖示與完整控制範圍仍待逐項操作核對；真實瀏覽器尚未驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "string-wave-energy"
+        ],
+        "covered": "左右行波／駐波的動能、彈性位能、總能密度與局部能流；兩波長總能、精確短繩段質心與兩端張力；下方動態空間能量圖。",
+        "remaining": "原站播放倍率、張力／速度圖示與完整控制範圍仍待逐項操作核對；真實瀏覽器尚未驗收。",
+        "basis": [
+          "原站057截圖及文字",
+          "本地專用模型、場景及獨立檢查"
+        ]
+      },
+      "implementationAction": "重用可用解析與圖表能力，新增來源專屬實作"
+    },
+    {
+      "id": "site-058",
+      "sourceId": "058",
+      "title": "雙點波源干涉",
+      "category": "波動",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/interferenceTwoSource2023/interferenceTwoSource2023.html",
+      "sourceScreenshot": "screenshots/058-interferenceTwoSource2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "雙點波源干涉\n動畫全螢幕\n\n↑雙點波源，藉由建設性干涉與破壞性干涉形成腹線與節線\n\n說明影片：",
+      "relatedModelIds": [
+        "double-slit"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "two-source-interference"
+      ],
+      "requirements": [
+        "時變兩源空間波面與純視覺單源／合成比較",
+        "源距、波長、振幅、速度、相位差與追蹤位置可調",
+        "任意相位差的節線／腹線含極端路徑差射線",
+        "包絡與瞬時位移區分，明示無幾何衰減的等幅示意"
+      ],
+      "evidence": [
+        "models/two-source-interference.js：專用物理／教學模型",
+        "assets/scenes-two-source-interference.js：專用3D場景",
+        "verify-two-source-interference.cjs：144組獨立檢查",
+        "two-source-interference.html：直接入口"
+      ],
+      "nextAction": "原站完整控制、平面模式、能量相關顯示與透明度仍待對照；真實瀏覽器尚未驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "two-source-interference"
+        ],
+        "covered": "雙點穩態等幅徑向波面、初相位差、源距／波長／振幅／速度、單源與合成視圖、節腹雙曲線及退化射線、等相位波前。",
+        "remaining": "原站完整控制、平面模式、能量相關顯示與透明度仍待對照；真實瀏覽器尚未驗收。",
+        "basis": [
+          "原站058截圖及文字",
+          "本地專用模型、場景及獨立檢查"
+        ]
+      },
+      "implementationAction": "重用可用解析與圖表能力，新增來源專屬實作"
+    },
+    {
+      "id": "site-059",
+      "sourceId": "059",
+      "title": "共鳴氣柱實驗",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/resonanceExperiment/resonanceExperiment.html",
+      "sourceScreenshot": "screenshots/059-resonanceExperiment.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "共鳴氣柱實驗\n[這個動畫需要 FlashPlayer]\n\n這是實驗室裡找聲波波長實驗的模擬動畫，動畫中，調整水杯的高低可改變空氣柱的長度，\n\n當空氣駐的長度符合某些條件時，音叉發出的聲波就會在空氣柱中形成駐波，決定聲音是否共鳴。\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "longitudinal-tube"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "resonance-column"
+      ],
+      "requirements": [
+        "可調氣柱長度與對應水杯／水位",
+        "固定音叉頻率下的有阻尼受迫響應",
+        "共鳴長度與相鄰長度差λ/2",
+        "可選音訊使用物理Hz，與慢動畫分開",
+        "SI位移／壓力與限幅示意圖形分開"
+      ],
+      "evidence": [
+        "models/resonance-column.js：專用模型",
+        "assets/scenes-resonance-column.js：3D裝置",
+        "verify-resonance-column.cjs：36組獨立檢查",
+        "assets/mechanics-audio.js、verify-audio.cjs：明確啟用及音訊生命週期mock檢查",
+        "resonance-column.html：直接入口"
+      ],
+      "nextAction": "未重現原版Flash的即時拖杯與聲音建立過程；本模型採已達穩態的壓力驅動近似，端部修正／輻射未計。真實瀏覽器與音響待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "resonance-column"
+        ],
+        "covered": "水位／氣柱長度、固定音叉頻率、阻尼穩態受迫聲學、共鳴長度標記與長度響應曲線，手動啟用物理Hz純音。",
+        "remaining": "未重現原版Flash的即時拖杯與聲音建立過程；本模型採已達穩態的壓力驅動近似，端部修正／輻射未計。真實瀏覽器與音響待驗收。",
+        "basis": [
+          "原站059截圖及說明（不執行Flash）",
+          "本地專用模型、場景與獨立檢查"
+        ]
+      },
+      "implementationAction": "依Flash截圖／文字新增現代模型、裝置及可選聲音；未執行Flash"
+    },
+    {
+      "id": "site-060",
+      "sourceId": "060",
+      "title": "波以耳實驗",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/bell/bell.html",
+      "sourceScreenshot": "screenshots/060-bell.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "波以耳實驗\n[這個動畫需要 FlashPlayer]\n\n波以耳的實驗，玻璃罩內的空氣經由幫浦抽掉後，鈴聲就傳不出來了。\n\n證明了聲波是需要介質傳遞的。記的開喇叭。\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "vacuum-bell"
+      ],
+      "requirements": [
+        "抽氣／進氣／封閉狀態及氣體質量平衡",
+        "鈴體振動不隨抽氣停止",
+        "壓力／氣體存量及傳聲衰減示意",
+        "聲速不設零、保留結構傳聲與近似限制",
+        "波圈／粒子顯示不重設時間"
+      ],
+      "evidence": [
+        "models/vacuum-bell.js：專用模型",
+        "assets/scenes-vacuum-bell.js：3D裝置",
+        "verify-vacuum-bell.cjs：32組獨立檢查",
+        "assets/mechanics-audio.js、verify-audio.cjs：明確啟用及音訊生命週期mock檢查",
+        "vacuum-bell.html：直接入口"
+      ],
+      "nextAction": "原版即時抽放按鈕目前以重設式模式拉桿替代，需補動態閥門歷史；聲強採簡化耦合近似，非真實聲場／音色。真實瀏覽器及音響待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "vacuum-bell"
+        ],
+        "covered": "玻璃罩／泵／持續振動鈴體、抽氣／進氣／封閉／循環、泵極限與漏氣、傳聲衰減與結構傳聲、可選純音播放。",
+        "remaining": "原版即時抽放按鈕目前以重設式模式拉桿替代，需補動態閥門歷史；聲強採簡化耦合近似，非真實聲場／音色。真實瀏覽器及音響待驗收。",
+        "basis": [
+          "原站060截圖及說明（不執行Flash）",
+          "本地專用模型、場景與獨立檢查"
+        ]
+      },
+      "implementationAction": "依Flash截圖／文字新增現代模型、裝置及可選聲音；未執行Flash"
+    },
+    {
+      "id": "site-061",
+      "sourceId": "061",
+      "title": "聲速",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/speedSound/speedSound.html",
+      "sourceScreenshot": "screenshots/061-speedSound.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "聲速\n[這個動畫需要 FlashPlayer]\n\n小明和姊姊出去玩，結果和姊姊走丟了，原來他和姊姊在山中的岔路分開，各自登上了一座山，\n小明哭著要找姊姊，請問姊姊何時會聽到小明的哭聲？\n\n調整動畫中北風與太陽的大小可決定環境的溫度，而決定聲音的速度。\n\n想一想，溫度越高，聲速越快還是越慢？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "sound-speed"
+      ],
+      "requirements": [
+        "溫度以Kelvin決定乾空氣聲速",
+        "可調兩山間距，有限聲包延遲d/c抵達",
+        "聲包前後緣／路徑可隱藏且保留時間",
+        "接收包絡圖及聲源／接收者聆聽切換"
+      ],
+      "evidence": [
+        "models/sound-speed.js：專用傳播模型",
+        "models/acoustic-core.js：乾空氣聲速／聲包核心",
+        "assets/scenes-sound-speed.js：3D專用場景",
+        "verify-sound-speed.cjs：36組獨立檢查",
+        "sound-speed.html：直接入口"
+      ],
+      "nextAction": "原版哭聲、太陽／北風互動細節與地形美術未逐項重現；本題純音與地形為示意，未計風速、濕度、反射／繞射。真實瀏覽器及聽感待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "sound-speed"
+        ],
+        "covered": "兩山聲源／接收者、冷熱溫度控制、乾空氣聲速、有限聲包前後緣、精確d/c抵達、可選聆聽位置及接收包絡圖。",
+        "remaining": "原版哭聲、太陽／北風互動細節與地形美術未逐項重現；本題純音與地形為示意，未計風速、濕度、反射／繞射。真實瀏覽器及聽感待驗收。",
+        "basis": [
+          "原站061截圖／說明（Flash不執行）",
+          "本地傳播模型、場景與獨立檢查"
+        ]
+      },
+      "implementationAction": "依Flash截圖與文字新增現代模型；重用聲速及可選音訊，不執行Flash"
+    },
+    {
+      "id": "site-062",
+      "sourceId": "062",
+      "title": "回聲",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/backSound/backSound.html",
+      "sourceScreenshot": "screenshots/062-backSound.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "回聲\n[這個動畫需要 FlashPlayer]\n\n接續前一個小明和姊姊走失的故事(聲速的動畫)......\n姊姊聽到哭聲後立刻下山要來找小明，這時小明的哭聲藉由山壁反射回來，\n小明聽到自己的回聲就開始思考，如果山壁靠的太近，會不會就分不出原聲與回聲？\n\n請你用滑鼠移動山壁，幫小明解決疑惑吧。\n\n山壁靠多近時，會分不出原聲與回聲呢？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "implemented",
+      "modelIds": [
+        "echo"
+      ],
+      "requirements": [
+        "山壁距離拉桿與一次反射返回",
+        "2d/c及山壁d/c事件與回放",
+        "原聲／回聲包絡及反射能量r²",
+        "發聲時長與教學辨識間隔，明示非人耳通用閾值",
+        "波前／包絡顯示不重設時間"
+      ],
+      "evidence": [
+        "models/echo.js：專用傳播模型",
+        "models/acoustic-core.js：乾空氣聲速／聲包核心",
+        "assets/scenes-echo.js：3D專用場景",
+        "verify-echo.cjs：24組獨立檢查",
+        "echo.html：直接入口"
+      ],
+      "nextAction": "原站拖曳山壁目前以距離拉桿替代；音訊為包絡相加提示，未模擬重疊相干相消或哭聲音色。實際可辨性不以單一閾值保證，真實瀏覽器／聽感待驗收。 短脈衝音訊目前按動畫幀更新並平滑gain，最短聲包的事件調度／聽感需補實測。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "echo"
+        ],
+        "covered": "可調山壁距離、溫度、聲長、反射係數及辨識間隔；精確2d/c前後事件、一次反射波前／包絡、原聲與延遲回聲提示。",
+        "remaining": "原站拖曳山壁目前以距離拉桿替代；音訊為包絡相加提示，未模擬重疊相干相消或哭聲音色。實際可辨性不以單一閾值保證，真實瀏覽器／聽感待驗收。 短脈衝音訊目前按動畫幀更新並平滑gain，最短聲包的事件調度／聽感需補實測。",
+        "basis": [
+          "原站062截圖／說明（Flash不執行）",
+          "本地傳播模型、場景與獨立檢查"
+        ]
+      },
+      "implementationAction": "依Flash截圖與文字新增現代模型；重用聲速及可選音訊，不執行Flash"
+    },
+    {
+      "id": "site-063",
+      "sourceId": "063",
+      "title": "都卜勒效應",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/DopplerEffect2024/DopplerEffect2024.html",
+      "sourceScreenshot": "screenshots/063-DopplerEffect2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "都卜勒效應\n動畫全螢幕\n\n聲源移動改變波長\n觀察者移動改變波速\n兩個人一起改變頻率\n就是都普勒效應\n\n說明影片：",
+      "relatedModelIds": [
+        "sound-speed"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "doppler"
+      ],
+      "requirements": [
+        "移動聲源／觀察者與均勻風分開設定",
+        "每個波面中心保留發射位置再隨風平流",
+        "遲滯時間及單位波線方向決定接收頻率",
+        "前後波長與接收頻率讀值／圖表",
+        "純視覺波面／分析／聆聽位置不改SI"
+      ],
+      "evidence": [
+        "models/doppler.js：來源專屬模型",
+        "assets/scenes-doppler.js：3D專用場景",
+        "verify-doppler.cjs：108組獨立檢查",
+        "assets/mechanics-audio.js、verify-audio.cjs：手動啟用與Fourier音訊mock驗證",
+        "doppler.html：直接入口"
+      ],
+      "nextAction": "目前次音速、平行錯開路徑與均勻風，未含超音速震波／多重遲滯解；原站完整控制範圍與分析面板仍待逐項對照。真實瀏覽器／聽感待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "doppler"
+        ],
+        "covered": "聲源／觀察者對地速度、均勻風、遲滯波面交會、前後波長、接收頻率、代表性發射波面中心及分析路徑；可選源／接收音高。",
+        "remaining": "目前次音速、平行錯開路徑與均勻風，未含超音速震波／多重遲滯解；原站完整控制範圍與分析面板仍待逐項對照。真實瀏覽器／聽感待驗收。",
+        "basis": [
+          "原站063截圖／文字（Flash不執行）",
+          "本地解析模型、場景及獨立檢查"
+        ]
+      },
+      "implementationAction": "重用聲學與音訊核心，新增專屬移動源／聲音合成模型"
+    },
+    {
+      "id": "site-064",
+      "sourceId": "064",
+      "title": "聲音三要素",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/soundCHCH/soundCHCH.html",
+      "sourceScreenshot": "screenshots/064-soundCHCH.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "聲音三要素\n[這個動畫需要 FlashPlayer]\n\n這個動畫在說明聲音三要素，利用右邊的按鈕，你可以選擇不同的聲音高低，也可以選擇\n不同的音色，或者聽聽噪音。按下播放鈕，聲音就會自動播放，還可以調整聲音大小喔。\n\n聲音的波形會顯示在中間的螢幕上，仔細觀察，想一想：\n聲音的響度由聲波的哪個性質決定？\n聲音的高低由聲波的哪個性質決定？\n聲音的品質由聲波的哪個性質決定？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "resonance-column",
+        "vacuum-bell"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "sound-elements"
+      ],
+      "requirements": [
+        "基頻（含220／440／880Hz）、振幅與音色控制",
+        "同係數Fourier波形與音訊",
+        "RMS／均方／振幅上界區分，非校準響度",
+        "可重現帶限噪音與頻譜／部分音比較",
+        "專用時間觀察窗與窗內游標避免混疊／游標越界"
+      ],
+      "evidence": [
+        "models/sound-elements.js：來源專屬模型",
+        "assets/scenes-sound-elements.js：3D專用場景",
+        "verify-sound-elements.cjs：36組獨立檢查",
+        "assets/mechanics-audio.js、verify-audio.cjs：手動啟用與Fourier音訊mock驗證",
+        "sound-elements.html：直接入口"
+      ],
+      "nextAction": "原站sound A／B錄音不可得，改用明示諧波合成而非原聲還原；噪音為100ms重複的64部分音示意，非理想白噪音。真實瀏覽器與音色／聽感待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "sound-elements"
+        ],
+        "covered": "基頻／振幅、純音／八次諧波／奇次諧波／64部分音帶限噪音、3D波形與振幅頻譜、密集時間窗圖；與合成音訊共用Fourier係數。",
+        "remaining": "原站sound A／B錄音不可得，改用明示諧波合成而非原聲還原；噪音為100ms重複的64部分音示意，非理想白噪音。真實瀏覽器與音色／聽感待驗收。",
+        "basis": [
+          "原站064截圖／文字（Flash不執行）",
+          "本地解析模型、場景及獨立檢查"
+        ]
+      },
+      "implementationAction": "重用聲學與音訊核心，新增專屬移動源／聲音合成模型"
+    },
+    {
+      "id": "site-065",
+      "sourceId": "065",
+      "title": "頻譜與波形",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/soundWaveform/soundWaveform.html",
+      "sourceScreenshot": "screenshots/065-soundWaveform.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "頻譜與波形\n[這個動畫需要 FlashPlayer]\n\n頻譜與波形的動畫，其實就是新版的聲音三要素。\n\n你可以調整基音泛音的振幅比例、基音的頻率以及音量大小，觀察頻譜與波形的變化。\n\n想一想，利用這個動畫，你能說明什麼是「音調相同但音色不同」嗎？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "sound-elements"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "sound-elements"
+      ],
+      "requirements": [
+        "基頻與音量可調",
+        "第1至第8次泛音振幅可獨立調整",
+        "頻譜柱與波形同步",
+        "純音／方波型／鋸齒型預設與聽感比較"
+      ],
+      "evidence": [
+        "models/sound-elements.js：已有基頻、振幅、三種音色預設、波形與部分音頻譜",
+        "assets/mechanics-audio.js：相同Fourier係數音訊已具備",
+        "verify-sound-elements.cjs：既有預設36組通過；自由係數尚未實作",
+        "2026-10-21 sound-elements音色4新增第1至第8諧波獨立相對振幅；verify-sound-elements.cjs通過全零、單一第二諧波、等權及混合權重的獨立Fourier和、RMS與音訊係數核對。",
+        "自訂h1至h8拉桿自動選擇音色4，重建時保留時間、播放狀態及已啟用聲音；verify-audio.cjs驗證保留啟用不會自行開聲音，切換實驗仍關閉。"
+      ],
+      "nextAction": "原站逐控制語意與實際瀏覽器驗收仍待完成；基頻、音量及預設音色切換目前仍重設。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "sound-elements"
+        ],
+        "covered": "sound-elements已有基頻、音量、八條諧波獨立相對振幅、波形、頻譜及同係數合成聲音；選音色4使用自訂，係數依絕對值和歸一，全零靜音。",
+        "remaining": "原站逐控制語意與實際瀏覽器驗收仍待完成；基頻、音量及預設音色切換目前仍重設。",
+        "basis": [
+          "065截圖的f0到8f0柱與三預設",
+          "sound-elements實作及音訊係數契約"
+        ]
+      },
+      "implementationAction": "擴充既有聲音三要素的自由係數控制，避免重複造相同波形／音訊引擎"
+    },
+    {
+      "id": "site-066",
+      "sourceId": "066",
+      "title": "方波傅立葉",
+      "category": "聲音",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/fourierSqareWave/fourierSqareWave.html",
+      "sourceScreenshot": "screenshots/066-fourierSqareWave.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "方波傅立葉\n\n↑不同頻率與振幅的簡諧運動疊加成方波",
+      "relatedModelIds": [
+        "sound-elements",
+        "shm-projection"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "fourier-square"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "27組獨立奇次級數、Parseval RMS、週期、零均值、跳躍點及音訊縮放檢查通過。",
+        "離線原生Canvas預覽已檢視，非實際瀏覽器。"
+      ],
+      "nextAction": "原站完整控制語意、實際瀏覽器與聽感驗收待完成；離線預覽非瀏覽器。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "fourier-square"
+        ],
+        "covered": "六排奇次諧波圓投影、串接圓向量及逐項部分和；可調基頻、振幅、項數，理想方波、音訊與下方密集波形圖。",
+        "remaining": "原站完整控制語意、實際瀏覽器與聽感驗收待完成；離線預覽非瀏覽器。",
+        "basis": [
+          "models/fourier-square.js",
+          "assets/scenes-fourier-square.js",
+          "verify-fourier-square.cjs",
+          "artifacts/fourier-square.png"
+        ]
+      },
+      "implementationAction": "重用Fourier及圓投影，新增逐項部分和視圖"
+    },
+    {
+      "id": "site-067",
+      "sourceId": "067",
+      "title": "平面鏡成像",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/mirrorImage2021/mirrorImage2021.html",
+      "sourceScreenshot": "screenshots/067-mirrorImage2021.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "平面鏡成像\n動畫全螢幕\n\n平面鏡成像，鏡子可以調整位置和長度喔！眼睛也可以調整位置，\n試試看，哪些物體的像看得見，哪些看不見呢？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "plane-mirror"
+      ],
+      "requirements": [
+        "有限平面鏡的位置與寬度可調",
+        "眼睛與物體位置可調；物像等距",
+        "以反射光路是否通過有限鏡面判定各點虛像的可見性",
+        "3D自由視角、光路與鏡後延長線及可用入口"
+      ],
+      "evidence": [
+        "81組獨立鏡面交點、反射定律、物像等距與有限鏡面可見性驗證通過。",
+        "離線Canvas場景已檢視；取景依參數調整，非瀏覽器驗收。"
+      ],
+      "nextAction": "原站延伸物體造型與逐點可見範圍、拖曳互動、完整顯示控制及實際瀏覽器驗收仍待補。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "plane-mirror"
+        ],
+        "covered": "有限矩形鏡面、三個點物體、等距虛像、眼睛位置、鏡寬與橫向位置拉桿；反射光路、虛線延長及可見性。",
+        "remaining": "原站延伸物體造型與逐點可見範圍、拖曳互動、完整顯示控制及實際瀏覽器驗收仍待補。",
+        "basis": [
+          "原站067截圖與說明",
+          "models/plane-mirror.js",
+          "assets/scenes-plane-mirror.js",
+          "verify-plane-mirror.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-068",
+      "sourceId": "068",
+      "title": "兩人同鏡",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/twoPersonOneMirror2021/twoPersonOneMirror2021.html",
+      "sourceScreenshot": "screenshots/068-twoPersonOneMirror2021.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "兩人同鏡\n動畫全螢幕\n\n↑兩人同鏡。\n\n\n兩個人共用同一面鏡子，鏡子要多長，才能讓兩個人都看到自己全身的像呢？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "shared-mirror"
+      ],
+      "requirements": [
+        "兩人身高、眼高、離鏡距離可調",
+        "鏡面高度與鏡底安裝高度可調",
+        "判定各自能否看到全身，標示各自及共同最小鏡面區間",
+        "呈現頭腳反射光路與虛像，使用既有3D視角及播放控制"
+      ],
+      "evidence": [
+        "72組獨立區間、最小性必要／充分條件、距離獨立性、反射定律及顯示不改物理測試通過。",
+        "原生Canvas離線場景已檢視，非實際瀏覽器。"
+      ],
+      "nextAction": "原站人物外觀、各人物視角快捷與額外顯示模式、實際瀏覽器操作驗收仍待核對。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "shared-mirror"
+        ],
+        "covered": "兩人各自看自己全身，身高、眼高比例、距離與鏡面高度／位置；最小共同鏡面範圍、反射端點及可見虛像線段。",
+        "remaining": "原站人物外觀、各人物視角快捷與額外顯示模式、實際瀏覽器操作驗收仍待核對。",
+        "basis": [
+          "原站068截圖及說明",
+          "models/shared-mirror.js",
+          "assets/scenes-shared-mirror.js",
+          "verify-shared-mirror.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-069",
+      "sourceId": "069",
+      "title": "雙鏡成多像",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/doubleMirrorImage2021/doubleMirrorImage2021.html",
+      "sourceScreenshot": "screenshots/069-doubleMirrorImage2021.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "雙鏡成多像\n動畫全螢幕\n\n↑雙鏡成多像。\n\n\n兩個平面鏡夾90度，試問站在兩鏡中間的人可以看到幾個像？\n\n這是一個參考書裡常見的考題，每次說明時，都覺得講一百句話不如看一眼。\n\n上面的動畫中，你可以調整鏡子所夾的角度，物體與眼睛的位置，將滑鼠移到像的位置，還可看到光是如何打進眼睛的。\n\n　\n\n仔細觀察，你發現了嗎？\n\n反射奇數次的影像會左右相反，反射偶數次的則不會。\n\n試試看，你還能發現哪些以前不曾注意過的現象？\n\n　\n\n你也可以動動手，拿起兩面鏡子試一試，很有趣喔！\n\n↑兩鏡夾90度。\n\n↑兩鏡夾60度。\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "double-mirror"
+      ],
+      "requirements": [
+        "兩鏡夾角、物體及眼睛位置可調",
+        "逐段追跡有限鏡面多次反射，判定各像可見性並合併重合像",
+        "可選像查看對應光路",
+        "呈現奇偶次反射的手性差異，使用既有3D操作"
+      ],
+      "evidence": [
+        "162組反射定律、有限鏡面交點、光路等長、徑向等距、重合合併、鏡長單調性與90/60/30度像數測試通過。",
+        "60與90度原生Canvas離線預覽已產生，60度場景已檢視；非瀏覽器驗收。"
+      ],
+      "nextAction": "原站懸停選像、雙視圖及原站完整顯示控制、實際瀏覽器驗收仍待完成；目前以選像拉桿替代懸停，交線退化光路排除。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "double-mirror"
+        ],
+        "covered": "30至150度有限鏡面、物體及眼睛極座標拉桿、最多12次交替反射的可見性追跡；重合像合併、選像光路、奇偶手性標記。",
+        "remaining": "原站懸停選像、雙視圖及原站完整顯示控制、實際瀏覽器驗收仍待完成；目前以選像拉桿替代懸停，交線退化光路排除。",
+        "basis": [
+          "原站069截圖及說明",
+          "models/double-mirror.js",
+          "assets/scenes-double-mirror.js",
+          "verify-double-mirror.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-070",
+      "sourceId": "070",
+      "title": "曲面鏡反射",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/curveMirrorReflection2021/curveMirrorReflection2021.html",
+      "sourceScreenshot": "screenshots/070-curveMirrorReflection2021.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "曲面鏡反射\n動畫全螢幕\n\n↑曲面鏡反射\n\n\n試試看\n\n1.平行光平行對稱軸射向拋物面鏡。\n\n2.點光源由橢圓面鏡的其中一個焦點射出。\n\n3.點光源由雙曲面鏡的其中一個焦點射出。\n\n說明影片：\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "conic-mirror"
+      ],
+      "requirements": [
+        "球面、拋物面、橢圓面及雙曲面反射模式",
+        "平行軸入射及焦點點光源，並能調整光源位置與傾角",
+        "依精確法線計算反射，呈現球面像差與三種圓錐曲線焦點性質",
+        "反向延長線、單次反射光路及既有3D操作入口"
+      ],
+      "evidence": [
+        "108組反射法線／切線、獨立焦點距離恆等式、焦點會聚／發散與球面像差測試通過。",
+        "四模式原生Canvas離線預覽已產生，橢圓與雙曲模式已檢視；非瀏覽器驗收。",
+        "新增96組多次反射測試通過：正向交點、單位反射方向、球面角動量、反射上限前綴一致性與明確截停。",
+        "12次反射、球面寬口徑傾斜入射離線預覽已檢視，出現實際11次反射。"
+      ],
+      "nextAction": "原站完整顯示控制與實際瀏覽器驗收仍待核對；目前為有限右側弧的子午截面、最多12次反射，未模擬完整旋轉面。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "conic-mirror"
+        ],
+        "covered": "四種精確曲線、有限口徑、尺度、平行／點光源、偏移／傾角；最多1至12次反射、每次下一交點與法線、離弧逃逸及上限截停標記、反向延長與焦點。",
+        "remaining": "原站完整顯示控制與實際瀏覽器驗收仍待核對；目前為有限右側弧的子午截面、最多12次反射，未模擬完整旋轉面。",
+        "basis": [
+          "原站070截圖及說明",
+          "models/conic-mirror.js",
+          "assets/scenes-conic-mirror.js",
+          "verify-conic-mirror.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-071",
+      "sourceId": "071",
+      "title": "成像作圖",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/imageDrawing2023/imageDrawing2023.html",
+      "sourceScreenshot": "screenshots/071-imageDrawing2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "成像作圖\n動畫全螢幕\n\n↑成像作圖\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "image-drawing"
+      ],
+      "requirements": [
+        "凸透鏡、凹透鏡、凸面鏡、凹面鏡四模式",
+        "可調物距、物高及焦距並呈現正倒立、放大縮小、實像虛像",
+        "分別顯示平行軸／焦點／中心等特殊光線及光學元件上下端的光線",
+        "處理物在焦點時平行出射與像在無限遠，不能用有限大數冒充",
+        "原站繪圖／標註與清除功能、成像顯示開關需核對與補齊",
+        "沿用3D視角、滑桿、圖表隱藏與播放操作"
+      ],
+      "evidence": [
+        "144組高斯成像、特殊光線交會、正倒立及實虛像、焦點無限遠與近焦點有限大像測試通過。",
+        "六種狀態離線原生Canvas預覽已產生，凸透鏡實像及無限遠已檢視；非瀏覽器驗收。",
+        "verify-annotations.cjs執行實際HTML/scripts：三組視角逆投影、世界座標筆跡、第二指標隔離、中斷／失去capture、撤回／清除、恢復旋轉、實驗作用域與播放保留通過。",
+        "手繪線段原生Canvas離線預覽已檢視。"
+      ],
+      "nextAction": "原站完整操作與顯示模式、實際瀏覽器／觸控驗收仍待完成；標註僅在本次頁面內保存。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "image-drawing"
+        ],
+        "covered": "四種薄元件模式、物距／物高／焦距、三條特殊光線及上下端光線開關、成像開關；有號像距、放大率、實虛像與焦點無限遠。 自由手繪、四色筆、撤回／清除，筆跡附著作圖平面並隨視角變換；作畫不改時間與播放。",
+        "remaining": "原站完整操作與顯示模式、實際瀏覽器／觸控驗收仍待完成；標註僅在本次頁面內保存。",
+        "basis": [
+          "原站071截圖",
+          "models/image-drawing.js",
+          "assets/scenes-image-drawing.js",
+          "verify-image-drawing.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-072",
+      "sourceId": "072",
+      "title": "折射的原因",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/deflection2023/deflection2023.html",
+      "sourceScreenshot": "screenshots/072-deflection2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "光的折射\n動畫全螢幕\n\n把光線想像成二輪車，可以看到：\n(1)光由快到慢，偏向法線\n(2)光由慢到快，偏離法線\n(3)光由慢到快，且入射角大於臨界角，不折射全反射。\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "refraction-cart"
+      ],
+      "requirements": [
+        "雙輪車跨越兩種輪速的介面，呈現先後跨界與車頭轉向",
+        "可調兩介質速度、入射角及輪距",
+        "快到慢偏向法線、慢到快偏離法線及超臨界折返",
+        "輪跡、車軸歷程及理想光線比較可顯示／隱藏",
+        "原站色散多車模式與完整控制語意待核對實作"
+      ],
+      "evidence": [
+        "135組獨立輪距、無側滑速度、介質速度切換、事件連續性、Snell關係、臨界掠射及反射角測試通過。",
+        "四情況離線Canvas已產生；折返模式已檢視並修正背景平面遮住軌跡的繪製層次。",
+        "新增12組七色配置通過：速度函數與波長排序、各色Snell／介質約束、共用時間不中途停車、取景及混合透射／折返。",
+        "離線色散及混合臨界情況預覽已產生；混合情況已檢視，7色中3色折返。"
+      ],
+      "nextAction": "原站精確色散參數與完整控制語意、實際瀏覽器操作驗收仍待核對；目前以未校準Cauchy形速度比呈現正常色散，非特定材料。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "refraction-cart"
+        ],
+        "covered": "雙輪規定速度依介質改變的解析剛性無側滑車，含先後跨界、轉向、折射、精確臨界及折返；輪距／入射角／兩速可調，輪跡／軸歷程／理想光線顯示。 七色色散比較使用同一解析車模型，420至650nm各自依明示速度函數改速、折射或折返，共用時間軸；強度可調，主讀值550nm。",
+        "remaining": "原站精確色散參數與完整控制語意、實際瀏覽器操作驗收仍待核對；目前以未校準Cauchy形速度比呈現正常色散，非特定材料。",
+        "basis": [
+          "原站072截圖及說明",
+          "models/refraction-cart.js",
+          "assets/scenes-refraction-cart.js",
+          "verify-refraction-cart.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-073",
+      "sourceId": "073",
+      "title": "多層折射",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/mutiLayer/mutiLayer.html",
+      "sourceScreenshot": "screenshots/073-mutiLayer.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "多層折射\n[這個動畫需要 FlashPlayer]\n\n這個動畫演示光線經過多層平行介質的折射情形。\n\n你可以拖曳光線入設的位置，入設的角度，或改變四層介質的折射率，\n並觀察光線折射的情形。\n\n動畫中幫你預設好四種情形，你可以一一檢視。\n其中第4種情況如下圖：\n\n請你想一想：界面1有可能發生全反射嗎？界面2有可能發生全反射嗎？\n\n動手試試看吧！\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "layered-refraction"
+      ],
+      "requirements": [
+        "四層平行介質折射率、入射位置與角度可調",
+        "逐界面Snell判定、臨界掠射與全反射後返回傳播",
+        "反射方向、透射光路及角度顯示控制",
+        "四組預設：第4組依原站可見截圖；其餘原數值不可讀時明示替代",
+        "Flash僅以既有截圖／說明重建，不執行Flash或EXE"
+      ],
+      "evidence": [
+        "243組獨立Snell不變量、c/n速度與光程、連續光路、可達全反射與臨界掠射測試通過。",
+        "實際HTML/scripts預設切換、n拉桿自動轉自訂及顯示同步測試通過。",
+        "透射及全反射離線Canvas預覽已產生；全反射返回場景已檢視，非瀏覽器驗收。"
+      ],
+      "nextAction": "原站前三組Flash內部預設數值不可讀，目前以明示教學預設替代；拖曳光線與完整控制語意、實際瀏覽器操作驗收仍待核對。不追跡部分反射分支或Fresnel能量。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "layered-refraction"
+        ],
+        "covered": "四層n值、入射角／位置拉桿、Snell主光路、全反射返回、臨界掠射、奈秒光程播放及局部反射方向；4組預設與自訂同步控制。",
+        "remaining": "原站前三組Flash內部預設數值不可讀，目前以明示教學預設替代；拖曳光線與完整控制語意、實際瀏覽器操作驗收仍待核對。不追跡部分反射分支或Fresnel能量。",
+        "basis": [
+          "原站073截圖及說明",
+          "models/layered-refraction.js",
+          "assets/scenes-layered-refraction.js",
+          "verify-layered-refraction.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-074",
+      "sourceId": "074",
+      "title": "杯中吸管",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/strawInCup2026/strawInCup2026.html",
+      "sourceScreenshot": "screenshots/074-strawInCup2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "杯中吸管\n動畫全螢幕\n\n杯中的吸管，為何看起來折斷了呢？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "straw-cup"
+      ],
+      "requirements": [
+        "圓柱與長方形透明液體容器",
+        "條紋吸管、水深、傾角與液體折射率可調",
+        "依自由3D視角追跡水面與側面折射／全反射，呈現實際折射外觀",
+        "可疊加真實吸管位置比較",
+        "原站魚物件及完整顯示控制仍需補齊"
+      ],
+      "evidence": [
+        "99組Snell、全反射與光路逆向可逆性、有限圓柱／盒邊界、吸管交點與幾何配置測試通過。",
+        "圓柱、方形及n=1離線Canvas已產生；圓柱已檢視，渲染取樣靜態提高且拖曳後重繪。"
+      ],
+      "nextAction": "原站魚物件、完整顯示及相機控制語意、實際瀏覽器效能與觸控驗收待補；不含玻璃殼、部分反射與Fresnel能量。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "straw-cup"
+        ],
+        "covered": "零壁厚圓柱／長方形液體容器、條紋吸管、n／水深／傾角，自由視角逆向光線追蹤水面與側面，含全反射與最多8次交互作用；真實位置疊加。",
+        "remaining": "原站魚物件、完整顯示及相機控制語意、實際瀏覽器效能與觸控驗收待補；不含玻璃殼、部分反射與Fresnel能量。",
+        "basis": [
+          "原站074截圖及說明",
+          "models/straw-cup.js",
+          "assets/scenes-straw-cup.js",
+          "verify-straw-cup.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-075",
+      "sourceId": "075",
+      "title": "視深與實深",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/realAndApparentDepth2026/realAndApparentDepth2026.html",
+      "sourceScreenshot": "screenshots/075-realAndApparentDepth2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "視深與實深\n動畫全螢幕\n\n視深與實深\n\n說明影片：",
+      "relatedModelIds": [
+        "straw-cup"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "apparent-depth"
+      ],
+      "requirements": [
+        "物體距界面、橫向位置、觀察者位置、水折射率可調",
+        "空氣看水中與水中看空氣兩種方向",
+        "精確求折射點、雙光線反向延長與表觀交點",
+        "標示真實與表觀距離，另列近軸公式及適用限制",
+        "原站泳池外觀、物件／視角模式與完整控制語意待核對"
+      ],
+      "evidence": [
+        "324組獨立Snell向量／費馬極小值、兩方向、反延長交點、折射率匹配、近軸與子午微分極限測試通過。",
+        "三種離線Canvas狀態已產生；空氣看水中模式已檢視，另加實距／表觀距離尺。"
+      ],
+      "nextAction": "原站泳池外觀、物件／視角及完整顯示控制、實際瀏覽器操作驗收待補。兩光線子午交點不代表所有離軸光線的唯一虛像。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "apparent-depth"
+        ],
+        "covered": "平面界面精確Snell眼端連接、空氣／水雙方向、兩取樣光束反延長交點、物體／觀察者位置、取樣間距、真實與表觀距離標記及近軸參考。",
+        "remaining": "原站泳池外觀、物件／視角及完整顯示控制、實際瀏覽器操作驗收待補。兩光線子午交點不代表所有離軸光線的唯一虛像。",
+        "basis": [
+          "原站075截圖及說明",
+          "models/apparent-depth.js",
+          "assets/scenes-apparent-depth.js",
+          "verify-apparent-depth.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-076",
+      "sourceId": "076",
+      "title": "球形透鏡",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/sphereLens2026/sphereLens2026.html",
+      "sourceScreenshot": "screenshots/076-sphereLens2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "球形透鏡\n動畫全螢幕\n\n球形透鏡，裡面的魚看外面是否會有全反射呢？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "sphere-lens"
+      ],
+      "requirements": [
+        "球形透鏡精確球面折射與全反射",
+        "外看內與內看外兩種觀察模式，可調折射率及內部觀察位置",
+        "外部魚物件幾何示意、可調魚位置，跟隨自由3D視角更新外觀",
+        "球心不全反射、偏離球心後可達全反射的教學數值",
+        "原站環境圖、游動及完整顯示控制仍待核對"
+      ],
+      "evidence": [
+        "12組n／內部位置配置各1萬立體角取樣驗證TIR比例；精確入射不變量、球心無TIR與球內連續反射檢查通過。",
+        "另以球透鏡近軸中心焦距nR/[2(n−1)]獨立核對外部平行光雙次折射。",
+        "外看內、球心內看外及90%半徑TIR離線預覽已產生，外看內與TIR模式已檢視。"
+      ],
+      "nextAction": "原站環境圖、魚游動、網格及完整控制語意、實際瀏覽器效能與觸控驗收待補；不含玻璃殼或Fresnel部分反射。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "sphere-lens"
+        ],
+        "covered": "球面交點與最多8次向量Snell/TIR逆追跡、內外觀察、n及內部眼點與外觀魚位置，內部首界面最大入射角／臨界角／均勻立體角TIR比例。",
+        "remaining": "原站環境圖、魚游動、網格及完整控制語意、實際瀏覽器效能與觸控驗收待補；不含玻璃殼或Fresnel部分反射。",
+        "basis": [
+          "原站076截圖及說明",
+          "models/sphere-lens.js",
+          "assets/scenes-sphere-lens.js",
+          "verify-sphere-lens.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-077",
+      "sourceId": "077",
+      "title": "Fresnel Equation",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/FresnelEquation2024/FresnelEquation2024.html",
+      "sourceScreenshot": "screenshots/077-FresnelEquation2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "Fresnel Equation\n動畫全螢幕\n\n光在折射時，反射與透射強度如何分配呢？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "fresnel"
+      ],
+      "requirements": [
+        "可調兩介質折射率與入射角",
+        "s、p偏振與混合／非偏振的反射透射功率",
+        "正確通量因子、布魯斯特角與全反射",
+        "電場及可選相對磁場示意，保留全反射複數相位",
+        "反射／透射顯示控制、角度掃描曲線於3D視窗下方且預設隱藏"
+      ],
+      "evidence": [
+        "63係數配置與12場模型通過：複數切向E/B邊界、R+T、正常入射、Brewster零反射、TIR模長／相位、互易及獨立時均Poynting通量。",
+        "s／Brewster／TIR混合／非偏振四狀態離線預覽已產生，TIR已檢視。"
+      ],
+      "nextAction": "原站完整控制語意及實際瀏覽器操作驗收仍待核對；不畫消逝場，波形採明示相位放大／慢放示意。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "fresnel"
+        ],
+        "covered": "無吸收非磁介質複數Fresnel係數、s/p/非偏振/相干線混合、R/T功率與角度掃描、Brewster角、全反射相位；E及相對cB波形與反射／透射顯示。",
+        "remaining": "原站完整控制語意及實際瀏覽器操作驗收仍待核對；不畫消逝場，波形採明示相位放大／慢放示意。",
+        "basis": [
+          "原站077截圖及說明",
+          "models/fresnel-core.js",
+          "models/fresnel.js",
+          "assets/scenes-fresnel.js",
+          "verify-fresnel.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-078",
+      "sourceId": "078",
+      "title": "眼看透鏡成像",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/lensImage2026/lensImage2026.html",
+      "sourceScreenshot": "screenshots/078-lensImage2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "眼看透鏡成像\n動畫全螢幕\n\n眼看透鏡成像\n\n說明影片：",
+      "relatedModelIds": [
+        "image-drawing"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "eye-lens"
+      ],
+      "requirements": [
+        "凸／凹透鏡、透明板、凹／凸面鏡、平面鏡六模式",
+        "有限圓形口徑內的觀察者逆向追跡外觀，鏡孔之外能看到真實物體",
+        "可調物距、焦距、口徑及圖案尺寸，辨識正倒立與左右色塊",
+        "自由視角，區分面鏡正面與背面",
+        "鏡外成像位置參考，焦點處無有限像，原站完整顯示控制待核對"
+      ],
+      "evidence": [
+        "72組獨立光線／像點交會、薄元件可逆、平面鏡／板極限、焦點平行光及有限口徑檢查通過。",
+        "實際HTML/scripts畫面取樣測試確認預設有限孔徑與透明板都能看見物體，避免初始觀察者未收到物光。",
+        "七種外觀離線預覽已產生；預設觀察視角修正後凸透鏡倒像已檢視。"
+      ],
+      "nextAction": "原站側面遠看／觀察視野快捷、球物件、完整顯示與視角控制、實際瀏覽器效能及觸控驗收待補；曲面模式採近軸薄元件，非大角度精確曲面。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "eye-lens"
+        ],
+        "covered": "六薄元件模式、有限圓孔與逆向視角追跡、物距／焦距／口徑／圖案尺寸；非對稱程式圖案、鏡外構圖像及無限遠處理，鏡背面不反射。",
+        "remaining": "原站側面遠看／觀察視野快捷、球物件、完整顯示與視角控制、實際瀏覽器效能及觸控驗收待補；曲面模式採近軸薄元件，非大角度精確曲面。",
+        "basis": [
+          "原站078截圖及說明",
+          "models/image-drawing.js",
+          "models/eye-lens.js",
+          "assets/scenes-eye-lens.js",
+          "verify-eye-lens.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-079",
+      "sourceId": "079",
+      "title": "成像之舞",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/dancingImage/dancingImage.html",
+      "sourceScreenshot": "screenshots/079-dancingImage.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "成像之舞\n動畫全螢幕\n\n成像之舞\n\n學生在參考書上看到的問題：\n\n透鏡成像中，將物體固定，透鏡向右運動，則成像會：\n(A) 向右移動 (B) 向左移動 (C) 先向右再向左 (D) 先向左再向右\n別再想了，用動畫試試看吧。\n動畫中，物距像距對調時，成像位置會不會改變呢？為什麼？\n\n關於透鏡成像，下列敘述何者正確？\n(A)凹透鏡成像時，像的速度必小於物的速度。\n(B)凸透鏡成像時，像的速度必小於物的速度。\n(C)凸透鏡成像時，除了物體在焦點外，物體與像的移動方向必相同。\n(D)凸透鏡成像時，若物體由焦點向透鏡移動，則像必做減速運動。\n(E)凹透鏡成像時，若物體遠離透鏡，則像必做加速運動。\n很多學生不會這個題目，就是因為沒看這個動畫，那，就看吧。\n本題的參考答案：A C D (反白看見)",
+      "relatedModelIds": [
+        "image-drawing",
+        "eye-lens"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "dancing-image"
+      ],
+      "requirements": [
+        "凸／凹透鏡，物體及透鏡可分別運動",
+        "原站物體與透鏡各自SHM、等速及圓周模式",
+        "像的位置、速度／加速度與方向變化，區分物體動與透鏡動",
+        "物距／像距互換之共軛位置比較",
+        "光線、軌跡與成像顯示控制，焦點奇異情況須明示"
+      ],
+      "evidence": [
+        "64組獨立數值微分核對x/y像速度與加速度、共軛交換、移動鏡像速反轉、焦點穿越及相切、域界終止檢查通過。",
+        "原站概念：固定鏡的物像同方向、凹透鏡像速小於物速、凸透鏡焦內靠近時像減速，定量檢查通過。",
+        "實際HTML/scripts在焦點開圖、光線、匯出與顯示切換通過；原生Canvas預設／焦點／圓周及焦點圖表已產生並檢視預設與圖表。",
+        "共用104模型2514參數及場景／操作／CSV回歸通過。"
+      ],
+      "nextAction": "原站完整操作與控制語意、實際瀏覽器驗收待核對；物距至0.05m停止，不模擬物體穿越元件或透鏡轉動。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "dancing-image"
+        ],
+        "covered": "凸／凹透鏡，物體及透鏡獨立固定／SHM／等速／圓周平移；解析像位置／速度／加速度、光線／軌跡／成像與共軛位置切換。焦點空值、速度圖斷線與CSV留空。",
+        "remaining": "原站完整操作與控制語意、實際瀏覽器驗收待核對；物距至0.05m停止，不模擬物體穿越元件或透鏡轉動。",
+        "basis": [
+          "原站079截圖及題目說明",
+          "models/dancing-image.js",
+          "assets/scenes-dancing-image.js",
+          "verify-dancing-image.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-080",
+      "sourceId": "080",
+      "title": "透鏡遮一半",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/lensFilterHalf2021/lensFilterHalf2021.html",
+      "sourceScreenshot": "screenshots/080-lensFilterHalf2021.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "透鏡遮一半\n動畫全螢幕\n\n↑透鏡遮一半，成像怎麼半？\n\n\n說明影片：",
+      "relatedModelIds": [
+        "eye-lens",
+        "image-drawing"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "half-lens"
+      ],
+      "requirements": [
+        "由上向下可調遮板，50%直徑遮住半個圓孔",
+        "點、十字及三色物體取樣，每個物點使用全部剩餘孔徑",
+        "光線經薄元件到屏幕，焦平面完整像點與相對光量",
+        "可切換抽樣光線、屏幕底板，觀察離焦時孔徑光斑",
+        "區分精確開孔面積光量與固定曝光的顯示亮度，原站完整視角控制待核對"
+      ],
+      "evidence": [
+        "54組開孔面積／對稱、非零孔徑光線、獨立光線交點／離焦映射、逐物點及屏幕各色通量加總測試通過。",
+        "焦平面每個物點一個獨立像素、全遮無光、半孔重心−4/(3π)及顯示不改物理檢查通過。",
+        "共用105模型2543參數與場景／操作回歸通過；開孔／半孔／離焦／全遮離線預覽產生，半孔已檢視。"
+      ],
+      "nextAction": "原站觀看面／側視快捷、遠看與完整操作語意、實際瀏覽器驗收待核對；物體離散取樣、幾何光學不含繞射。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "half-lens"
+        ],
+        "covered": "圓弓形精確面積及CDF開孔抽樣、逐物點加權光線、有限孔徑薄透鏡屏幕成像；點／十字／三色、遮板／焦距／物距比／半徑／屏距比、光線／屏幕／固定曝光。",
+        "remaining": "原站觀看面／側視快捷、遠看與完整操作語意、實際瀏覽器驗收待核對；物體離散取樣、幾何光學不含繞射。",
+        "basis": [
+          "原站080截圖及說明",
+          "models/half-lens.js",
+          "assets/scenes-half-lens.js",
+          "verify-half-lens.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-081",
+      "sourceId": "081",
+      "title": "視差法找成像位置",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/opticalParallax/opticalParallax.html",
+      "sourceScreenshot": "screenshots/081-opticalParallax.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "視差法找成像位置\n動畫全螢幕\n\n↑視差法，是光學實驗中尋找成像位置的方法，但常常實驗手冊寫得很清楚，同學們卻但不懂。\n所以我設計了這個動畫，希望方便老師們講解 ─ 視差法。\n\n想一想：\n(1) 當頭向右移動時，發現成像相對標示棒向右移動，這樣是像比較遠還是標示棒比較遠呢？\n(2) 只有虛像的位置可以用視差法找嗎？實像的位置可以用視差法找嗎？",
+      "relatedModelIds": [
+        "image-drawing"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "optical-parallax"
+      ],
+      "requirements": [
+        "實像與虛像均可用視差定位，透鏡／面鏡模式",
+        "左右擺頭、手動標示棒位置及校準對照",
+        "比較像與棒的水平視角、相對移動方向與無視差條件",
+        "有限鏡孔可見性，棒在眼後或收不到像光時明示",
+        "自由3D與眼中視野對照、顯示構圖像／光路，切換保留時間"
+      ],
+      "evidence": [
+        "54配置檢查水平投影、薄元件到眼光路、實／虛與面鏡的同深度無視差、相對移動方向、居中重合歧義與棒在眼後。",
+        "實際HTML/scripts校準／手動連動及切眼中視野保留時間與播放測試通過。",
+        "實／虛／校準／平面鏡及兩種眼中視野離線預覽產生，3D實像與未校準眼中視野已檢視。"
+      ],
+      "nextAction": "原站完整操作／視角語意與實際瀏覽器驗收待核對；標棒為旁路直接觀察的理想參考，未做元件遮擋與人眼調焦。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "optical-parallax"
+        ],
+        "covered": "六種實／虛透鏡及面鏡模式、左右擺頭與參考棒、精確角投影與鏡孔檢查，手動／校準、3D與眼中視野、水平角曲線。",
+        "remaining": "原站完整操作／視角語意與實際瀏覽器驗收待核對；標棒為旁路直接觀察的理想參考，未做元件遮擋與人眼調焦。",
+        "basis": [
+          "原站081截圖及說明",
+          "models/optical-parallax.js",
+          "assets/scenes-optical-parallax.js",
+          "verify-optical-parallax.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-082",
+      "sourceId": "082",
+      "title": "光學儀器",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/opticalInstruments2021/opticalInstruments2021.html",
+      "sourceScreenshot": "screenshots/082-opticalInstruments2021.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "光學儀器\n動畫全螢幕\n\n↑光學儀器",
+      "relatedModelIds": [
+        "image-drawing",
+        "eye-lens"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "optical-instruments"
+      ],
+      "requirements": [
+        "原站可見四種儀器：望遠鏡、顯微鏡、放大鏡、眼鏡",
+        "物鏡與目鏡可啟閉、凸凹及焦距／口徑調整",
+        "兩薄透鏡與間距的逐段傳播、像點與光線構圖",
+        "儀器的成像與放大率須依各模式定義，不能用單透鏡名稱替代",
+        "顯示物像／光線／尺／視野與原站快捷操作仍需核對"
+      ],
+      "evidence": [
+        "48組矩陣系統：行列式／逆矩陣、逐段光線傳播與矩陣對照通過。",
+        "四預設驗證無焦望遠鏡−6倍、伽利略+6倍、鬆弛目鏡顯微鏡−62.5倍、放大鏡角／橫向放大不同、近視矯正視網膜聚焦與孔徑裁切。",
+        "實際HTML/scripts模式預設連動與視網膜聚焦檢查通過。",
+        "四儀器離線預覽已產生，望遠鏡光路已檢視。"
+      ],
+      "nextAction": "原站完整三維物體／視野、尺與各快捷控制及實際瀏覽器驗收待補；目前子午光線取樣，非三維孔徑能量或完整視覺成像。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "optical-instruments"
+        ],
+        "covered": "ABCD多元件核心、物鏡／目鏡的啟閉／凸凹／焦距／口徑及間距；四教學預設、有限／無限遠物體、成像與角放大率區分、固定視網膜幾何光斑及子午孔徑通過。",
+        "remaining": "原站完整三維物體／視野、尺與各快捷控制及實際瀏覽器驗收待補；目前子午光線取樣，非三維孔徑能量或完整視覺成像。",
+        "basis": [
+          "原站082截圖",
+          "models/ray-matrix.js",
+          "models/optical-instruments.js",
+          "assets/scenes-optical-instruments.js",
+          "verify-optical-instruments.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-083",
+      "sourceId": "083",
+      "title": "虹與霓",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/rainbow3D2022/rainbow3D2022.html",
+      "sourceScreenshot": "screenshots/083-rainbow3D2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "虹與霓\n動畫全螢幕\n\n↑虹與霓\n\n說明影片：",
+      "relatedModelIds": [
+        "sphere-lens",
+        "fresnel"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "rainbow"
+      ],
+      "requirements": [
+        "主虹一次與次虹兩次內部反射，逐球面交點及折射／反射",
+        "色散及主／次虹偏向極值、相反色序",
+        "觀察者3D角錐、太陽仰角、平地／全圓切換",
+        "單波長偏心光路與各偏振Fresnel支路功率",
+        "原站完整觀察視野、亮度及控制語意仍需核對"
+      ],
+      "evidence": [
+        "30支路配置核對獨立偏向角公式、球面交點、各偏振Fresnel乘積，確認虹霓為部分內反射並非TIR。",
+        "極值點導數／曲率、七色主次虹順序、無色散同角及3D角錐不變量檢查通過。",
+        "實際HTML/scripts平地／全圓切換重新取景保留時間及播放、單滴切換檢查通過。",
+        "天空、全圓、主／次水滴離線預覽產生，天空及次水滴已檢視。"
+      ],
+      "nextAction": "原站完整天空外觀、觀察視野、亮度角分布及各控制、實際瀏覽器驗收待補；未計Alexander暗帶及超數虹亮度，色散為明示教學函數。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "rainbow"
+        ],
+        "covered": "精確球滴光路及s/p各別Fresnel通量連乘、主／次虹極值與七色色序；觀察者角錐、太陽仰角、平地／懸崖全圓、單水滴光點、固定亮度與角錐線。",
+        "remaining": "原站完整天空外觀、觀察視野、亮度角分布及各控制、實際瀏覽器驗收待補；未計Alexander暗帶及超數虹亮度，色散為明示教學函數。",
+        "basis": [
+          "原站083截圖及說明",
+          "models/rainbow.js",
+          "assets/scenes-rainbow.js",
+          "verify-rainbow.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-084",
+      "sourceId": "084",
+      "title": "希區考克變焦",
+      "category": "幾何光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/hitchcock2026/hitchcock2026.html",
+      "sourceScreenshot": "screenshots/084-hitchcock2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "希區考克變焦\n動畫全螢幕\n\n希區考克變焦\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "dolly-zoom"
+      ],
+      "requirements": [
+        "固定3D主體與不同深度背景圓環",
+        "自動往返與手動攝影機距離、焦距及同步變焦控制",
+        "比較只移動、移動加變焦、只變焦",
+        "主體像高不變而背景相對比例改變，攝影機畫面／3D構圖切換"
+      ],
+      "evidence": [
+        "54配置驗證精確聚焦像距、同步主體像高恆定、背景深度比改變、只變焦透視比不變及攝影機速度。",
+        "實際HTML/scripts視圖切換保留時間及播放；繪圖arc取樣確認主環像素半徑固定、遠背景環增大。",
+        "共用109模型2693參數回歸通過，基準／遠／近／自由3D離線預覽已產生，遠端畫面已檢視。"
+      ],
+      "nextAction": "原站完整視野控制及實際瀏覽器操作驗收待核對；省略景深、像差及真實內對焦鏡頭呼吸。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "dolly-zoom"
+        ],
+        "covered": "固定3D環、3:2感光面聚焦透視投影、f/d同步、三比較模式、往返／手動、距離／焦距／圓環參數及自由3D取景範圍。",
+        "remaining": "原站完整視野控制及實際瀏覽器操作驗收待核對；省略景深、像差及真實內對焦鏡頭呼吸。",
+        "basis": [
+          "原站084截圖及說明",
+          "models/dolly-zoom.js",
+          "assets/scenes-dolly-zoom.js",
+          "verify-dolly-zoom.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-085",
+      "sourceId": "085",
+      "title": "雙狹縫繞射",
+      "category": "波動光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/doubleSlit2016/doubleSlit2016.html",
+      "sourceScreenshot": "screenshots/085-doubleSlit2016.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "雙狹縫繞射\n動畫全螢幕\n\n↑雙狹縫繞射。\n  縫寬、縫距可調，狹縫、雷射可轉，可在狹縫填入折射率介質。\n\n檔案下載\n\n[離線網頁檔]",
+      "relatedModelIds": [
+        "double-slit"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "double-slit"
+      ],
+      "requirements": [
+        "雙狹縫有限矩形孔、縫長寬／縫距／波長／屏距",
+        "狹縫面內旋轉及小角度雷射斜入射",
+        "兩縫各自薄片折射率及厚度，依光程差計算相位",
+        "2D強度及掃描曲線；原站波形／波前與強度／圖形顯示過程待補"
+      ],
+      "evidence": [
+        "216配置驗證複振幅／強度、旋轉共變、斜入射峰、零折射率差與相位週期；獨立192×192雙矩形孔徑積分核對。",
+        "兩片共同相位消去、交換薄片使條紋位移反向檢查通過。",
+        "旋轉／相位／斜入射離線預覽已產生，90度轉向後條紋已檢視。"
+      ],
+      "nextAction": "原站波形／波前及強度／圖形的過程顯示、旋轉控制完整語意與實際瀏覽器驗收仍待核對；純量Fraunhofer且薄片不含吸收／反射／傾斜校正。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "double-slit"
+        ],
+        "covered": "擴充原double-slit，加入孔徑面內旋轉、水平入射傾角、兩縫獨立薄相位片、複振幅與2D強度；保留真實縫長寬／縫距／波長／屏距與掃描。",
+        "remaining": "原站波形／波前及強度／圖形的過程顯示、旋轉控制完整語意與實際瀏覽器驗收仍待核對；純量Fraunhofer且薄片不含吸收／反射／傾斜校正。",
+        "basis": [
+          "原站085截圖與embedded控制記錄",
+          "models/wave-optics.js",
+          "assets/mechanics-scenes.js 的double-slit分支",
+          "verify-double-slit.cjs"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-086",
+      "sourceId": "086",
+      "title": "干涉繞射條紋",
+      "category": "波動光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/diffractionPattern2023/diffractionPattern2023.html",
+      "sourceScreenshot": "screenshots/086-diffractionPattern2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "干涉繞射條紋\n動畫全螢幕\n\n↑干涉繞射條紋\n介紹如何計算光的干涉繞射的強度。\n\n說明影片1：\n\n說明影片2：",
+      "relatedModelIds": [
+        "double-slit"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "aperture-pattern"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "verify-aperture-pattern.cjs：36組獨立孔積分/Bessel/暗紋/陣列與DOM檢查通過；artifacts/aperture-pattern-circle.png離線預覽已檢視"
+      ],
+      "nextAction": "原站精確控制範圍及放大操作語義尚未完全核對；遠場近似及中心峰歸一，無近場或不同孔板絕對功率比較；瀏覽器操作待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "aperture-pattern"
+        ],
+        "covered": "矩形／圓孔、1..8×1..8陣列、兩軸孔尺寸及淨距、屏距波長亮度與示意放大；矩形sinc、圓孔Bessel/Airy及相干陣列和。",
+        "remaining": "原站精確控制範圍及放大操作語義尚未完全核對；遠場近似及中心峰歸一，無近場或不同孔板絕對功率比較；瀏覽器操作待驗收。",
+        "basis": [
+          "原站086截圖及results.json",
+          "models/aperture-pattern.js",
+          "verify-aperture-pattern.cjs"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-087",
+      "sourceId": "087",
+      "title": "干涉繞射的強度",
+      "category": "波動光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/diffractionIntensity2022/diffractionIntensity2022.html",
+      "sourceScreenshot": "screenshots/087-diffractionIntensity2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "干涉繞射的強度\n動畫全螢幕\n\n↑干涉繞射的強度\n介紹如何計算光的干涉繞射的強度。\n\n說明影片：",
+      "relatedModelIds": [
+        "double-slit"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "diffraction-amplitudes"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "verify-diffraction-amplitudes.cjs：45配置整縫解析和、暗紋、相消及交叉項與五模式DOM通過；artifacts/diffraction-amplitudes.png離線預覽已檢視"
+      ],
+      "nextAction": "雙光柵目前定義為兩組有限狹縫，原站精確語義與各控制仍需逐項對齊；實際瀏覽器操作待驗收。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "diffraction-amplitudes"
+        ],
+        "covered": "五模式：電場向量、多縫、單縫、雙縫、雙光柵；有限孔分區解析積分、首尾相接向量、A/B/A+B、瞬時場／強度及手動自動掃描。",
+        "remaining": "雙光柵目前定義為兩組有限狹縫，原站精確語義與各控制仍需逐項對齊；實際瀏覽器操作待驗收。",
+        "basis": [
+          "原站087截圖及results.json",
+          "models/diffraction-amplitudes.js",
+          "verify-diffraction-amplitudes.cjs"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-088",
+      "sourceId": "088",
+      "title": "轉狹縫轉雷射",
+      "category": "波動光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/rotateSlitLaserScreen/rotateSlitLaserScreen.html",
+      "sourceScreenshot": "screenshots/088-rotateSlitLaserScreen.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "轉狹縫轉雷射\n動畫全螢幕\n\n↑轉狹縫轉雷射\n\n說明影片：",
+      "relatedModelIds": [
+        "double-slit"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "double-slit"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "verify-double-slit.cjs：旋轉屏方向等價性與掃描點世界座標檢查通過",
+        "artifacts/double-slit-screen-rotation.png：55°屏及30°孔徑面內旋轉離線Canvas預覽已檢視"
+      ],
+      "nextAction": "原站波長倍數尺寸範圍、狹縫法向轉動、廣角雷射、圓弧屏、角度尺及波程差輔助尚未重建；原站完整控制與瀏覽器操作待驗收。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "double-slit"
+        ],
+        "covered": "double-slit現有孔徑面內旋轉、小角度雷射斜入射，以及±60°平面屏水平轉動；以屏上實際位置求出射方向及複數振幅。",
+        "remaining": "原站波長倍數尺寸範圍、狹縫法向轉動、廣角雷射、圓弧屏、角度尺及波程差輔助尚未重建；原站完整控制與瀏覽器操作待驗收。",
+        "basis": [
+          "原站088截圖及results.json",
+          "models/wave-optics.js",
+          "verify-double-slit.cjs"
+        ]
+      },
+      "implementationAction": "新增專用題型並重用相關能力"
+    },
+    {
+      "id": "site-089",
+      "sourceId": "089",
+      "title": "光柵",
+      "category": "波動光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/opticalGrating2026/opticalGrating2026.html",
+      "sourceScreenshot": "screenshots/089-opticalGrating2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "光柵\n動畫全螢幕\n\n光柵繞射，哪裡會有熱射條紋？\n\n說明影片：",
+      "relatedModelIds": [
+        "double-slit"
+      ],
+      "status": "in-progress",
+      "modelIds": [
+        "optical-grating"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "90組切向動量、完整允許級次、掠射、直接光程和與場景/切換檢查通過；artifacts/optical-grating.png離線檢視",
+        "整合驗證：115模型2891參數、115場景及共用操作通過（verify-mechanics.cjs）"
+      ],
+      "nextAction": "原站精確動畫/控制語義與瀏覽器操作仍待核對；採理想點溝槽相干陣列，未建模閃耀、偏振、單槽包絡及能量效率。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "optical-grating"
+        ],
+        "covered": "廣角向量光柵級次、穿透／反射、轉角、密度、綠／紅藍光、波前、指定方向及切線；縮放沿用共用視角操作。",
+        "remaining": "原站精確動畫/控制語義與瀏覽器操作仍待核對；採理想點溝槽相干陣列，未建模閃耀、偏振、單槽包絡及能量效率。",
+        "basis": [
+          "原站089截圖及results.json",
+          "models/optical-grating.js",
+          "verify-optical-grating.cjs"
+        ]
+      },
+      "implementationAction": "新增專用題型並重用相關能力"
+    },
+    {
+      "id": "site-090",
+      "sourceId": "090",
+      "title": "光的三原色",
+      "category": "波動光學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/color3Origin2022/color3Origin2022.html",
+      "sourceScreenshot": "screenshots/090-color3Origin2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "光的三原色\n動畫全螢幕\n\n↑光的三原色",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "rgb-lights"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "288強度組合、八個疊色區、sRGB逆轉/50%灰與實際拉桿事件/場景通過；artifacts/rgb-lights.png離線檢視",
+        "整合驗證：115模型2891參數、115場景及共用操作通過（verify-mechanics.cjs）"
+      ],
+      "nextAction": "原站未證實的拖曳/隱含操作及實際瀏覽器仍待核對；CMY僅理想濾片減色，非真顏料散射。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "rgb-lights"
+        ],
+        "covered": "左右RGB加色及CMY減色、六拉桿、可調光斑半徑與分離，線性光相加後編碼sRGB。",
+        "remaining": "原站未證實的拖曳/隱含操作及實際瀏覽器仍待核對；CMY僅理想濾片減色，非真顏料散射。",
+        "basis": [
+          "原站090截圖及results.json",
+          "models/rgb-lights.js",
+          "verify-rgb-lights.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-091",
+      "sourceId": "091",
+      "title": "金箔驗電器",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/electroScope2024/electroScope2024.html",
+      "sourceScreenshot": "screenshots/091-electroScope2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "金箔驗電器\n動畫全螢幕\n\n金箔驗電器有兩個功能：\n1.檢驗待測棒是否帶電\n2.檢驗待測棒與驗電器電性同性或異性\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "electroscope"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "180配置正定電容/守恆/接觸等位/感應反號/金箔平衡及DOM通過；electroscope三種離線預覽已檢視",
+        "整合驗證：115模型2891參數、115場景及共用操作通過（verify-mechanics.cjs）"
+      ],
+      "nextAction": "原站拖曳棒操作一致性與瀏覽器仍待驗收；集中電容準靜態模型，非精確導體表面場，無金箔慣性漏電。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "electroscope"
+        ],
+        "covered": "正負棒、預充電、靠近移開、接觸分電、先接地/斷地/移棒感應起電、電荷顯隱；集中電容及金箔力矩平衡。",
+        "remaining": "原站拖曳棒操作一致性與瀏覽器仍待驗收；集中電容準靜態模型，非精確導體表面場，無金箔慣性漏電。",
+        "basis": [
+          "原站091截圖及results.json",
+          "models/electroscope.js",
+          "verify-electroscope.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-092",
+      "sourceId": "092",
+      "title": "雙點電荷",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/twoCharge2025/twoCharge2025.html",
+      "sourceScreenshot": "screenshots/092-twoCharge2025.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "雙點電荷\n動畫全螢幕\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "in-progress",
+      "modelIds": [
+        "two-charges"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "27配置獨立電位/力、負梯度、高斯通量、偶極與同號極限、三視圖DOM通過；two-charges與terrain離線預覽已檢視",
+        "整合驗證：115模型2891參數、115場景及共用操作通過（verify-mechanics.cjs）"
+      ],
+      "nextAction": "原站電位立體/空間視圖的精確語義、完整等位面及原站拖曳等控制尚未對齊；瀏覽器待驗收。場圖省略電荷近區且線數非通量定量。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "two-charges"
+        ],
+        "covered": "可調正負電量與距離、觀察點；庫侖場與電位、RK4電力線、電場方向、截面等位線、軸對稱空間線及壓縮電位地形。",
+        "remaining": "原站電位立體/空間視圖的精確語義、完整等位面及原站拖曳等控制尚未對齊；瀏覽器待驗收。場圖省略電荷近區且線數非通量定量。",
+        "basis": [
+          "原站092截圖及results.json",
+          "models/two-charges.js",
+          "verify-two-charges.cjs"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-093",
+      "sourceId": "093",
+      "title": "ILB LvB",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/ILBLVB2022/ILBLVB2022.html",
+      "sourceScreenshot": "screenshots/093-ILBLVB2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "ILB LvB\n動畫全螢幕\n\n載流直導線在均勻場中，電流磁力線與環境磁力線互相排斥各自縮短。\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "分開呈現載流導線Iℓ×B與帶電粒子qv×B，原站ILB/LvB切換不可合併成單一受力圖",
+        "依截圖加入電池上下／翻轉、磁極反向、電壓與播放；核對導線形狀與磁力線輔助",
+        "均勻外場加導線自場只作場圖，受力須排除自身場；量綱與叉積符號獨立驗證",
+        "共用3D/UI/入口/路由與物理、DOM、離線場景驗證，實際瀏覽器另記"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/093-ILBLVB2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-094",
+      "sourceId": "094",
+      "title": "電場單擺",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/electricPendulum/electricPendulum.html",
+      "sourceScreenshot": "screenshots/094-electricPendulum.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "電場單擺\n[這個動畫需要 FlashPlayer]\n\n有一個考題是這樣的，一個單擺的擺錘帶正電，放在一水平的向右電場中，\n\n將擺錘由鉛直釋放，會發生什麼事情?\n\n我喜歡用這樣的方式思考：\n\n        擺錘同時受到固定不變的重力mg↓，以及電力qE→，\n\n        可以合起來看成等效的重力mg'向右下方。\n\n動畫中，你可以調整電場的大小，選擇觀看的方式，還可以讓單擺晃動。\n\n想一想：等效的重力mg'的大小該如何計算呢？它與鉛直線的夾角是多少呢？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "pendulum"
+      ],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依已保存Flash截圖重建水平電場中的帶電非線性單擺，不執行Flash/EXE",
+        "可調場強，顯示mg、qE、合力及等效重力方向，原圖三種比較視圖與晃動操作",
+        "等效重力大小sqrt(g²+(qE/m)²)、偏角atan(qE/mg)，驗證非線性週期及機械能",
+        "共用3D/UI/入口/路由與物理、DOM、離線場景驗證，實際瀏覽器另記"
+      ],
+      "evidence": [],
+      "nextAction": "缺電荷、水平電場、電力與等效重力；現有擺不能替代電場單擺。",
+      "existingComparison": {
+        "level": "related",
+        "modelIds": [
+          "pendulum"
+        ],
+        "covered": "已有純重力非線性擺。",
+        "remaining": "缺電荷、水平電場、電力與等效重力；現有擺不能替代電場單擺。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/094-electricPendulum.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增專用題型並重用相關能力"
+    },
+    {
+      "id": "site-095",
+      "sourceId": "095",
+      "title": "電荷在場中運動",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/qInEBFields2025/qInEBFields2025.html",
+      "sourceScreenshot": "screenshots/095-qInEBFields2025.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "電荷在電磁場中運動\n動畫全螢幕\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "可調帶電粒子參數、速度與均勻電磁場方向，支援直線/圓/螺旋/交叉場等情境",
+        "依原圖參數預設及更多選單核對功能，現截圖標題遮住細節，不能猜測算完整",
+        "採洛侖茲力q(E+v×B)，獨立驗證純磁能量/迴旋半徑週期、平行電場加速及E×B漂移",
+        "共用3D/UI/入口/路由與物理、DOM、離線場景驗證，實際瀏覽器另記"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/095-qInEBFields2025.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-096",
+      "sourceId": "096",
+      "title": "電磁感應",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/electromagneticInduction2022/electromagneticInduction2022.html",
+      "sourceScreenshot": "screenshots/096-electromagneticInduction2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "電磁感應\n動畫全螢幕\n\n磁通量造成的電磁感應，就是切割磁力線造成的電磁感應。\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/096-electromagneticInduction2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-097",
+      "sourceId": "097",
+      "title": "旋轉感應",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/rotationalEMF2026/rotationalEMF2026.html",
+      "sourceScreenshot": "screenshots/097-rotationalEMF2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "旋轉感應\n115分科第8題\n動畫全螢幕\n\n半圓金屬環在不均勻磁場中旋轉，感應電動是該長什麼樣子呢？\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/097-rotationalEMF2026.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-098",
+      "sourceId": "098",
+      "title": "電動機",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/dcMotor2022/dcMotor2022.html",
+      "sourceScreenshot": "screenshots/098-dcMotor2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "電動機\n動畫全螢幕\n\n↑電動機\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/098-dcMotor2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-099",
+      "sourceId": "099",
+      "title": "發電機",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/acGenerator2022/acGenerator2022.html",
+      "sourceScreenshot": "screenshots/099-acGenerator2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "發電機\n動畫全螢幕\n\n↑發電機\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/099-acGenerator2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-100",
+      "sourceId": "100",
+      "title": "法拉第悖論",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/FaradayParadox2024/FaradayParadox2024.html",
+      "sourceScreenshot": "screenshots/100-FaradayParadox2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "法拉第悖論(Faraday Paradox)\n動畫全螢幕\n\n法拉第悖論(Faraday Paradox)\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/100-FaradayParadox2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-101",
+      "sourceId": "101",
+      "title": "電磁波與偏極柵",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/EMWandPolarization2023/EMWandPolarization2023.html",
+      "sourceScreenshot": "screenshots/101-EMWandPolarization2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "電磁波與偏極柵\n動畫全螢幕\n\n↑電磁波與偏極柵\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/101-EMWandPolarization2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-102",
+      "sourceId": "102",
+      "title": "電磁波的能量",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/energyEMWave2026/energyEMWave2026.html",
+      "sourceScreenshot": "screenshots/102-energyEMWave2026.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "電磁波的能量\n動畫全螢幕\n\n電磁波的能量",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/102-energyEMWave2026.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-103",
+      "sourceId": "103",
+      "title": "波的邊界條件",
+      "category": "電磁學",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/waveBoundary2024/waveBoundary2024.html",
+      "sourceScreenshot": "screenshots/103-waveBoundary2024.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "波的邊界條件\n動畫全螢幕\n\n波的邊界條件\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/103-waveBoundary2024.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-104",
+      "sourceId": "104",
+      "title": "光電效應實驗",
+      "category": "近代物理",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/photoelectricEffectExperiment/photoelectricEffectExperiment.html",
+      "sourceScreenshot": "screenshots/104-photoelectricEffectExperiment.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "光電效應\n[這個動畫需要 FlashPlayer]\n\n↑經典的光電效應實驗\n\n↑動畫截圖\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/104-photoelectricEffectExperiment.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-105",
+      "sourceId": "105",
+      "title": "原子模型的演進",
+      "category": "近代物理",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/allAtoms2025/allAtoms2025.html",
+      "sourceScreenshot": "screenshots/105-allAtoms2025.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "原子模型的演進\n動畫全螢幕\n\n原子模型的演進\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/105-allAtoms2025.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-106",
+      "sourceId": "106",
+      "title": "EPR實驗",
+      "category": "近代物理",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/EPRexperimant2022/EPRexperimant2022.html",
+      "sourceScreenshot": "screenshots/106-EPRexperimant2022.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "EPR實驗\n動畫全螢幕\n\n↑EPR實驗\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/106-EPRexperimant2022.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-107",
+      "sourceId": "107",
+      "title": "1s2s躍遷禁止",
+      "category": "近代物理",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/forbidden1s2s/forbidden1s2s.html",
+      "sourceScreenshot": "screenshots/107-forbidden1s2s.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "1s2s躍遷禁止\n動畫全螢幕\n\n↑光的偏極與原子能階躍遷\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/107-forbidden1s2s.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-108",
+      "sourceId": "108",
+      "title": "混成軌域",
+      "category": "近代物理",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/orbitalHybridization2023/orbitalHybridization2023.html",
+      "sourceScreenshot": "screenshots/108-orbitalHybridization2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "混成軌域\n動畫全螢幕\n\n混成軌域是怎麼混的呢？。\n\n說明影片：",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/108-orbitalHybridization2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-109",
+      "sourceId": "109",
+      "title": "永動機",
+      "category": "其它",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/cork/cork.html",
+      "sourceScreenshot": "screenshots/109-cork.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "永動機\n[這個動畫需要 FlashPlayer]\n\n這是個靠著浮力不停轉動的機器，軟木塞半側在水裡，受到浮力向上，\n另一半不在水裡，只受重力向下，所以可以不停轉動。\n\n接上發電機，就能不斷的發電囉！\n\n根據能量守恆定律，這合理嗎？動畫中的機器有沒有什麼問題？\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/109-cork.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-110",
+      "sourceId": "110",
+      "title": "滾動摩擦",
+      "category": "其它",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/tire/tire.html",
+      "sourceScreenshot": "screenshots/110-tire.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "滾動摩擦\n[這個動畫需要 FlashPlayer]\n\n在平坦道路上滾動而漸漸變慢的輪胎，受到地面的摩擦力是向前或向後？\n\n看看動畫，想一想：\n如果你選摩擦力向前，力與速度同向，輪胎不是會越跑越快嗎？\n如果你選摩擦力向後，力與轉動方向相同，輪胎不是會越轉越快嗎？\n\n好奇怪喔~\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "rolling",
+        "bicycle-friction"
+      ],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "現有模型不含滾動阻力／形變接觸力矩；不能回答無驅動輪胎自行減速的原站問題。",
+      "existingComparison": {
+        "level": "related",
+        "modelIds": [
+          "rolling",
+          "bicycle-friction"
+        ],
+        "covered": "已有理想純滾動與輪子摩擦力方向。",
+        "remaining": "現有模型不含滾動阻力／形變接觸力矩；不能回答無驅動輪胎自行減速的原站問題。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/110-tire.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增專用題型並重用相關能力"
+    },
+    {
+      "id": "site-111",
+      "sourceId": "111",
+      "title": "輪的純滾動",
+      "category": "其它",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/IPHO2008/IPHO2008.html",
+      "sourceScreenshot": "screenshots/111-IPHO2008.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "輪在粗糙面上純滾動\n動畫全螢幕\n\n↑2008物奧初選試題",
+      "relatedModelIds": [
+        "rolling",
+        "bicycle-friction"
+      ],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "缺原站單輪指定點與軌跡的獨立觀察；2008 題目對應控制仍待確認。",
+      "existingComparison": {
+        "level": "partial",
+        "modelIds": [
+          "rolling",
+          "bicycle-friction"
+        ],
+        "covered": "已有 v=Rω 的輪子平動、自轉、轉動慣量及摩擦力；腳踏車可設定等速滑行。",
+        "remaining": "缺原站單輪指定點與軌跡的獨立觀察；2008 題目對應控制仍待確認。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/111-IPHO2008.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "擴充現有模型／場景"
+    },
+    {
+      "id": "site-112",
+      "sourceId": "112",
+      "title": "雷射冷卻",
+      "category": "其它",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/ultraCold/ultraCold.html",
+      "sourceScreenshot": "screenshots/112-ultraCold.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "雷射冷卻\n[這個動畫需要 FlashPlayer]\n\n這個動畫是我讀研究所時，為了介紹我們實驗室做的研究而做的動畫。\n主要是介紹如何利用雷射將原子冷卻。\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/112-ultraCold.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-113",
+      "sourceId": "113",
+      "title": "面截方體",
+      "category": "其它",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/cubeAndPlane/cubeAndPlane.html",
+      "sourceScreenshot": "screenshots/113-cubeAndPlane.jpg",
+      "sourceFormat": "page-only",
+      "sourceDescription": "面截方體\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/113-cubeAndPlane.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-114",
+      "sourceId": "114",
+      "title": "天空中的日行跡",
+      "category": "其它",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/Analemma/Analemma.html",
+      "sourceScreenshot": "screenshots/114-Analemma.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "天空中的日行跡\n動畫全螢幕\n\n↑天空中的日行跡(Analemma)\n\n感謝師大附中地球科學王靖華老師、吳尚庭老師指導討論。\n\n檔案下載\n\n[離線網頁檔]",
+      "relatedModelIds": [],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+      "existingComparison": {
+        "level": "none",
+        "modelIds": [],
+        "covered": "現有實驗中未找到對應的專用模型。",
+        "remaining": "需建立本題專用模型、場景與操作；不能將來源截圖或紀錄頁當成模擬。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/114-Analemma.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增模型、場景及入口"
+    },
+    {
+      "id": "site-115",
+      "sourceId": "115",
+      "title": "追蹤曲線",
+      "category": "其它",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/pursuitCurves2023/pursuitCurves2023.html",
+      "sourceScreenshot": "screenshots/115-pursuitCurves2023.jpg",
+      "sourceFormat": "html5-canvas",
+      "sourceDescription": "追蹤曲線\n動畫全螢幕\n\n↑有趣的追蹤曲線\n\n說明影片：\n\n複雜的數學推導1\nA等速直線B追蹤\n\n複雜的數學推導2\n互相追逐",
+      "relatedModelIds": [
+        "pursuit"
+      ],
+      "status": "planned",
+      "modelIds": [],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [],
+      "nextAction": "缺二維追逐的速度方向持續指向目標、互相追逐與追蹤曲線。",
+      "existingComparison": {
+        "level": "related",
+        "modelIds": [
+          "pursuit"
+        ],
+        "covered": "已有同一直線上的追及／會車。",
+        "remaining": "缺二維追逐的速度方向持續指向目標、互相追逐與追蹤曲線。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/115-pursuitCurves2023.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "新增專用題型並重用相關能力"
+    },
+    {
+      "id": "site-116",
+      "sourceId": "116",
+      "title": "彈簧質量SHM",
+      "category": "計算模擬",
+      "sourceUrl": "https://www.haha90.url.tw/content/TeachAnime/allTeachinfAnimation/springMassSHM/springMassSHM.html",
+      "sourceScreenshot": "screenshots/116-springMassSHM.jpg",
+      "sourceFormat": "flash-screenshot",
+      "sourceDescription": "彈簧質量SHM\n[這個動畫需要 FlashPlayer]\n\n↑動畫截圖。\n\n檔案下載\n\n[PC exe]",
+      "relatedModelIds": [
+        "massive-spring"
+      ],
+      "status": "implemented",
+      "modelIds": [
+        "massive-spring"
+      ],
+      "requirements": [
+        "依原站畫面及說明逐項建立功能對照",
+        "以本專案架構實作實際模型與對應互動",
+        "原站參數、顯示模式與教學概念均需對照，不能只比名稱",
+        "物理／邊界／操作驗證與可用入口"
+      ],
+      "evidence": [
+        "2026-10-20 現有程式比對：彈簧總質量、端點質量、剛度可調；12 段分布慣性、節點形變、最低模態與 mₛ/3 近似比較已有實作。"
+      ],
+      "nextAction": "原站截圖的週期計算圖與參數範圍未逐項重現；採離散分布模型，尚待原站公式對照。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "massive-spring"
+        ],
+        "covered": "彈簧總質量、端點質量、剛度可調；12 段分布慣性、節點形變、最低模態與 mₛ/3 近似比較已有實作。",
+        "remaining": "原站截圖的週期計算圖與參數範圍未逐項重現；採離散分布模型，尚待原站公式對照。",
+        "basis": [
+          "results.json 中的原站說明",
+          "screenshots/116-springMassSHM.jpg",
+          "本地模型定義、場景分支與入口"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "user-mass",
+      "title": "考慮滑輪或彈簧質量的運動學",
+      "category": "使用者新增",
+      "requirements": [
+        "有質量滑輪的轉動慣量及兩側不同張力",
+        "有質量彈簧的分布慣性、波形及振動週期",
+        "與忽略質量的模型比較"
+      ],
+      "relatedModelIds": [
+        "massive-pulley"
+      ],
+      "modelIds": [
+        "massive-pulley",
+        "massive-spring"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "verify-mechanics.cjs：物理獨立參考、邊界與操作檢查通過；全35模型共683組參數",
+        "render-previews.cjs：原生Canvas離線場景已檢視",
+        "總覽與獨立HTML入口已加入"
+      ],
+      "nextAction": "實際瀏覽器操作驗收；目前工具無法開啟本機file網址，離線替身不算瀏覽器驗收",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "massive-pulley",
+          "massive-spring"
+        ],
+        "covered": "使用者新增需求已有實際模型、操作與入口。",
+        "remaining": "保留原有 implemented 狀態，實際瀏覽器驗收尚待完成。",
+        "basis": [
+          "本地模型定義",
+          "verify-mechanics.cjs",
+          "獨立 HTML 入口"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "user-double-slit",
+      "title": "可調尺寸與屏距的雙狹縫干涉",
+      "category": "使用者新增",
+      "requirements": [
+        "螢幕與狹縫距離可調",
+        "狹縫寬度、長度與縫距可調",
+        "波長可調",
+        "二維干涉／繞射光強與橫截面圖",
+        "物理尺寸及示意放大比例清楚；近似條件明示"
+      ],
+      "relatedSourceIds": [
+        "085",
+        "086",
+        "087"
+      ],
+      "modelIds": [
+        "double-slit"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "verify-mechanics.cjs：物理獨立參考、邊界與操作檢查通過；全35模型共683組參數",
+        "render-previews.cjs：原生Canvas離線場景已檢視",
+        "總覽與獨立HTML入口已加入"
+      ],
+      "nextAction": "實際瀏覽器操作驗收；目前工具無法開啟本機file網址，離線替身不算瀏覽器驗收",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "double-slit"
+        ],
+        "covered": "使用者新增需求已有實際模型、操作與入口。",
+        "remaining": "保留原有 implemented 狀態，實際瀏覽器驗收尚待完成。",
+        "basis": [
+          "本地模型定義",
+          "verify-mechanics.cjs",
+          "獨立 HTML 入口"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "user-bicycle",
+      "title": "腳踏車輪子的摩擦力方向",
+      "category": "使用者新增",
+      "requirements": [
+        "前後輪分別顯示摩擦力及方向",
+        "可調驅動、前輪煞車、後輪煞車",
+        "滑行時無理想靜摩擦的情境",
+        "轉動慣量、平動與純滾動約束一致",
+        "停止及純滾動適用條件明示"
+      ],
+      "relatedSourceIds": [
+        "018",
+        "110",
+        "111"
+      ],
+      "modelIds": [
+        "bicycle-friction"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "verify-mechanics.cjs：物理獨立參考、邊界與操作檢查通過；全35模型共683組參數",
+        "render-previews.cjs：原生Canvas離線場景已檢視",
+        "總覽與獨立HTML入口已加入"
+      ],
+      "nextAction": "實際瀏覽器操作驗收；目前工具無法開啟本機file網址，離線替身不算瀏覽器驗收",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "bicycle-friction"
+        ],
+        "covered": "使用者新增需求已有實際模型、操作與入口。",
+        "remaining": "保留原有 implemented 狀態，實際瀏覽器驗收尚待完成。",
+        "basis": [
+          "本地模型定義",
+          "verify-mechanics.cjs",
+          "獨立 HTML 入口"
+        ]
+      },
+      "implementationAction": "核對差異與完成驗收"
+    },
+    {
+      "id": "user-violin-fourier",
+      "title": "小提琴聲的傅立葉分析與合成",
+      "relatedModelIds": [
+        "sound-elements"
+      ],
+      "requirements": [
+        "分析小提琴聲，顯示各頻率分量及其振幅",
+        "可觀察個別分量波形與逐項疊加後的合成波形",
+        "明確區分實際錄音分析與示意泛音合成；使用音源及分析窗需可追溯"
+      ],
+      "nextAction": "已依使用者優先要求交付可用模擬；後續依使用回饋調整，暫不進行全站驗收。",
+      "category": "使用者新增",
+      "modelIds": [
+        "violin-fourier"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "verify-violin-fourier.cjs：合成、獨立係數/相位/DC/殘差、Parseval、靜音與DOM定向檢查；artifacts/violin-fourier.png離線預覽"
+      ],
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "violin-fourier"
+        ],
+        "covered": "12個整數諧波的振幅/相位、個別波形、合成波形、開關/倍率及聲音；預設明示示意小提琴音色，另可本機匯入錄音做指定基頻與窗的Hann加權最小平方擬合。",
+        "remaining": "屬指定基頻的諧波分析，並非完整FFT或非整數部分音/弓噪/時變音高分析。",
+        "basis": [
+          "使用者新增題目",
+          "models/violin-fourier.js",
+          "verify-violin-fourier.cjs"
+        ]
+      },
+      "implementationAction": "擴充相關能力並建立專用教學情境"
+    },
+    {
+      "id": "user-floating-block-shm",
+      "title": "方塊入水與浮力簡諧振盪",
+      "relatedModelIds": [
+        "spring",
+        "vertical-spring"
+      ],
+      "requirements": [
+        "呈現方塊落入水中及上下振盪的3D過程",
+        "標示平衡位置、相對平衡的位移與重力、浮力及合力",
+        "在部分浸沒且截面固定的適用區間，呈現恢復力與位移成正比且方向相反",
+        "區分簡諧區間與完全浸沒、離水及阻尼等非簡諧情況，明示理想化假設"
+      ],
+      "nextAction": "已依使用者優先要求交付可用模擬；後續依使用回饋調整，暫不進行全站驗收。",
+      "category": "使用者新增",
+      "modelIds": [
+        "floating-block-shm"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "verify-floating-block-shm.cjs：27解析SHM配置、分段浮力、能量/阻尼及DOM通過；兩個離線預覽"
+      ],
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "floating-block-shm"
+        ],
+        "covered": "從水面上落下的分段浮力運動，以及保證部分浸沒的平衡附近情境；可調密度/尺寸/落高/振幅/阻尼，平衡、位移、浮力、重力、合力及離水/全浸界線。",
+        "remaining": "忽略波浪、入水衝擊、附加質量及浮體轉動；僅部分浸沒無阻尼區域為理想SHM。",
+        "basis": [
+          "使用者新增題目",
+          "models/floating-block-shm.js",
+          "verify-floating-block-shm.cjs"
+        ]
+      },
+      "implementationAction": "擴充相關能力並建立專用教學情境"
+    },
+    {
+      "id": "user-pendulum-angle-comparison",
+      "title": "小角度單擺與大角度單擺比較",
+      "relatedModelIds": [
+        "pendulum"
+      ],
+      "requirements": [
+        "並排比較小角度近似與大角度單擺的運動及週期",
+        "可調擺長及初始角度，顯示近似週期與非線性週期及其差異",
+        "說明大角度需保留sinθ非線性，可用橢圓積分或級數修正週期",
+        "以相同初始條件比較線性近似與完整模型，呈現角度增加造成的誤差"
+      ],
+      "nextAction": "已依使用者優先要求交付可用模擬；後續依使用回饋調整，暫不進行全站驗收。",
+      "category": "使用者新增",
+      "modelIds": [
+        "pendulum-angle-comparison"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "verify-pendulum-angle-comparison.cjs：54配置週期/運動/能量與DOM通過；離線預覽已檢視"
+      ],
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "pendulum-angle-comparison"
+        ],
+        "covered": "同初始角/擺長/重力並排比較線性近似與完整非線性擺，含精確橢圓積分週期、四階修正及誤差、同步角度雙曲線。",
+        "remaining": "初角1..175度、觀察上限180秒，線性大角度運動為比較用假想模型，忽略阻尼。",
+        "basis": [
+          "使用者新增題目",
+          "models/pendulum-angle-comparison.js",
+          "verify-pendulum-angle-comparison.cjs"
+        ]
+      },
+      "implementationAction": "擴充相關能力並建立專用教學情境"
+    },
+    {
+      "id": "user-celestial-sphere",
+      "title": "天球模型",
+      "category": "使用者新增",
+      "requirements": [
+        "觀測緯度、赤經、赤緯與地方恆星時",
+        "地平圈、天赤道、天極、天頂、周日軌跡及高度/方位",
+        "拱極、永不升起與掠地平線判定"
+      ],
+      "relatedModelIds": [],
+      "modelIds": [
+        "celestial-sphere"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "49組球面公式/極限/DOM通過；離線預覽已檢視"
+      ],
+      "nextAction": "已交付可用核心，依使用者回饋調整。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "celestial-sphere"
+        ],
+        "covered": "觀測緯度、赤經、赤緯與地方恆星時；地平圈、天赤道、天極、天頂、周日軌跡及高度/方位；拱極、永不升起與掠地平線判定",
+        "remaining": "示意恆星座標，無日期星曆、折射/歲差",
+        "basis": [
+          "使用者新題目",
+          "models/celestial-sphere.js",
+          "verify-celestial-sphere.cjs"
+        ]
+      },
+      "implementationAction": "新增天文專用模擬"
+    },
+    {
+      "id": "user-sun-earth",
+      "title": "日地運動",
+      "category": "使用者新增",
+      "requirements": [
+        "固定慣性地軸、自轉/公轉、地軸傾角及四季",
+        "可調緯度/日期/太陽時，公轉與日照近景",
+        "晝夜、赤緯、白晝長與極晝夜"
+      ],
+      "relatedModelIds": [],
+      "modelIds": [
+        "sun-earth"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "168配置、逐時照明積分與DOM通過；全景及近景離線預覽已檢視"
+      ],
+      "nextAction": "已交付可用核心，依使用者回饋調整。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "sun-earth"
+        ],
+        "covered": "固定慣性地軸、自轉/公轉、地軸傾角及四季；可調緯度/日期/太陽時，公轉與日照近景；晝夜、赤緯、白晝長與極晝夜",
+        "remaining": "理想圓軌道與平行光，無精密曆日/折射",
+        "basis": [
+          "使用者新題目",
+          "models/sun-earth.js",
+          "verify-sun-earth.cjs"
+        ]
+      },
+      "implementationAction": "新增天文專用模擬"
+    },
+    {
+      "id": "user-moon-earth",
+      "title": "月地運動",
+      "category": "使用者新增",
+      "requirements": [
+        "月球公轉與同步自轉標記",
+        "月相、相位角及地球視角月相盤",
+        "傾角、交點與時間可調，區分恆星月與會合月"
+      ],
+      "relatedModelIds": [],
+      "modelIds": [
+        "moon-earth"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "27配置月相/鎖定/週期及DOM通過；離線預覽已檢視"
+      ],
+      "nextAction": "已交付可用核心，依使用者回饋調整。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "moon-earth"
+        ],
+        "covered": "月球公轉與同步自轉標記；月相、相位角及地球視角月相盤；傾角、交點與時間可調，區分恆星月與會合月",
+        "remaining": "理想等速圓軌道，未含天秤動/地影/月面地形",
+        "basis": [
+          "使用者新題目",
+          "models/moon-earth.js",
+          "verify-moon-earth.cjs"
+        ]
+      },
+      "implementationAction": "新增天文專用模擬"
+    },
+    {
+      "id": "user-sun-earth-moon",
+      "title": "日地月模型與日蝕月蝕",
+      "category": "使用者新增",
+      "requirements": [
+        "日全蝕/日環蝕/月全蝕/錯過交點與自訂情境",
+        "可調月軌傾角/交點/相位/月地距離與觀察時間窗",
+        "本影、半影、偽本影與月相分開呈現，全景/地月近景"
+      ],
+      "relatedModelIds": [],
+      "modelIds": [
+        "sun-earth-moon"
+      ],
+      "status": "implemented",
+      "evidence": [
+        "45配置軌道/獨立圓錐邊界/蝕預設/月相與陰影/DOM通過；離線預覽已檢視"
+      ],
+      "nextAction": "已交付可用核心，依使用者回饋調整。",
+      "existingComparison": {
+        "level": "core",
+        "modelIds": [
+          "sun-earth-moon"
+        ],
+        "covered": "日全蝕/日環蝕/月全蝕/錯過交點與自訂情境；可調月軌傾角/交點/相位/月地距離與觀察時間窗；本影、半影、偽本影與月相分開呈現，全景/地月近景",
+        "remaining": "近軸中心截面相交教學判定，非地表可見地點/實際蝕日期/混合蝕預報；球面半影線性明暗示意",
+        "basis": [
+          "使用者新題目",
+          "models/sun-earth-moon.js",
+          "verify-sun-earth-moon.cjs"
+        ]
+      },
+      "implementationAction": "新增天文專用模擬"
+    }
+  ],
+  "existingReview": {
+    "date": "2026-10-20",
+    "scope": "本地122個共用模型與3個獨立拋體頁面；數量依目前註冊模型產生。逐題功能對照、完成證據與未完成差異保存在各項existingComparison，不以相近題名當成已完成。",
+    "rule": "core 表示核心題型已有實作，partial 表示部分功能，related 只有可參考模型，none 無專用模型；不等同原站功能全部驗收。"
+  }
+}

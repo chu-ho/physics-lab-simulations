@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='hydrostatic-buoyancy');
+const p=M.defaults(def);
+const at=overrides=>def.build({...p,...overrides}).sample(0);
+assert.equal(at({depth:-.2}).buoyancy,0);
+assert.equal(at({depth:.25}).submergedFraction,50);
+const deep=at({depth:1.25});
+assert.ok(deep.topPressure>0);
+assert.ok(Math.abs(deep.buoyancy-at({depth:.8}).buoyancy)<1e-10);
+const floating=at({equilibrium:1});
+assert.ok(Math.abs(floating.support)<1e-10);
+assert.ok(Math.abs(floating.submergedFraction-70)<1e-10);
+assert.ok(at({equilibrium:1,block:1500}).support>0);
+assert.ok(Math.abs(at({equilibrium:1,block:1000}).support)<1e-10);
+console.log('PASS hydrostatic-buoyancy: pressure difference, immersion and equilibrium');

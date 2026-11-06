@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='generator-transformer');
+const p=M.defaults(def);
+const gen=def.build(p),transformer=def.build({...p,mode:1});
+const peak=1.25;
+const g=gen.sample(peak),tr=transformer.sample(peak);
+assert.equal(gen.sample(0).output,0);
+assert.ok(Math.abs(g.fluxMilli)<1e-12);
+assert.ok(Math.abs(g.output-p.turns*2*Math.PI*p.frequency*p.field*.004)<1e-12);
+assert.ok(Math.abs(g.torque*2*Math.PI*p.frequency-g.power)<1e-12);
+assert.ok(Math.abs(tr.output/tr.primaryVoltage-p.secondary/p.turns)<1e-12);
+assert.ok(Math.abs(tr.primaryVoltage*tr.primaryCurrent-tr.power)<1e-12);
+console.log('PASS generator-transformer: Faraday phase, turns ratio and ideal power balance');

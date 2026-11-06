@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='gauss-surface');
+const defaults=M.defaults(def);
+const sim=def.build(defaults);
+const centered=sim.sample(0);
+assert.ok(Math.abs(centered.flux-centered.estimate)<1e-9);
+assert.equal(sim.sample(4).flux,centered.flux);
+assert.equal(sim.sample(10).flux,0);
+assert.ok(Math.abs(sim.sample(10).estimate)<Math.abs(centered.flux)*.01);
+assert.equal(def.build({...defaults,offset:defaults.radius}).sample(10).onSurface,true);
+console.log('PASS gauss-surface');

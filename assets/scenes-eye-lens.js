@@ -1,0 +1,14 @@
+'use strict';let eyeLensRaster=null,eyeLensKey='';
+function drawEyeLens(s){const sim=simulation,p=params,G=Mechanics.ThinOptics,interactive=typeof pointers!=='undefined'&&pointers.size>0,key=JSON.stringify([W,H,camera,p.kind,p.u,p.f,p.aperture,p.size,interactive]);
+if(key!==eyeLensKey){const width=Math.min(interactive?200:480,Math.ceil(W/(interactive?5:2))),height=Math.min(interactive?140:340,Math.ceil(H/(interactive?5:2)));eyeLensRaster=document.createElement('canvas');eyeLensRaster.width=width;eyeLensRaster.height=height;const context=eyeLensRaster.getContext('2d'),raster=context.createImageData(width,height),bounds=sceneBounds(),unit=v=>{const n=Math.hypot(...v);return v.map(x=>x/n);},at=(o,d,t)=>o.map((x,j)=>x+t*d[j]);
+for(let row=0;row<height;row++)for(let col=0;col<width;col++){const sx=((col+.5)*W/width-W/2)/focal,sy=-((row+.5)*H/height-(bounds.top+bounds.bottom)/2)/focal;let direction=unit(forward.map((v,j)=>v+sx*right[j]+sy*up[j])),origin=[...eye],rgb=null;
+for(let step=0;step<2;step++){const element=G.apertureHit(origin,direction,p.aperture);
+if(Math.abs(direction[0])>1e-9){const t=(sim.objectX-origin[0])/direction[0];if(t>1e-7&&(!element||t<element.t)){const point=at(origin,direction,t),color=G.symbol(point[1]-2+.6*p.size,point[2],p.size);if(color){rgb=color;break;}}}
+if(!element){if(direction[1]<-1e-9){const t=-origin[1]/direction[1];if(t>0){const q=at(origin,direction,t),even=(Math.floor(q[0])+Math.floor(q[2]))%2===0,contrast=Math.max(0,1-t/focal*(W/width));rgb=(even?[186,201,185]:[152,175,161]).map((x,j)=>[169,188,173][j]+(x-[169,188,173][j])*contrast);break;}}rgb=[156+row/height*40,188+row/height*20,202-row/height*10];break;}
+if(element.r>p.aperture*.975){rgb=[89,133,142];break;}if(sim.mirror&&origin[0]>0){rgb=[126,145,147];break;}
+direction=G.transfer(direction,[element.point[1]-2,element.point[2]],sim.f,sim.mirror);if(!direction){rgb=[115,140,147];break;}origin=at(element.point,direction,1e-6);
+}if(!rgb)rgb=[156,188,202];const offset=(row*width+col)*4;for(let j=0;j<3;j++)raster.data[offset+j]=Math.round(rgb[j]);raster.data[offset+3]=255;}
+context.putImageData(raster,0,0);eyeLensKey=key;}
+ctx.drawImage(eyeLensRaster,0,0,W,H);
+const text=['凸透鏡','凹透鏡','透明薄板','凹面鏡','凸面鏡','平面鏡'][p.kind]+' · '+(sim.image?(sim.image.real?'實像':'虛像')+' m='+sim.image.magnification.toFixed(2):'平行出射：像在無限遠'),textY=sceneBounds().top+18;ctx.font='12px system-ui';ctx.textAlign='left';ctx.strokeStyle='#edf3e9';ctx.lineWidth=3;ctx.strokeText(text,20,textY);ctx.fillStyle='#4f727c';ctx.fillText(text,20,textY);if(sim.mirror&&eye[0]>0)ctx.fillText('目前在鏡背面；請轉到物體側或按立體視角。',20,textY+22);
+if(p.ghost&&sim.image){const im=sim.image,b=sim.bounds;if(im.x>=b.min[0]&&im.x<=b.max[0]&&im.y>=b.min[1]&&im.y<=b.max[1]){arrow([im.x,2-.6*p.size*im.magnification,0],[im.x,2+.6*p.size*im.magnification,0],'#a87598','構圖像');}else{ctx.fillText('構圖像超出觀察窗：x='+im.x.toFixed(2)+' m',20,textY+44);}}}

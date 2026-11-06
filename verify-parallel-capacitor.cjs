@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='parallel-capacitor');
+const defaults=M.defaults(def);
+const sample = (p,t) => def.build({...defaults,...p}).sample(t);
+const fixed=sample({dielectric:4},8);
+const initial=sample({},0);
+const isolated=sample({dielectric:4,isolated:1},8);
+assert.equal(fixed.capacitance/initial.capacitance,4);
+assert.equal(fixed.charge/initial.charge,4);
+assert.equal(isolated.charge,initial.charge);
+assert.equal(isolated.voltage/initial.voltage,.25);
+assert.ok(Math.abs(isolated.energy/initial.energy-.25)<1e-12);
+console.log('PASS parallel-capacitor');

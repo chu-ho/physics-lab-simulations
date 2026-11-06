@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='wire-magnetic-field');
+const p=M.defaults(def);
+const run=overrides=>def.build({...p,...overrides});
+const right=run({background:0}).sample(0);
+assert.ok(right.bz<0);
+assert.equal(run({background:0,current:-p.current}).sample(0).bz,-right.bz);
+assert.equal(run({radius:2*p.radius}).sample(0).wireField,right.wireField/2);
+assert.equal(run({current:0}).sample(7).field,p.background);
+assert.ok(run({background:0}).sample(2.5).bx>0);
+console.log('PASS wire-magnetic-field: direction, superposition, reversal and 1/r scaling');

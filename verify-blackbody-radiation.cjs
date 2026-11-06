@@ -1,0 +1,12 @@
+'use strict';
+const assert = require('node:assert/strict');
+const M = require('./mechanics-models.js');
+const def = M.defs.find(d => d.id === 'blackbody-radiation');
+const sample = (params, t) => def.build({...M.defaults(def), ...params}).sample(t);
+const hot = sample({temperature: 6000}, 0);
+const cold = sample({temperature: 3000}, 0);
+assert.equal(hot.power / cold.power, 16);
+assert.equal(cold.peak / hot.peak, 2);
+const at = (nm) => sample({temperature: 6000}, (nm-180)*10/3820).intensity;
+assert.ok(at(hot.peak)>at(.9*hot.peak) && at(hot.peak)>at(1.1*hot.peak));
+console.log('PASS blackbody-radiation');

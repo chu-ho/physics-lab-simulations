@@ -1,0 +1,13 @@
+/* Ten independent oscillators on one prescribed moving base. */
+(function(M){'use strict';const {P,M:metric,trajectory,integrated}=M.helpers;
+M.register('resonance-bank','受迫振盪：十振子共振比較','振動','resonance-bank',[P('w','共同驅動角頻率',.5,4,.1,2,'rad/s'),P('A','底板振幅參數',.05,.3,.01,.12,'m'),P('zeta','各振子阻尼比',0,.4,.02,.06),{...P('showLabels','顯示自然頻率',0,1,1,1),visual:true}],[metric('driveFrequency','共同驅動角頻率','rad/s'),metric('maxResponse','最大瞬時相對位移','m'),metric('energyAccount','機械能＋耗能−外功','J')],
+'q̈ᵢ+2ζωᵢq̇ᵢ+ωᵢ²qᵢ=−ÿb；yb=A(1−cosΩt)，ωᵢ=0.8+0.3i（i=0…9）',
+'十個互不耦合的1kg振子，共用同一受控底板。自然角頻率依序0.8到3.5rad/s，kᵢ=ωᵢ²，cᵢ=2ζωᵢ；阻尼器連接質點與底板。q是相對移動底板及各自靜力平衡的位移，y=H+yb+q。彈簧原長分別選為H+mg/kᵢ，使初始球高相同；H自動留出運動空間。彈簧可拉可推，質點不受水平運動。底板從靜止平滑啟動，20秒內包含暫態，不能把瞬時振幅當穩態共振曲線。ζ=0且驅動等於自然頻率時振幅隨時間增加，不截成有限穩態值。外功由底板支承力乘底板速度積分，耗能由Σcᵢq̇ᵢ²積分；兩者與機械能一起記錄。原站SHM勾選語意尚待核對。',
+['改變共同驅動頻率，反應最大的球會如何移動？','把阻尼設為零並對準某顆球的自然頻率，反應為什麼持續增大？'],p=>{
+const N=10,frequencies=Array.from({length:N},(_,i)=>.8+.3*i),cs=frequencies.map(w=>2*p.zeta*w),base=t=>({y:p.A*(1-Math.cos(p.w*t)),v:p.A*p.w*Math.sin(p.w*t),a:p.A*p.w*p.w*Math.cos(p.w*t)});
+const motion=integrated(20,Array(22).fill(0),(t,s)=>{const b=base(t),d=Array(22).fill(0);for(let i=0;i<N;i++){const q=s[2*i],v=s[2*i+1],w=frequencies[i],c=cs[i];d[2*i]=v;d[2*i+1]=-w*w*q-c*v-b.a;d[20]+=c*v*v;d[21]+=(9.81-w*w*q-c*v)*b.v;}return d;},s=>{const o={heat:s[20],work:s[21]};for(let i=0;i<N;i++){o['q'+i]=s[2*i];o['v'+i]=s[2*i+1];}return o;},1/240);
+let min=0,max=0;for(let j=0;j<=500;j++){const s=motion.sample(j/25);for(let i=0;i<N;i++){min=Math.min(min,s['q'+i]);max=Math.max(max,s['q'+i]);}}const H=2-min;
+const sample=t=>{const s=motion.sample(t),b=base(t);let K=0,U=0,maxResponse=0;const out={...s,baseY:b.y,baseV:b.v,driveFrequency:p.w};for(let i=0;i<N;i++){const w=frequencies[i],q=s['q'+i],v=s['v'+i],y=H+b.y+q,vy=b.v+v,acc=-w*w*q-cs[i]*v;out['y'+i]=y;out['vy'+i]=vy;out['acc'+i]=acc;out['force'+i]=acc;K+=.5*vy*vy;U+=9.81*y+.5*w*w*(q-9.81/(w*w))**2;maxResponse=Math.max(maxResponse,Math.abs(q));}return{...out,x:-9,y:out.y0,z:0,vx:0,vy:out.vy0,fy:out.acc0,K,U,E:K+U,energyAccount:K+U+s.heat-s.work,maxResponse};};
+return trajectory(20,sample,{frequencies,equilibriumHeight:H,events:[{t:0,label:'十個振子從靜止平衡，共同啟動底板'}],endLabel:'20秒觀察結束；含暫態，非穩態振幅掃描',bounds:{min:[-11,0,-1],max:[11,H+max+2*p.A+2,1]}});
+},'models/resonance-bank.js');M.defs.find(d=>d.id==='resonance-bank').plotMetrics=[...Array.from({length:10},(_,i)=>metric('q'+i,'振子'+(i+1)+'相對位移','m')),metric('heat','阻尼耗能','J'),metric('work','底板輸入功','J'),metric('E','機械能','J')];
+})(typeof module!=='undefined'&&module.exports?require('../mechanics-models.js'):globalThis.Mechanics);

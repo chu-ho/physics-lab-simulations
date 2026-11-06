@@ -1,0 +1,12 @@
+'use strict';
+const assert = require('node:assert/strict');
+const M = require('./mechanics-models.js');
+const def = M.defs.find(d => d.id === 'hydrogen-spectrum');
+const sample = (params, t) => def.build({...M.defaults(def), ...params}).sample(t);
+const balmer = sample({}, 0);
+assert.ok(Math.abs(balmer.wavelength-656.5)<1);
+assert.equal(balmer.level,3);
+assert.equal(sample({},4).level,2);
+assert.equal(sample({absorption:1},0).level,2);
+assert.equal(sample({absorption:1},4).wavelength,balmer.wavelength);
+console.log('PASS hydrogen-spectrum');

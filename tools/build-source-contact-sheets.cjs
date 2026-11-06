@@ -1,0 +1,7 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path');
+let canvas;try{canvas=require('@napi-rs/canvas')}catch{canvas=require(path.resolve(path.dirname(process.execPath),'../node_modules/@napi-rs/canvas'))}
+const {createCanvas,loadImage}=canvas,root=path.resolve(__dirname,'../research/haha90-audit'),rows=require('../research/haha90-audit/results.json');
+fs.mkdirSync(path.join(root,'contact-sheets'),{recursive:true});
+async function sheet(group,name,cols=4){const w=340,h=300,out=createCanvas(w*cols,h*Math.ceil(group.length/cols)),ctx=out.getContext('2d');ctx.fillStyle='#101c25';ctx.fillRect(0,0,out.width,out.height);for(let i=0;i<group.length;i++){const row=group[i],img=await loadImage(fs.readFileSync(path.join(root,row.screenshot))),x=i%cols*w,y=Math.floor(i/cols)*h,sx=Math.min(250,img.width*.2),sy=Math.min(150,img.height*.1),sw=img.width-sx,sh=Math.min(img.height-sy,row.flash?1150:700);ctx.drawImage(img,sx,sy,sw,sh,x+5,y+28,w-10,h-35);ctx.fillStyle='#ecf2f4';ctx.font='13px "Microsoft JhengHei",sans-serif';ctx.fillText(row.id+' '+row.title,x+7,y+19)}fs.writeFileSync(path.join(root,'contact-sheets',name),out.toBuffer('image/jpeg',{quality:.88}))}
+(async()=>{for(let i=0;i<rows.length;i+=12)await sheet(rows.slice(i,i+12),'overview-'+String(i/12+1).padStart(2,'0')+'.jpg');await sheet(rows.filter(r=>r.flash),'flash-overview.jpg',3);console.log('Saved 10 overview sheets and one Flash overview.');})().catch(e=>{console.error(e);process.exit(1)});

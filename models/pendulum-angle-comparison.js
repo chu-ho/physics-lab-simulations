@@ -1,0 +1,16 @@
+(function(M){'use strict';const {P,M:metric,trajectory}=M.helpers;
+function ellipticK(k){let a=1,b=Math.sqrt(1-k*k);for(let i=0;i<30&&Math.abs(a-b)>1e-15;i++){const c=(a+b)/2;b=Math.sqrt(a*b);a=c;}return Math.PI/(2*a);}
+M.PendulumComparison={ellipticK};
+M.register('pendulum-angle-comparison','小角度與大角度單擺比較','振動','pendulum-angle-comparison',[
+P('angle','共同初始角（由鉛直向下量起）',1,175,1,90,'°'),P('L','共同擺長',.5,4,.1,2,'m'),P('g','重力加速度',1,15,.01,9.81,'m/s²'),P('cycles','觀察完整單擺週期數',2,10,1,6)
+],[metric('T0','小角度週期 T₀','s'),metric('exactPeriod','完整單擺週期 T','s'),metric('periodIncrease','週期增加','%')],
+'θ̈線性=−(g/L)θ；θ̈完整=−(g/L)sinθ；T=4√(L/g)K(sin(θ₀/2))；T₄=T₀[1+θ₀²/16+11θ₀⁴/3072]',
+'兩擺具有相同擺長、重力、初始角與零初速，無阻力、無驅動，擺球視為質點，連桿為無質量剛桿。藍色擺使用線性近似（大角度時僅為比較用的假想運動）；橘色擺求解完整 sinθ 方程。週期以第一類完全橢圓積分精確計算；四階級數中的角度必須用弧度。175° 上限避免接近180°不穩定平衡時發散的週期；觀察最長180秒，超過時截短但不改變週期。兩擺前後分開方便3D觀察。展開圖表可比較角度、週期近似及其誤差。',
+['為何大角度完整單擺比線性擺慢？','四階修正在多大初角後開始不夠準？','初角接近180°時，為何週期趨向無限大？'],p=>{
+const A=p.angle*Math.PI/180,w=Math.sqrt(p.g/p.L),T0=2*Math.PI/w,K=ellipticK(Math.sin(A/2)),period=4*K/w,T4=T0*(1+A*A/16+11*A**4/3072),tauPeriod=4*K,n=Math.ceil(tauPeriod/.002),h=tauPeriod/n,rows=[[A,0]];
+let a=A,v=0;for(let j=0;j<n;j++){const k1=v,l1=-Math.sin(a),k2=v+h*l1/2,l2=-Math.sin(a+h*k1/2),k3=v+h*l2/2,l3=-Math.sin(a+h*k2/2),k4=v+h*l3,l4=-Math.sin(a+h*k3);a+=h*(k1+2*k2+2*k3+k4)/6;v+=h*(l1+2*l2+2*l3+l4)/6;rows.push([a,v]);}
+function nonlinear(t){const u=((t*w)%tauPeriod)/h,j=Math.min(n-1,Math.floor(u)),f=u-j,r=rows[j],s=rows[j+1],f2=f*f,f3=f2*f;return [(2*f3-3*f2+1)*r[0]+(f3-2*f2+f)*h*r[1]+(-2*f3+3*f2)*s[0]+(f3-f2)*h*s[1],((6*f2-6*f)*r[0]+(3*f2-4*f+1)*h*r[1]+(-6*f2+6*f)*s[0]+(3*f2-2*f)*h*s[1])/h*w];}
+const duration=Math.min(180,p.cycles*period),pivot=p.L+1.2;const sim=trajectory(duration,t=>{const [theta,omega]=nonlinear(t),linear=A*Math.cos(w*t),linearOmega=-A*w*Math.sin(w*t),x=p.L*Math.sin(theta),y=pivot-p.L*Math.cos(theta),Kinetic=.5*p.L*p.L*omega*omega,U=p.g*p.L*(1-Math.cos(theta));return{time:t,x,y,z:1.2,vx:p.L*Math.cos(theta)*omega,vy:p.L*Math.sin(theta)*omega,theta,omega,linear,linearOmega,thetaDegrees:theta*180/Math.PI,linearDegrees:linear*180/Math.PI,angleDifference:(theta-linear)*180/Math.PI,T0,exactPeriod:period,seriesPeriod:T4,periodIncrease:100*(period/T0-1),smallError:100*(1-T0/period),seriesError:100*(1-T4/period),K:Kinetic,U,E:Kinetic+U,linearEnergy:.5*p.L*p.L*linearOmega**2+.5*p.g*p.L*linear**2};},{hidePrimary:true,hideGrid:()=>true,minimumSceneScale:3,pivot,nonlinear,bounds:{min:[-p.L-.6,0,-1.8],max:[p.L+.6,2*p.L+2,1.8]},events:[{t:T0,label:'線性擺首次回到釋放位置'},{t:period,label:'完整擺首次回到釋放位置'}],endLabel:duration===180?'達180秒觀察上限':'比較完成'});sim.positionPlot={min:0,max:duration,key:'time',label:'時間',unit:'s',title:'兩擺角度同步比較',yUnit:'°',scopeLabel:'藍色線性近似／橘色完整單擺',series:[{label:'線性近似',color:'#4289be',value:t=>A*Math.cos(w*t)*180/Math.PI},{label:'完整單擺',color:'#cf8346',value:t=>nonlinear(t)[0]*180/Math.PI}]};return sim;
+},'models/pendulum-angle-comparison.js');
+const d=M.defs.find(d=>d.id==='pendulum-angle-comparison');d.initialView={yaw:-.45,pitch:.2};d.plotMetrics=[metric('linearDegrees','線性近似角度','°'),metric('thetaDegrees','完整單擺角度','°'),metric('seriesPeriod','四階修正週期','s'),metric('smallError','小角度週期低估','%'),metric('seriesError','四階週期低估','%'),metric('E','完整單擺機械能（1kg）','J')];
+})(typeof module!=='undefined'&&module.exports?require('../mechanics-models.js'):globalThis.Mechanics);

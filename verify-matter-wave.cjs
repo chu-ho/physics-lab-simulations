@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='matter-wave');
+const defaults=M.defaults(def);
+const base = def.build(defaults);
+const high = def.build({...defaults,voltage:4*100});
+const low = def.build({...defaults,voltage:100});
+assert.equal(low.sample(0).wavelength/high.sample(0).wavelength,2);
+assert.deepEqual(base.hits,def.build(defaults).hits);
+assert.equal(base.sample(12).count,480);
+assert.ok(base.hits.every(([x,y])=>Math.abs(x)<=120&&Math.abs(y)<=.5));
+const wavelength=base.sample(0).wavelength;
+const sine=wavelength/(2*defaults.spacing);
+const dark=1000*sine/Math.sqrt(1-sine*sine);
+assert.ok(base.density(dark)<1e-20);
+assert.ok(def.build({...defaults,whichPath:1}).density(dark)>.5);
+console.log('PASS matter-wave');

@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='eddy-current');
+const defaults=M.defaults(def);
+const run=conducting=>def.build({...defaults,conducting});
+const open=run(0), closed=run(1);
+assert.ok(Math.abs(open.fallTime-Math.sqrt(1/9.81))<1e-9);
+assert.ok(closed.fallTime>open.fallTime);
+assert.ok(closed.sample(6).heat>0);
+assert.ok(Math.abs(closed.sample(6).height)<1e-8);
+const energy=closed.sample(0).energy;
+for(let t=0;t<=6;t+=.25)assert.ok(Math.abs(closed.sample(t).energy-energy)<1e-7);
+const slowest=def.build({...defaults,mass:15,moment:9,resistance:20,conducting:1});
+assert.ok(slowest.fallTime<6 && Math.abs(slowest.sample(6).height)<1e-8);
+assert.ok(Math.abs(slowest.sample(6).energy-slowest.sample(0).energy)<1e-7);
+console.log('PASS eddy-current');

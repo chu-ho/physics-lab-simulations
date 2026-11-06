@@ -1,0 +1,11 @@
+'use strict';function drawSunEarth(s){const sim=simulation,p=params,q=sim.geometry(t),r=sim.r,center=p.view?[0,0,0]:q.center,add=(a,b)=>a.map((v,j)=>v+b[j]),mul=(a,k)=>a.map(v=>v*k),dot=(a,b)=>a.reduce((v,x,j)=>v+x*b[j],0),point=n=>add(center,mul(n,r));
+if(!p.view){ring([0,0,0],sim.R,'xz','#9aa8ab',1);sphere([0,0,0],.65,'#f2be56');label([0,1,0],'太陽','#b38a43',12);for(const [day,name]of [[0,'春分'],[365.2422/4,'夏至'],[365.2422/2,'秋分'],[365.2422*3/4,'冬至']]){const a=Math.PI/2+TAU*day/365.2422;label([sim.R*Math.cos(a),-.7,sim.R*Math.sin(a)],name,'#85949a',11);}}
+// Surface patches are colored by the outward normal's dot product with sunlight.
+for(let j=0;j<18;j++)for(let k=0;k<36;k++){const a=-Math.PI/2+j*Math.PI/18,b=(k/36)*TAU,mid=q.normal(a+Math.PI/36,b+Math.PI/36),sun=dot(mid,q.sun),base=j%3===0||k%4===0?[91,150,151]:[66,119,151],bright=sun>0?.40+.60*Math.sqrt(sun):.20,col='rgb('+base.map(v=>Math.round(v*bright)).join(',')+')';polygon([point(q.normal(a,b)),point(q.normal(a+Math.PI/18,b)),point(q.normal(a+Math.PI/18,b+TAU/36)),point(q.normal(a,b+TAU/36))],col,col);}
+if(p.guides){segment(add(center,mul(sim.axis,-1.55)),add(center,mul(sim.axis,1.55)),'#ce9d65',2);label(add(center,mul(sim.axis,1.75)),'北極 N','#be955c',10);for(const [phi,color]of [[0,'#e5ca81'],[p.latitude*Math.PI/180,'#c380b9']])for(let i=0;i<72;i++)segment(point(q.normal(phi,i*TAU/72)),point(q.normal(phi,(i+1)*TAU/72)),color,1);}
+const mark=point(q.observer);sphere(mark,.07,'#f0a4da');label(add(mark,[0,.20,0]),'觀測地 '+p.latitude+'°','#a977a9',10);
+// Terminator is a great circle perpendicular to the direction to the Sun.
+const u=[-q.sun[2],0,q.sun[0]],v=[0,1,0];for(let i=0;i<96;i++){const a=i*TAU/96,b=(i+1)*TAU/96;segment(point(add(mul(u,Math.cos(a)),mul(v,Math.sin(a)))),point(add(mul(u,Math.cos(b)),mul(v,Math.sin(b)))),'#e4c878',1);}
+for(const y of [-.7,0,.7]){const end=add(center,[0,y,0]),start=add(end,mul(q.sun,p.view?2:2.3));arrow(start,add(end,mul(q.sun,1.2)),'#d6b462','');}
+label(add(center,[0,-1.65,0]),'赤緯 '+s.declination.toFixed(1)+'° · 晝長 '+s.daylight.toFixed(2)+' h','#a28b59',11);label(add(center,[0,-1.9,0]),'太陽時 '+s.solarHour.toFixed(2)+' h · 高度 '+s.altitude.toFixed(1)+'°','#8b9fa9',10);if(p.view)label([0,1.9,0],'平行日照近景｜軸向在一年內固定','#a28b59',12);
+}

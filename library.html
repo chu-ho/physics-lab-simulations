@@ -1,6 +1,582 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>物理實驗室 · 經典運動學與力學</title><link rel="stylesheet" href="assets/lab.css"><style>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>物理互動實驗室 · 學習地圖</title><link rel="stylesheet" href="assets/lab.css"><link rel="stylesheet" href="assets/learning-map.css"><style>
 html,body{height:auto;min-height:100%;overflow:auto}body{background:#101c25}header{height:76px;position:sticky;top:0;z-index:2}main{max-width:1250px;margin:0 auto;padding:48px 28px 64px}.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:36px;align-items:center;margin-bottom:40px}.eyebrow{color:var(--mint);font-size:11px;letter-spacing:3px}.hero h2{font-size:clamp(30px,4vw,46px);line-height:1.3;margin:12px 0 18px;letter-spacing:1px}.hero p{color:#a9bcc5;max-width:540px;font-size:14px;line-height:1.9}.hero-art{background:linear-gradient(150deg,#9bbdcd,#d9e6df 65%,#e9e7d4);border-radius:22px;border:1px solid #ffffff30;overflow:hidden;aspect-ratio:1.55;position:relative}.hero-art svg{display:block;width:100%;height:100%}.hero-art span{position:absolute;left:22px;bottom:17px;font-size:10px;letter-spacing:2px;color:#35525e}.hero .count{color:var(--mint);font-size:13px}.toolbar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:0 0 24px}.search{background:#172630;border:1px solid #39505a;padding:11px 15px;border-radius:9px;color:#ecf2f4;min-width:240px;font:inherit}.filters{display:flex;gap:7px;flex-wrap:wrap}.filters button{font-size:12px;padding:8px 12px}.filters button[aria-pressed=true]{background:var(--mint);color:#15392f;border-color:var(--mint);font-weight:700}.result{font-size:12px;color:var(--muted);margin:10px 0 22px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.card{display:flex;flex-direction:column;position:relative;background:#172630;border:1px solid #2c3d47;border-radius:14px;padding:22px;text-decoration:none;color:var(--ink);min-height:205px;transition:border-color .15s,transform .15s}.card:hover{border-color:#8ee0c090;transform:translateY(-3px)}.card:focus-visible{outline:3px solid var(--orange);outline-offset:3px}.card .number{font-size:10px;letter-spacing:1.5px;color:var(--muted)}.card .tag{color:var(--mint);font-size:10px;margin-left:9px}.card h3{font-size:18px;line-height:1.5;margin:11px 0 9px;font-weight:650}.card p{font-size:12px;line-height:1.8;color:#a6bcc6;margin:0 0 18px;flex:1}.card .open{font-size:11px;color:var(--mint);display:flex;justify-content:space-between}.card .icon{position:absolute;right:20px;top:19px;color:#ffb36b;font-size:22px}.empty{padding:40px;color:var(--muted);text-align:center;grid-column:1/-1}footer{color:var(--muted);font-size:11px;line-height:1.9;margin-top:36px;border-top:1px solid var(--line);padding-top:18px}footer a{color:var(--mint)}
 @media(max-width:850px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr .8fr;gap:25px}.hero h2{font-size:30px}.card{padding:18px}}@media(max-width:580px){header{height:64px;padding:0 18px}header h1{font-size:17px}main{padding:30px 17px}.hero{grid-template-columns:1fr;gap:20px}.hero-art{aspect-ratio:2.2}.hero h2{font-size:29px;margin-top:8px}.hero p{font-size:12px}.cards{grid-template-columns:1fr;gap:12px}.card{min-height:180px}.toolbar{gap:12px}.search{width:100%}.filters{gap:5px}.filters button{font-size:11px;padding:7px 9px}.card h3{font-size:18px}}
-</style></head><body><header><div><div class="overline">PHYSICS LAB / CLASSICAL MECHANICS</div><h1>物理互動實驗室 <span style="color:var(--mint);font-weight:400">/ 3D</span></h1></div><a href="index.html" style="color:var(--mint);font-size:12px">拋體實驗 ↗</a></header><main>
-<section class="hero"><div><div class="eyebrow">OBSERVE · ADJUST · DISCOVER</div><h2>讓公式動起來，<br>從不同角度理解力學。</h2><p>調整一個條件，觀察一段運動。從第一次自由落體到行星軌道，透過可旋轉的 3D 場景、時間回放與數據圖表，探索每個經典問題背後的規律。</p><div class="count" id="count"></div></div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 500 320"><defs><radialGradient id="ball"><stop stop-color="#ffce94"/><stop offset="1" stop-color="#c8793b"/></radialGradient></defs><path d="M-40 260 280 125 550 240 230 385Z" fill="#afc2b6"/><g stroke="#66897e" opacity=".3"><path d="m0 250 320 134m-250 164 320-136M40 306 360 171M100 333 420 198M160 360 480 224M0 224l320 134M60 198l320 134M120 172l320 134"/></g><path d="M100 236Q220-70 402 244" fill="none" stroke="#466f78" stroke-width="3" stroke-dasharray="6 6"/><path d="M100 236Q147 117 215 113" fill="none" stroke="#cf7632" stroke-width="4"/><ellipse cx="215" cy="247" rx="20" ry="7" fill="#34544b44"/><path d="M215 113v134" stroke="#466f78" stroke-dasharray="4 5" opacity=".5"/><circle cx="215" cy="113" r="17" fill="url(#ball)"/><path d="m215 113 53 2m-8-5 8 5-9 4" stroke="#168579" stroke-width="3" fill="none"/><path d="m215 113 0-37m-5 8 5-8 5 8" stroke="#8b5ac4" stroke-width="3" fill="none"/><path d="m100 236 63 27m-63-27 0-73m0 73-51 22" stroke="#46616a" stroke-width="2"/><text x="170" y="268" fill="#46616a" font-size="13">x</text><text x="95" y="156" fill="#46616a" font-size="13">y</text><text x="36" y="266" fill="#46616a" font-size="13">z</text></svg><span>A DIFFERENT VIEW OF PHYSICS</span></div></section>
-<div class="toolbar"><input class="search" id="search" type="search" placeholder="搜尋實驗、公式或主題…" aria-label="搜尋實驗"><nav class="filters" id="filters" aria-label="實驗分類"></nav></div><p class="result" id="result" role="status"></p><div class="cards" id="cards"></div><footer>全部實驗可離線使用，數值採 SI 單位；模型假設與探究問題位於各實驗頁面。3D 是觀察方式，平面運動也能自由轉動視角。<br>新實驗包含時間圖表與 CSV；原有三個拋體實驗保留各自的特色操作。<a href="CURRICULUM.md">課程範圍與驗收清單</a></footer></main><script src="mechanics-models.js"></script><script src="assets/library.js"></script></body></html>
+</style></head><body><header><div><div class="overline">PHYSICS LAB / LEARNING MAP</div><h1>物理互動實驗室 <span style="color:var(--mint);font-weight:400">/ 3D</span></h1></div><nav aria-label="實驗室導覽"><a href="#learning-map" style="color:var(--mint);font-size:12px">學習地圖</a> · <a href="#experiment-catalogue" style="color:var(--mint);font-size:12px">實驗列表</a></nav></header><main>
+<section class="map-section" id="learning-map" aria-labelledby="map-title">
+  <div class="map-header"><div><h2 id="map-title">物理學習地圖</h2><p>拖曳旋轉四條 3D 主幹。點選圓點，查看相鄰節點與實驗。</p></div>
+  <div class="map-tools" id="map-tools" hidden><input id="map-search" class="search" type="search" aria-label="搜尋地圖" placeholder="搜尋概念、實驗或生活情境">
+  <button type="button" id="map-zoom-out" aria-label="縮小地圖">−</button>
+  <button type="button" id="map-zoom-in" aria-label="放大地圖">＋</button>
+  <button type="button" id="map-zoom-reset">重設視圖</button></div></div>
+  <p id="map-fallback-hint">點選章節標題即可展開概念和實驗。</p>
+  <div class="map-results" id="map-results" aria-live="polite"></div>
+  <div class="map-stage" id="map-stage">
+  <div class="map-viewport" id="map-viewport" tabindex="0" role="region" aria-label="物理主題分支圖"><div class="map-board" id="map-board">
+<!-- Generated by tools/build-map-fallback.cjs -->
+<section class="map-lane map-fallback" style="--branch:#8ee0c0">
+<h3>力學</h3><div class="map-tree">
+<details id="map-static-1.1"><summary>1.1 運動學</summary>
+<p class="map-guidance">高中深化 · 從等加速與拋體讀取位置、速度及加速度。</p>
+<h4>運動圖表與參考系</h4>
+<ul>
+<li id="map-static-lab-acceleration"><a href="mechanics.html#experiment=acceleration">等加速度直線運動</a>
+<details class="map-activity"><summary>探究活動</summary><p>車輛正在向前減速時，位置圖還會上升嗎？</p><p>把初速設為 4 m/s、加速度設為 −2 m/s²。暫停在第 1 秒，依序切換位置、速度與加速度圖，讓三次讀值共用同一時刻。</p><details><summary>核對觀察</summary><p>第 1 秒仍向前移動。位置圖斜率為正，速度圖斜率為負。第 2 秒速度過零，位置圖在此轉折。</p></details><p>換個情境 · 把初速反向，再從速度圖的有號面積解釋前兩秒的位移。</p></details>
+</li>
+<li id="map-static-lab-river"><a href="mechanics.html#experiment=river">渡河與相對速度</a>
+</li>
+<li id="map-static-lab-pursuit"><a href="mechanics.html#experiment=pursuit">追及與會車</a>
+</li>
+<li id="map-static-lab-relative-motion"><a href="mechanics.html#experiment=relative-motion">雙球與移動參考系</a>
+</li>
+</ul>
+<h4>拋體運動</h4>
+<ul>
+<li id="map-static-lab-projectile"><a href="index.html">平面斜拋</a>
+</li>
+<li id="map-static-lab-stairs"><a href="staircase-projectile.html">階梯斜拋與反彈</a>
+</li>
+<li id="map-static-lab-inclined-projectile"><a href="inclined-projectile.html">斜面上的斜拋</a>
+</li>
+<li id="map-static-lab-vertical"><a href="mechanics.html#experiment=vertical">自由落體與鉛直上拋</a>
+</li>
+<li id="map-static-lab-airplane-drop"><a href="mechanics.html#experiment=airplane-drop">飛機投彈</a>
+</li>
+<li id="map-static-lab-safe-parabola"><a href="mechanics.html#experiment=safe-parabola">安全拋物線、同時圓與頂點橢圓</a>
+</li>
+<li id="map-static-lab-shoot-monkey"><a href="mechanics.html#experiment=shoot-monkey">射猴子：共同自由落體</a>
+</li>
+<li id="map-static-lab-optimal-projectile"><a href="mechanics.html#experiment=optimal-projectile">斜拋幾度拋最遠</a>
+</li>
+</ul>
+<h4>天體運動與觀察</h4>
+<ul>
+<li id="map-static-lab-sun-earth"><a href="mechanics.html#experiment=sun-earth">日地運動：地軸、晝夜與四季</a>
+</li>
+<li id="map-static-lab-moon-earth"><a href="mechanics.html#experiment=moon-earth">月地運動與月相</a>
+</li>
+<li id="map-static-lab-sun-earth-moon"><a href="mechanics.html#experiment=sun-earth-moon">日地月：日蝕、月蝕與軌道交點</a>
+</li>
+<li id="map-static-lab-celestial-sphere"><a href="mechanics.html#experiment=celestial-sphere">天球模型：恆星周日運動</a>
+</li>
+</ul>
+<h4>運動學</h4>
+<ul>
+<li id="map-static-lab-incline-shadow"><a href="mechanics.html#experiment=incline-shadow">斜面上的投影</a>
+</li>
+</ul>
+</details>
+<details id="map-static-1.2"><summary>1.2 動力學</summary>
+<p class="map-guidance">高中入門 · 先辨認合力與加速度，再比較摩擦、碰撞和轉動。</p>
+<p>建議先備 <a href="#map-static-1.1">1.1 運動學</a></p>
+<h4>受力與摩擦</h4>
+<ul>
+<li id="map-static-lab-drag"><a href="mechanics.html#experiment=drag">空氣阻力與終端速度</a>
+</li>
+<li id="map-static-lab-friction"><a href="mechanics.html#experiment=friction">水平受力與靜、動摩擦</a>
+</li>
+<li id="map-static-lab-incline"><a href="mechanics.html#experiment=incline">斜面滑動與摩擦</a>
+</li>
+<li id="map-static-lab-atwood"><a href="mechanics.html#experiment=atwood">阿特伍德機</a>
+</li>
+<li id="map-static-lab-table-pulley"><a href="mechanics.html#experiment=table-pulley">桌面物塊與懸掛重物</a>
+</li>
+<li id="map-static-lab-elevator"><a href="mechanics.html#experiment=elevator">電梯與視重量</a>
+</li>
+<li id="map-static-lab-bicycle-friction"><a href="mechanics.html#experiment=bicycle-friction">腳踏車前後輪的摩擦力</a>
+<details class="map-activity"><summary>探究活動</summary><p>踩踏加速時，兩輪摩擦力會指向同一方向嗎？</p><p>保留後輪驅動，把兩輪煞車力矩設為零。記錄兩個輪下箭頭和摩擦力讀值，再把驅動力矩設為零重做。</p><details><summary>核對觀察</summary><p>後輪受向前摩擦力，前輪受向後摩擦力。前輪靠接觸力矩增加轉速。兩個力矩控制都歸零後，理想等速滑行時兩輪摩擦力為零。</p></details></details>
+</li>
+<li id="map-static-lab-conveyor-friction"><a href="mechanics.html#experiment=conveyor-friction">輸送帶與摩擦力</a>
+<details class="map-activity"><summary>探究活動</summary><p>馬達經輸送帶作的功，會全部變成箱子的動能嗎？</p><p>選等加速模式，把帶初速設 2 m/s、箱子初速和帶加速度設零。切換圖表中的動能、摩擦熱和驅動功，記下同一時刻的讀值。</p><details><summary>核對觀察</summary><p>箱子滑動時，接觸傳入的功分成箱子動能增加與摩擦熱。開始同速後，這組設定下摩擦熱停止累積。</p></details><p>換個情境 · 把箱子初速改成與帶速相同，預測這次是否有摩擦熱。</p></details>
+</li>
+</ul>
+<h4>動量與碰撞</h4>
+<ul>
+<li id="map-static-lab-collision"><a href="mechanics.html#experiment=collision">一維碰撞與恢復係數</a>
+</li>
+<li id="map-static-lab-ballistic-pendulum"><a href="mechanics.html#experiment=ballistic-pendulum">彈道擺</a>
+</li>
+<li id="map-static-lab-rocket"><a href="mechanics.html#experiment=rocket">火箭與變質量</a>
+</li>
+<li id="map-static-lab-collision-2d"><a href="mechanics.html#experiment=collision-2d">二維偏心碰撞與自轉</a>
+</li>
+<li id="map-static-lab-center-of-mass"><a href="mechanics.html#experiment=center-of-mass">質心與內力</a>
+</li>
+<li id="map-static-lab-projectile-explosion"><a href="mechanics.html#experiment=projectile-explosion">斜拋空中爆</a>
+</li>
+<li id="map-static-lab-ring-ball"><a href="mechanics.html#experiment=ring-ball">環球碰撞與自由圓環</a>
+</li>
+<li id="map-static-lab-ball-rod"><a href="mechanics.html#experiment=ball-rod">質點撞棒：平動與轉動</a>
+</li>
+<li id="map-static-lab-rough-bounce"><a href="mechanics.html#experiment=rough-bounce">桌下彈跳球：平動與自轉</a>
+</li>
+</ul>
+<h4>圓周、轉動與引力</h4>
+<ul>
+<li id="map-static-lab-circular"><a href="mechanics.html#experiment=circular">等速圓周運動</a>
+</li>
+<li id="map-static-lab-banked"><a href="mechanics.html#experiment=banked">傾斜彎道</a>
+</li>
+<li id="map-static-lab-conical"><a href="mechanics.html#experiment=conical">圓錐擺與角動量</a>
+</li>
+<li id="map-static-lab-torque"><a href="mechanics.html#experiment=torque">固定軸轉動與力矩</a>
+</li>
+<li id="map-static-lab-rolling"><a href="mechanics.html#experiment=rolling">斜面純滾動</a>
+</li>
+<li id="map-static-lab-orbit"><a href="mechanics.html#experiment=orbit">行星軌道與距離指數</a>
+</li>
+<li id="map-static-lab-angular-momentum"><a href="mechanics.html#experiment=angular-momentum">收臂旋轉與角動量</a>
+</li>
+<li id="map-static-lab-binary-stars"><a href="mechanics.html#experiment=binary-stars">雙星互繞與總機械能</a>
+</li>
+</ul>
+<h4>振動與共振</h4>
+<ul>
+<li id="map-static-lab-spring"><a href="mechanics.html#experiment=spring">彈簧簡諧運動</a>
+</li>
+<li id="map-static-lab-damped"><a href="mechanics.html#experiment=damped">阻尼振動：鉛直彈簧與阻尼器</a>
+</li>
+<li id="map-static-lab-driven"><a href="mechanics.html#experiment=driven">受迫振動與共振</a>
+</li>
+<li id="map-static-lab-pendulum"><a href="mechanics.html#experiment=pendulum">單擺與大角度擺動</a>
+</li>
+<li id="map-static-lab-bungee"><a href="mechanics.html#experiment=bungee">高空彈跳</a>
+<details class="map-activity"><summary>探究活動</summary><p>繩索剛拉直後，跳躍者的下落速率還會增加嗎？</p><p>把阻尼設為零並保留預設的其他參數。開啟鉛直速度時間圖，依序查看首次拉直、合力為零和最低點的標記。</p><details><summary>核對觀察</summary><p>繩索剛拉直時伸長量為零，合力仍向下。彈力等於重力時，向下速率達極值。最低點的速度才首次回到零。</p></details></details>
+</li>
+<li id="map-static-lab-shm-projection"><a href="mechanics.html#experiment=shm-projection">圓周運動與簡諧投影</a>
+</li>
+<li id="map-static-lab-resonance-bank"><a href="mechanics.html#experiment=resonance-bank">受迫振盪：十振子共振比較</a>
+</li>
+<li id="map-static-lab-coupled-oscillators"><a href="mechanics.html#experiment=coupled-oscillators">耦合振盪與能量交換</a>
+</li>
+</ul>
+<h4>圓周與轉動</h4>
+<ul>
+<li id="map-static-lab-massive-pulley"><a href="mechanics.html#experiment=massive-pulley">有轉動慣量的滑輪</a>
+</li>
+<li id="map-static-lab-belt-wheels"><a href="mechanics.html#experiment=belt-wheels">飛輪組與皮帶傳動</a>
+</li>
+<li id="map-static-lab-bike-turn"><a href="mechanics.html#experiment=bike-turn">過彎傾身與失去接觸</a>
+</li>
+</ul>
+<h4>振動</h4>
+<ul>
+<li id="map-static-lab-pendulum-angle-comparison"><a href="mechanics.html#experiment=pendulum-angle-comparison">小角度與大角度單擺比較</a>
+</li>
+<li id="map-static-lab-massive-spring"><a href="mechanics.html#experiment=massive-spring">有質量彈簧的振動</a>
+</li>
+<li id="map-static-lab-wall-spring-pair"><a href="mechanics.html#experiment=wall-spring-pair">水平彈簧雙振子：貼牆釋放</a>
+</li>
+<li id="map-static-lab-spring-wire-cut"><a href="mechanics.html#experiment=spring-wire-cut">彈簧木塊與細線：剪線比較</a>
+</li>
+<li id="map-static-lab-falling-spring"><a href="mechanics.html#experiment=falling-spring">落下物體壓彈簧</a>
+</li>
+<li id="map-static-lab-vertical-spring-pair"><a href="mechanics.html#experiment=vertical-spring-pair">鉛直雙振子壓放與離地</a>
+</li>
+<li id="map-static-lab-spring-atwood"><a href="mechanics.html#experiment=spring-atwood">彈簧阿特伍機：可動支點</a>
+</li>
+<li id="map-static-lab-floating-block-shm"><a href="mechanics.html#experiment=floating-block-shm">方塊入水與浮力簡諧振盪</a>
+</li>
+</ul>
+<h4>動力學</h4>
+<ul>
+<li id="map-static-lab-moving-atwood"><a href="mechanics.html#experiment=moving-atwood">會動的阿特伍機：四重物與雙動滑輪</a>
+</li>
+<li id="map-static-lab-recoiling-wedge"><a href="mechanics.html#experiment=recoiling-wedge">光滑斜面向後滑</a>
+</li>
+<li id="map-static-lab-person-boat"><a href="mechanics.html#experiment=person-boat">人走船退與合質心</a>
+</li>
+<li id="map-static-lab-half-circle"><a href="mechanics.html#experiment=half-circle">鉛直半圓軌道</a>
+</li>
+<li id="map-static-lab-pulled-spool"><a href="mechanics.html#experiment=pulled-spool">線軸向左滾？向右滾？</a>
+</li>
+<li id="map-static-lab-noninertial"><a href="mechanics.html#experiment=noninertial">離心力與柯氏力</a>
+</li>
+<li id="map-static-lab-hole-table"><a href="mechanics.html#experiment=hole-table">桌子上有洞：懸掛重物</a>
+</li>
+</ul>
+<h4>萬有引力</h4>
+<ul>
+<li id="map-static-lab-intercontinental"><a href="mechanics.html#experiment=intercontinental">洲際斜拋與球面落點</a>
+</li>
+<li id="map-static-lab-projectile-cone"><a href="mechanics.html#experiment=projectile-cone">平拋與圓錐曲線</a>
+</li>
+</ul>
+</details>
+<details id="map-static-1.3"><summary>1.3 靜力學</summary>
+<p class="map-guidance">高中深化 · 用力矩與受力平衡解釋槓桿與堆疊。</p>
+<p>建議先備 <a href="#map-static-1.2">1.2 動力學</a></p>
+<h4>平衡與力矩</h4>
+<ul>
+<li id="map-static-lab-lever"><a href="mechanics.html#experiment=lever">槓桿平衡與合力矩</a>
+<details class="map-activity"><summary>探究活動</summary><p>較輕的重物能平衡另一端較重的重物嗎？</p><p>用左側 2 kg、3 m，右側 3 kg、2 m，比較左右力矩。把左側力臂縮短至 2 m，觀察合力矩。</p><details><summary>核對觀察</summary><p>兩側質量與力臂的乘積相等時力矩平衡。縮短左側力臂後，右側力矩較大。</p></details><p>換個情境 · 把兩側質量同時加倍，說明合力矩與支點支持力各如何改變。</p></details>
+</li>
+<li id="map-static-lab-slip-or-tip"><a href="mechanics.html#experiment=slip-or-tip">滑下或倒下</a>
+</li>
+<li id="map-static-lab-block-stack"><a href="mechanics.html#experiment=block-stack">堆木塊與最大懸伸</a>
+</li>
+<li id="map-static-lab-self-pull"><a href="mechanics.html#experiment=self-pull">把自己拉起來：內力與外力</a>
+</li>
+</ul>
+<h4>靜水壓與浮力</h4>
+<ul>
+<li id="map-static-lab-hydrostatic-buoyancy"><a href="mechanics.html#experiment=hydrostatic-buoyancy">靜水壓與浮力平衡</a>
+<details class="map-activity"><summary>探究活動</summary><p>方塊完全浸沒後，繼續向下壓會增加浮力嗎？</p><p>保留 0.5 m 高方塊，手持底面深度先設 0.8 m，再設 1.2 m。比較頂底表壓及浮力。</p><details><summary>核對觀察</summary><p>上下表壓一起增加，壓差不變，因此浮力不變。</p></details><p>換個情境 · 切換浮力平衡，將方塊密度設為液體的 70%，預測浸沒比例。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-1.4"><summary>1.4 能量</summary>
+<p class="map-guidance">高中入門 · 比較動能與位能，留意外力作功與能量耗散。</p>
+<p>建議先備 <a href="#map-static-1.2">1.2 動力學</a></p>
+<h4>作功與能量守恆</h4>
+<ul>
+<li id="map-static-lab-work"><a href="mechanics.html#experiment=work">變力作功與動能定理</a>
+</li>
+<li id="map-static-lab-energy-track"><a href="mechanics.html#experiment=energy-track">無摩擦軌道與能量守恆</a>
+</li>
+<li id="map-static-lab-vertical-circle"><a href="mechanics.html#experiment=vertical-circle">鉛直圓環與能量</a>
+</li>
+<li id="map-static-lab-vertical-spring"><a href="mechanics.html#experiment=vertical-spring">鉛直彈簧與等效簡諧位能</a>
+</li>
+<li id="map-static-lab-joule-experiment"><a href="mechanics.html#experiment=joule-experiment">焦耳實驗：功與水溫上升</a>
+</li>
+</ul>
+</details>
+<details id="map-static-1.5"><summary>1.5 熱力學</summary>
+<p class="map-guidance">高中深化 · 先讀理想氣體狀態與溫度，熱機循環適合大一延伸。</p>
+<p>建議先備 <a href="#map-static-1.4">1.4 能量</a></p>
+<h4>氣體狀態與熱過程</h4>
+<ul>
+<li id="map-static-lab-ideal-gas"><a href="mechanics.html#experiment=ideal-gas">理想氣體模型與壁面壓力</a>
+</li>
+<li id="map-static-lab-adiabatic-pistons"><a href="mechanics.html#experiment=adiabatic-pistons">鉛直絕熱汽缸：快慢壓縮比較</a>
+</li>
+<li id="map-static-lab-pv-path"><a href="mechanics.html#experiment=pv-path">理想氣體的 P–V 路徑與第一定律</a>
+<details class="map-activity"><summary>探究活動</summary><p>同一起點和終點，作功一定相同嗎？</p><p>保留預設起終點，播放兩條路徑並開啟 P–V 圖。比較面積與末端內能。</p><details><summary>核對觀察</summary><p>淨作功依路徑而異，內能變化只取決於起終狀態。</p></details><p>換個情境 · 切換成循環，解釋內能變化歸零後，淨吸熱與淨作功為何相等。</p></details>
+</li>
+</ul>
+<h4>微觀熱運動</h4>
+<ul>
+<li id="map-static-lab-thermal-lattice"><a href="mechanics.html#experiment=thermal-lattice">熱運動：固體晶格振動</a>
+</li>
+<li id="map-static-lab-maxwell-distribution"><a href="mechanics.html#experiment=maxwell-distribution">氣體分子速率分布</a>
+</li>
+<li id="map-static-lab-equipartition"><a href="mechanics.html#experiment=equipartition">能量均分：平動轉動與振動</a>
+</li>
+</ul>
+<h4>熱機循環與效率</h4>
+<ul>
+<li id="map-static-lab-carnot-engine"><a href="mechanics.html#experiment=carnot-engine">卡諾熱機：可逆循環與效率</a>
+<p><a href="#map-static-lab-pv-path" title="先用 P–V 圖面積理解作功，再比較封閉循環。">先看 → 理想氣體的 P–V 路徑與第一定律</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>調大膨脹比，熱機效率會提高嗎？</p><p>固定兩熱源溫度，對照兩個膨脹比的 P–V 面積、淨作功和效率。</p><details><summary>核對觀察</summary><p>膨脹比增大時，淨作功和吸熱一起增加，效率仍由兩溫度決定。</p></details><p>換個情境 · 降低冷源溫度並保持熱源不變，預測效率變化。</p></details>
+</li>
+</ul>
+</details>
+</div></section>
+<section class="map-lane map-fallback" style="--branch:#9acaff">
+<h3>波動與光學</h3><div class="map-tree">
+<details id="map-static-2.1"><summary>2.1 波動的性質</summary>
+<p class="map-guidance">高中入門 · 從波速、波長與頻率開始，再操作疊加與駐波。</p>
+<p>建議先備 <a href="#map-static-1.2">1.2 動力學</a></p>
+<h4>波形與傳播</h4>
+<ul>
+<li id="map-static-lab-basic-waves"><a href="mechanics.html#experiment=basic-waves">基礎波動：傳播反射與介質</a>
+<details class="map-activity"><summary>探究活動</summary><p>橫波波峰向右移動時，標記的質點會一起往右嗎？</p><p>用模式 1 橫波，查看標記點與波峰，開啟追蹤點位移圖。保持波長不變並調高波速。</p><details><summary>核對觀察</summary><p>波峰沿繩向前，標記點留在原來的橫向位置並上下振動。波速變大時，固定波長下的週期縮短。</p></details><p>換個情境 · 換成模式 2 縱波，說明粒子的振動方向與整體傳播方向。</p></details>
+</li>
+<li id="map-static-lab-string-interface"><a href="mechanics.html#experiment=string-interface">A繩入B繩：反射與透射</a>
+</li>
+<li id="map-static-lab-wave-function"><a href="mechanics.html#experiment=wave-function">橫波波函數：空間、時間與曲面</a>
+</li>
+<li id="map-static-lab-string-wave-energy"><a href="mechanics.html#experiment=string-wave-energy">橫波的力學能與能流</a>
+</li>
+<li id="map-static-lab-wave-polarization"><a href="mechanics.html#experiment=wave-polarization">橫波變縱波：振動方向轉換</a>
+</li>
+</ul>
+<h4>疊加與駐波</h4>
+<ul>
+<li id="map-static-lab-standing-waves"><a href="mechanics.html#experiment=standing-waves">駐波的產生與波的疊加</a>
+</li>
+<li id="map-static-lab-two-source-interference"><a href="mechanics.html#experiment=two-source-interference">雙點波源干涉</a>
+</li>
+<li id="map-static-lab-longitudinal-tube"><a href="mechanics.html#experiment=longitudinal-tube">管內縱波、反射與駐波</a>
+</li>
+<li id="map-static-lab-resonance-column"><a href="mechanics.html#experiment=resonance-column">共鳴氣柱：水位與音叉</a>
+</li>
+</ul>
+<h4>聲音與頻譜</h4>
+<ul>
+<li id="map-static-lab-vacuum-bell"><a href="mechanics.html#experiment=vacuum-bell">波以耳實驗：玻璃罩抽氣鈴聲</a>
+</li>
+<li id="map-static-lab-sound-speed"><a href="mechanics.html#experiment=sound-speed">聲速：溫度與聲音抵達時間</a>
+</li>
+<li id="map-static-lab-echo"><a href="mechanics.html#experiment=echo">山壁與回聲</a>
+</li>
+<li id="map-static-lab-doppler"><a href="mechanics.html#experiment=doppler">都卜勒效應：移動聲源與觀察者</a>
+</li>
+<li id="map-static-lab-sound-elements"><a href="mechanics.html#experiment=sound-elements">聲音三要素：音高、振幅與音色</a>
+</li>
+<li id="map-static-lab-violin-fourier"><a href="mechanics.html#experiment=violin-fourier">小提琴聲：傅立葉分析與合成</a>
+</li>
+<li id="map-static-lab-fourier-square"><a href="mechanics.html#experiment=fourier-square">方波傅立葉：圓投影與逐項疊加</a>
+</li>
+</ul>
+</details>
+<details id="map-static-2.2"><summary>2.2 幾何光學</summary>
+<p class="map-guidance">高中入門 · 從反射與折射開始，薄透鏡成像為高中深化。</p>
+<h4>反射與折射</h4>
+<ul>
+<li id="map-static-lab-plane-mirror"><a href="mechanics.html#experiment=plane-mirror">平面鏡成像與可見範圍</a>
+</li>
+<li id="map-static-lab-layered-refraction"><a href="mechanics.html#experiment=layered-refraction">多層平行介質折射</a>
+</li>
+<li id="map-static-lab-straw-cup"><a href="mechanics.html#experiment=straw-cup">杯中吸管：容器與折射外觀</a>
+</li>
+<li id="map-static-lab-apparent-depth"><a href="mechanics.html#experiment=apparent-depth">視深與實深：雙光線反向延長</a>
+</li>
+<li id="map-static-lab-sphere-lens"><a href="mechanics.html#experiment=sphere-lens">球形透鏡：內外觀察與全反射</a>
+</li>
+<li id="map-static-lab-rainbow"><a href="mechanics.html#experiment=rainbow">虹與霓：水滴光路與觀察角</a>
+</li>
+</ul>
+<h4>成像與光學儀器</h4>
+<ul>
+<li id="map-static-lab-image-drawing"><a href="mechanics.html#experiment=image-drawing">成像作圖：透鏡與面鏡</a>
+</li>
+<li id="map-static-lab-eye-lens"><a href="mechanics.html#experiment=eye-lens">眼看透鏡成像：有限口徑外觀</a>
+</li>
+<li id="map-static-lab-half-lens"><a href="mechanics.html#experiment=half-lens">透鏡遮一半：完整像與光量</a>
+<details class="map-activity"><summary>探究活動</summary><p>遮住一半透鏡，屏幕上的像會少一半嗎？</p><p>保持屏距／理想像距為 1，開啟抽樣光線，把遮擋高度從 0% 調到 50%。比較十字像和相對光量讀值。</p><details><summary>核對觀察</summary><p>像點的位置維持不變，開孔面積與相對光量都減半。試把屏幕移離焦平面，再觀察光斑形狀。</p></details></details>
+</li>
+<li id="map-static-lab-optical-parallax"><a href="mechanics.html#experiment=optical-parallax">視差法：移動眼睛找成像位置</a>
+</li>
+<li id="map-static-lab-optical-instruments"><a href="mechanics.html#experiment=optical-instruments">光學儀器：多透鏡與成像</a>
+</li>
+<li id="map-static-lab-dolly-zoom"><a href="mechanics.html#experiment=dolly-zoom">希區考克變焦：主體不變、背景改變</a>
+</li>
+</ul>
+<h4>幾何光學</h4>
+<ul>
+<li id="map-static-lab-shared-mirror"><a href="mechanics.html#experiment=shared-mirror">兩人同鏡：全身像與最小鏡高</a>
+</li>
+<li id="map-static-lab-double-mirror"><a href="mechanics.html#experiment=double-mirror">雙鏡成多像：反射次數與可見光路</a>
+</li>
+<li id="map-static-lab-conic-mirror"><a href="mechanics.html#experiment=conic-mirror">曲面鏡反射與焦點性質</a>
+</li>
+<li id="map-static-lab-refraction-cart"><a href="mechanics.html#experiment=refraction-cart">折射的原因：雙輪車跨介面</a>
+</li>
+<li id="map-static-lab-dancing-image"><a href="mechanics.html#experiment=dancing-image">成像之舞：物體與透鏡的運動</a>
+</li>
+</ul>
+</details>
+<details id="map-static-2.3"><summary>2.3 物理光學</summary>
+<p class="map-guidance">高中入門 · 先觀察亮暗紋，再以相位差解釋干涉與繞射。</p>
+<p>建議先備 <a href="#map-static-2.1">2.1 波動的性質</a></p>
+<h4>干涉與繞射</h4>
+<ul>
+<li id="map-static-lab-double-slit"><a href="mechanics.html#experiment=double-slit">雙狹縫干涉與有限縫長繞射</a>
+</li>
+<li id="map-static-lab-aperture-pattern"><a href="mechanics.html#experiment=aperture-pattern">方孔、圓孔與多孔陣列干涉繞射</a>
+</li>
+<li id="map-static-lab-diffraction-amplitudes"><a href="mechanics.html#experiment=diffraction-amplitudes">干涉繞射：電場向量與孔徑疊加</a>
+<details class="map-activity"><summary>探究活動</summary><p>單縫只有一個開口，暗紋從哪裡來？</p><p>選模式 2 單縫，將波長設為 400 nm、縫寬設為 100 μm、屏距設為 3 m。開啟分量顯示，從屏幕中央掃到約 12 mm 的第一條暗紋。</p><details><summary>核對觀察</summary><p>中央各分量同相，合向量較長。暗紋處，各區間的場向量相消。換成模式 3 雙縫，仍可用先加場、再取模平方解釋亮暗。</p></details></details>
+</li>
+<li id="map-static-lab-optical-grating"><a href="mechanics.html#experiment=optical-grating">光柵：廣角級次與波前</a>
+</li>
+<li id="map-static-lab-thin-film"><a href="mechanics.html#experiment=thin-film">薄膜干涉：反射光譜與鍍膜</a>
+<details class="map-activity"><summary>探究活動</summary><p>膜厚設零後，薄膜折射率還影響反射嗎？</p><p>把膜厚設零，在固定基底下改薄膜折射率並比較光譜。</p><details><summary>核對觀察</summary><p>兩界面在零膜厚時合併為空氣與基底的界面。</p></details><p>換個情境 · 把膜厚調回非零，解釋反射為何開始依波長變化。</p></details>
+</li>
+</ul>
+<h4>偏振與色彩</h4>
+<ul>
+<li id="map-static-lab-fresnel"><a href="mechanics.html#experiment=fresnel">Fresnel：偏振與反射透射能量</a>
+</li>
+<li id="map-static-lab-rgb-lights"><a href="mechanics.html#experiment=rgb-lights">光的三原色：加色與減色比較</a>
+</li>
+<li id="map-static-lab-optical-polarizers"><a href="mechanics.html#experiment=optical-polarizers">偏振片：馬呂斯定律與交叉偏振</a>
+<details class="map-activity"><summary>探究活動</summary><p>首末兩片互相垂直時，插入第三片會更暗嗎？</p><p>固定非偏振入射與末片 90°，比較移除中間片及放入 45° 中間片時的輸出。</p><details><summary>核對觀察</summary><p>交叉兩片時輸出近零。中間片讓偏振方向先轉至 45°，再通過末片，理想輸出為入射強度的 12.5%。</p></details><p>換個情境 · 將入射改成沿首片的線偏振光，解釋同一組偏振片的輸出為何變成 25%。</p></details>
+</li>
+</ul>
+</details>
+</div></section>
+<section class="map-lane map-fallback" style="--branch:#ffc183">
+<h3>電與磁</h3><div class="map-tree">
+<details id="map-static-3.1"><summary>3.1 靜電學</summary>
+<p class="map-guidance">高中入門 · 先建立電荷與電場概念，高斯面與介電質適合大一延伸。</p>
+<h4>電荷、電場與電位</h4>
+<ul>
+<li id="map-static-lab-two-charges"><a href="mechanics.html#experiment=two-charges">雙點電荷：電場、等位線與電位</a>
+</li>
+</ul>
+<h4>感應與接地</h4>
+<ul>
+<li id="map-static-lab-electroscope"><a href="mechanics.html#experiment=electroscope">金箔驗電器：感應、接觸與接地</a>
+</li>
+</ul>
+<h4>通量與高斯定律</h4>
+<ul>
+<li id="map-static-lab-gauss-surface"><a href="mechanics.html#experiment=gauss-surface">球形高斯面：通量與包圍電荷</a>
+<details class="map-activity"><summary>探究活動</summary><p>球內電荷偏離中心，總通量會改變嗎？</p><p>播放點電荷從球心穿出，對照場箭頭與精確淨通量。</p><details><summary>核對觀察</summary><p>局部法向場會改變，球內淨通量固定。電荷出界後淨通量為零。</p></details><p>換個情境 · 反轉電荷，說明內部淨通量與場方向如何變化。</p></details>
+</li>
+</ul>
+<h4>電容與介電質</h4>
+<ul>
+<li id="map-static-lab-parallel-capacitor"><a href="mechanics.html#experiment=parallel-capacitor">平行板電容：接電源與斷開</a>
+<details class="map-activity"><summary>探究活動</summary><p>插入介電質時，固定電壓和固定電荷會有何不同？</p><p>維持板距 4 mm，把介電常數設為 4，分別播放兩種接線模式。</p><details><summary>核對觀察</summary><p>兩者電容都增至四倍。接電源時電荷增加，斷開時電壓下降。</p></details><p>換個情境 · 改為只縮小板距，說明哪兩個量受接線條件限制。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-3.2"><summary>3.2 電流磁效應</summary>
+<p class="map-guidance">高中深化 · 先看直導線磁場，再比較帶電粒子受力與軌跡。</p>
+<p>建議先備 <a href="#map-static-1.2">1.2 動力學</a> · <a href="#map-static-3.4">3.4 電路學</a></p>
+<h4>通電導線與磁場</h4>
+<ul>
+<li id="map-static-lab-wire-magnetic-field"><a href="mechanics.html#experiment=wire-magnetic-field">通電導線的磁場與磁針</a>
+<details class="map-activity"><summary>探究活動</summary><p>把電流反向，磁針必定掉頭 180° 嗎？</p><p>固定探針位置，在有背景場及背景場為零時各反轉一次電流。</p><details><summary>核對觀察</summary><p>導線磁場一定反向，有背景場時磁針指向兩者的合場。</p></details><p>換個情境 · 在無背景場時把距離加倍，預測磁場大小和方向。</p></details>
+</li>
+</ul>
+<h4>磁力與帶電粒子</h4>
+<ul>
+<li id="map-static-lab-charged-particle"><a href="mechanics.html#experiment=charged-particle">帶電粒子在均勻磁場中</a>
+<p><a href="#map-static-lab-circular" title="先讀向心加速度，再辨認磁力提供的向心分量。">先看 → 等速圓周運動</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>電荷反向會讓速度變慢嗎？</p><p>固定夾角與速率，切換電荷正負，比較軌跡和速率讀值。</p><details><summary>核對觀察</summary><p>繞轉方向反向，速率不變，因為磁力與速度垂直。</p></details><p>換個情境 · 將夾角設為 0° 和 90°，說明兩種極限軌跡。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-3.3"><summary>3.3 電磁感應</summary>
+<p class="map-guidance">高中入門 · 先觀察磁通變化引發感應，再用楞次定律解釋方向。</p>
+<p>建議先備 <a href="#map-static-3.2">3.2 電流磁效應</a> · <a href="#map-static-3.4">3.4 電路學</a></p>
+<h4>磁通量與楞次定律</h4>
+<ul>
+<li id="map-static-lab-magnetic-induction"><a href="mechanics.html#experiment=magnetic-induction">磁鐵穿線圈：磁通與感應電壓</a>
+<details class="map-activity"><summary>探究活動</summary><p>磁鐵到線圈中心時，電壓會最大嗎？</p><p>先看磁通圖，再用同一播放位置查看感應電壓。</p><details><summary>核對觀察</summary><p>中心磁通達極值，變化率為零，感應電壓也過零。</p></details><p>換個情境 · 把速度設零，說明有磁通時為何仍可沒有電壓。</p></details>
+</li>
+</ul>
+<h4>渦電流與磁阻尼</h4>
+<ul>
+<li id="map-static-lab-eddy-current"><a href="mechanics.html#experiment=eddy-current">渦電流：磁鐵穿過導體管</a>
+<p><a href="#map-static-lab-magnetic-induction" title="先辨認磁通變化率與感應電壓，再觀察閉合導體的電流。">先看 → 磁鐵穿線圈：磁通與感應電壓</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>導電管會讓磁鐵更快落下嗎？</p><p>使用同一磁鐵，分別播放絕緣管和導電管。讀取底端的實際模型時間與焦耳熱。</p><details><summary>核對觀察</summary><p>導電時感應電流產生阻尼，下落較久，部分機械能轉成焦耳熱。</p></details><p>換個情境 · 增加等效環電阻，說明下落時間如何接近絕緣管結果。</p></details>
+</li>
+</ul>
+<h4>發電與變壓</h4>
+<ul>
+<li id="map-static-lab-generator-transformer"><a href="mechanics.html#experiment=generator-transformer">發電機與理想變壓器</a>
+<p><a href="#map-static-lab-magnetic-induction" title="先用磁鐵穿線圈理解法拉第定律，再看週期性磁通。">先看 → 磁鐵穿線圈：磁通與感應電壓</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>二次側匝數加倍，輸出電壓會加倍嗎？</p><p>切換變壓器模式，保持一次側設定與電阻，改二次側匝數並比較電壓峰值。</p><details><summary>核對觀察</summary><p>理想變壓器電壓比等於匝數比，固定負載電阻時功率隨電壓平方增加。</p></details><p>換個情境 · 切換發電機，說明磁通過零時為何電壓可達極值。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-3.4"><summary>3.4 電路學</summary>
+<p class="map-guidance">高中深化 · 先讀簡單串並聯電路，RC 暫態與 RLC 為大一延伸。</p>
+<h4>串並聯與 RC 暫態</h4>
+<ul>
+<li id="map-static-lab-circuit-rc"><a href="mechanics.html#experiment=circuit-rc">串並聯電路與 RC 充放電</a>
+<details class="map-activity"><summary>探究活動</summary><p>電容加倍，充電到同一比例要多久？</p><p>選 RC 充電，閉合開關，固定電阻並把電容加倍。以電容電壓圖找 63% 時刻。</p><details><summary>核對觀察</summary><p>電壓到達約 63% 的時間為 RC，電容加倍後時間加倍。</p></details><p>換個情境 · 改成放電，說明相同時間常數後剩餘的電壓比例。</p></details>
+</li>
+</ul>
+<h4>交流與 RLC 共振</h4>
+<ul>
+<li id="map-static-lab-rlc-resonance"><a href="mechanics.html#experiment=rlc-resonance">串聯 RLC 共振與相位</a>
+<p><a href="#map-static-lab-circuit-rc" title="先讀取電阻和電容的端電壓，再比較交流相位。">先看 → 串並聯電路與 RC 充放電</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>電流峰值與相位過零會同時出現嗎？</p><p>開啟共振曲線，將頻率滑到最接近共振讀值的位置，比較兩側相位。</p><details><summary>核對觀察</summary><p>電抗在共振處互相抵消，電流達峰值，電壓與電流同相。</p></details><p>換個情境 · 提高電阻後，說明峰值變小與共振頻率是否改變。</p></details>
+</li>
+</ul>
+</details>
+</div></section>
+<section class="map-lane map-fallback" style="--branch:#d4b9ff">
+<h3>近代物理</h3><div class="map-tree">
+<details id="map-static-4.1"><summary>4.1 黑體輻射</summary>
+<p class="map-guidance">高中深化 · 比較溫度與光譜分布。公式的定量積分適合大一延伸。</p>
+<p>建議先備 <a href="#map-static-1.5">1.5 熱力學</a> · <a href="#map-static-2.3">2.3 物理光學</a></p>
+<h4>溫度與熱輻射光譜</h4>
+<ul>
+<li id="map-static-lab-blackbody-radiation"><a href="mechanics.html#experiment=blackbody-radiation">黑體輻射：溫度與光譜</a>
+<details class="map-activity"><summary>探究活動</summary><p>溫度加倍時，峰值與總出射度會怎麼變？</p><p>把比較溫度設為 3000 K，主溫度從 3000 K 調到 6000 K。開啟光譜圖。</p><details><summary>核對觀察</summary><p>波長光譜峰值縮短為一半，總出射度變成 16 倍。</p></details><p>換個情境 · 把兩溫度設為 4000 K 和 8000 K，解釋比例為何相同。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-4.2"><summary>4.2 光電效應</summary>
+<p class="map-guidance">高中入門 · 分開調整光頻率與強度，觀察動能和電流。</p>
+<p>建議先備 <a href="#map-static-3.1">3.1 靜電學</a> · <a href="#map-static-3.4">3.4 電路學</a></p>
+<h4>光子、逸出功與遏止電壓</h4>
+<ul>
+<li id="map-static-lab-photoelectric"><a href="mechanics.html#experiment=photoelectric">光電效應：光子能量與光電流</a>
+<details class="map-activity"><summary>探究活動</summary><p>低於截止頻率時，提高光強能打出電子嗎？</p><p>把頻率設為 400 THz、逸出功設為 2.3 eV，遏止電壓設零。提高固定光子流率。</p><details><summary>核對觀察</summary><p>每顆光子能量仍低於逸出功，模型中的發射率維持零。</p></details><p>換個情境 · 換成較低逸出功的材料，預測同一頻率能否放出電子。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-4.3"><summary>4.3 物質波</summary>
+<p class="map-guidance">高中入門 · 先觀察電子雙縫落點，德布羅意波長的定量關係為高中深化。</p>
+<p>建議先備 <a href="#map-static-2.1">2.1 波動的性質</a> · <a href="#map-static-2.3">2.3 物理光學</a></p>
+<h4>德布羅意波與電子繞射</h4>
+<ul>
+<li id="map-static-lab-matter-wave"><a href="mechanics.html#experiment=matter-wave">電子雙縫與物質波</a>
+<p><a href="#map-static-lab-diffraction-amplitudes" title="先比較相干的雙縫分布，再觀察逐次探測事件。">先看 → 干涉繞射：電場向量與孔徑疊加</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>逐一到達的電子能累積出干涉條紋嗎？</p><p>固定種子播放至終點。切換路徑資訊並比較兩種落點與機率密度圖。</p><details><summary>核對觀察</summary><p>相干時可逐漸看見條紋，完整路徑資訊時兩路機率相加。</p></details><p>換個情境 · 提高加速電壓，預測相干條紋間距。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-4.4"><summary>4.4 原子模型的發展和波爾氫原子模型與能階</summary>
+<p class="map-guidance">高中深化 · 用氫原子譜線連結能階差與光子能量。</p>
+<p>建議先備 <a href="#map-static-3.1">3.1 靜電學</a> · <a href="#map-static-4.3">4.3 物質波</a></p>
+<h4>散射與原子模型</h4>
+<ul>
+<li id="map-static-lab-rutherford-scattering"><a href="mechanics.html#experiment=rutherford-scattering">拉塞福散射：集中電荷與擴散電荷</a>
+<details class="map-activity"><summary>探究活動</summary><p>正電荷散開或集中，哪種更容易造成背向散射？</p><p>用 12 MeV、碰撞參數 0 fm、擴散半徑 140 fm 比較兩條軌跡。</p><details><summary>核對觀察</summary><p>集中電荷使粒子折返，擴散電荷使粒子穿過。</p></details><p>換個情境 · 略增碰撞參數，檢查大角偏轉會如何改變。</p></details>
+</li>
+</ul>
+<h4>氫原子能階與譜線</h4>
+<ul>
+<li id="map-static-lab-hydrogen-spectrum"><a href="mechanics.html#experiment=hydrogen-spectrum">氫原子能階與光譜</a>
+<details class="map-activity"><summary>探究活動</summary><p>同一對能階，吸收和發射會用不同波長嗎？</p><p>固定兩個能階，切換吸收及發射。比較躍遷方向和波長。</p><details><summary>核對觀察</summary><p>方向相反，能量差的絕對值與波長相同。</p></details><p>換個情境 · 換更大的能階差，預測對應波長會變長或變短。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-4.5"><summary>4.5 量子力學、波函數、軌域</summary>
+<p class="map-guidance">進階 · 從定態機率分布進入方井疊加與氫原子軌域。</p>
+<p>建議先備 <a href="#map-static-4.3">4.3 物質波</a></p>
+<h4>機率密度、定態與軌域</h4>
+<ul>
+<li id="map-static-lab-quantum-well"><a href="mechanics.html#experiment=quantum-well">量子方井：定態與疊加</a>
+<details class="map-activity"><summary>探究活動</summary><p>定態與疊加的機率密度都會變嗎？</p><p>將較高能階的機率權重從 0 調到 0.5，分別播放並觀察機率密度。</p><details><summary>核對觀察</summary><p>單一定態的密度固定，兩個能階疊加的交叉項會隨相位改變。</p></details><p>換個情境 · 把井寬加倍，從讀值確認能階差及相位週期的改變。</p></details>
+</li>
+<li id="map-static-lab-hydrogen-orbitals"><a href="mechanics.html#experiment=hydrogen-orbitals">氫原子軌域：1s、2s 與 2p</a>
+<p><a href="#map-static-lab-quantum-well" title="先區分波函數和機率密度，再觀察三維點雲。">先看 → 量子方井：定態與疊加</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>2s 和 2p_z 都有相同的節面嗎？</p><p>固定種子與點數，旋轉比較兩種點雲，再開啟徑向機率圖。</p><details><summary>核對觀察</summary><p>2s 在特定半徑有球形節面，2p_z 有平面節點。</p></details><p>換個情境 · 切換 1s，說明為何中心附近的空間機率密度與徑向機率不是同一量。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-4.6"><summary>4.6 半導體物理</summary>
+<p class="map-guidance">進階 · 先確認電位差與載子，再比較 PN 接面偏壓。</p>
+<p>建議先備 <a href="#map-static-4.4">4.4 原子模型的發展和波爾氫原子模型與能階</a> · <a href="#map-static-4.5">4.5 量子力學、波函數、軌域</a> · <a href="#map-static-3.4">3.4 電路學</a></p>
+<h4>能帶、載子與 PN 接面</h4>
+<ul>
+<li id="map-static-lab-pn-junction"><a href="mechanics.html#experiment=pn-junction">矽 PN 接面：偏壓與耗盡區</a>
+<p><a href="#map-static-lab-two-charges" title="先區分電場、電位和電位能，再讀接面的能帶障壁。">先看 → 雙點電荷：電場、等位線與電位</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>哪一側耗盡區較寬？</p><p>固定反偏壓，先把 P 側濃度設低於 N 側，再互換濃度。</p><details><summary>核對觀察</summary><p>摻雜較低的一側耗盡區較寬，兩側固定電荷量仍相抵。</p></details><p>換個情境 · 改為正偏壓，預測總耗盡寬度和障壁如何改變。</p></details>
+</li>
+</ul>
+</details>
+<details id="map-static-4.7"><summary>4.7 核物理</summary>
+<p class="map-guidance">高中深化 · 以多次放射性衰變取樣區分單次結果與統計期望。</p>
+<h4>核種與半衰期</h4>
+<ul>
+<li id="map-static-lab-radioactive-decay"><a href="mechanics.html#experiment=radioactive-decay">放射性衰變與半衰期</a>
+<details class="map-activity"><summary>探究活動</summary><p>過一個半衰期，每次都剛好剩一半嗎？</p><p>在一個半衰期對應的時間讀值，換三個不同種子。</p><details><summary>核對觀察</summary><p>理論期望是初始數的一半，單次取樣會波動。</p></details><p>換個情境 · 增加樣本數，再比較相對偏差的典型大小。</p></details>
+</li>
+</ul>
+<h4>結合能與反應能量</h4>
+<ul>
+<li id="map-static-lab-nuclear-binding"><a href="mechanics.html#experiment=nuclear-binding">核結合能：融合與分裂</a>
+<p><a href="#map-static-lab-radioactive-decay" title="先辨認核種和反應前後的變化，再比較質量差。">先看 → 放射性衰變與半衰期</a></p>
+<details class="map-activity"><summary>探究活動</summary><p>融合與分裂都放能時，產物和反應物的質量有何差異？</p><p>分別播放氘氚融合與鈾分裂，查看兩組產物的 Q 值。</p><details><summary>核對觀察</summary><p>兩組 Q 值均為正，產物總質量較小，差值轉成反應能量。</p></details><p>換個情境 · 用反向反應解釋為何須供應同等能量。</p></details>
+</li>
+</ul>
+</details>
+</div></section>
+<!-- end map fallback --></div></div>
+  <aside class="map-selection" id="map-selection" aria-label="節點資訊" aria-live="polite" hidden></aside>
+  </div>
+  <div class="map-detail" id="map-detail"></div>
+</section>
+<section class="hero"><div><div class="eyebrow">OBSERVE · ADJUST · DISCOVER</div><h2>讓公式動起來，<br>從不同角度理解物理。</h2><p>調整一個條件，觀察一段運動。從自由落體到光電效應，透過可旋轉的 3D 場景、時間回放與數據圖表，探索每個經典問題背後的規律。</p><div class="count" id="count"></div></div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 500 320"><defs><radialGradient id="ball"><stop stop-color="#ffce94"/><stop offset="1" stop-color="#c8793b"/></radialGradient></defs><path d="M-40 260 280 125 550 240 230 385Z" fill="#afc2b6"/><g stroke="#66897e" opacity=".3"><path d="m0 250 320 134m-250 164 320-136M40 306 360 171M100 333 420 198M160 360 480 224M0 224l320 134M60 198l320 134M120 172l320 134"/></g><path d="M100 236Q220-70 402 244" fill="none" stroke="#466f78" stroke-width="3" stroke-dasharray="6 6"/><path d="M100 236Q147 117 215 113" fill="none" stroke="#cf7632" stroke-width="4"/><ellipse cx="215" cy="247" rx="20" ry="7" fill="#34544b44"/><path d="M215 113v134" stroke="#466f78" stroke-dasharray="4 5" opacity=".5"/><circle cx="215" cy="113" r="17" fill="url(#ball)"/><path d="m215 113 53 2m-8-5 8 5-9 4" stroke="#168579" stroke-width="3" fill="none"/><path d="m215 113 0-37m-5 8 5-8 5 8" stroke="#8b5ac4" stroke-width="3" fill="none"/><path d="m100 236 63 27m-63-27 0-73m0 73-51 22" stroke="#46616a" stroke-width="2"/><text x="170" y="268" fill="#46616a" font-size="13">x</text><text x="95" y="156" fill="#46616a" font-size="13">y</text><text x="36" y="266" fill="#46616a" font-size="13">z</text></svg><span>A DIFFERENT VIEW OF PHYSICS</span></div></section>
+<h2 id="experiment-catalogue">全部實驗</h2><div class="toolbar"><input class="search" id="search" type="search" placeholder="搜尋實驗、公式或主題…" aria-label="搜尋實驗"><nav class="filters" id="filters" aria-label="實驗分類"></nav></div><p class="result" id="result" role="status"></p><div class="cards" id="cards"></div><footer>全部實驗可離線使用，數值採 SI 單位；模型假設與探究問題位於各實驗頁面。3D 是觀察方式，平面運動也能自由轉動視角。<br>新實驗包含時間圖表與 CSV；原有三個拋體實驗保留各自的特色操作。<a href="CURRICULUM.md">課程範圍與驗收清單</a> · <a href="research/haha90-audit/index.html">原站題目與截圖</a> · <a href="research/haha90-audit/IMPLEMENTATION.md">全站製作進度</a></footer></main><script src="mechanics-models.js"></script><script src="models/sun-earth.js"></script><script src="models/moon-earth.js"></script><script src="models/pendulum-angle-comparison.js"></script><script src="models/extended-mechanics.js"></script><script src="models/wave-optics.js"></script><script src="models/airplane-drop.js"></script><script src="models/safe-parabola.js"></script><script src="models/relative-motion.js"></script><script src="models/shoot-monkey.js"></script><script src="models/incline-shadow.js"></script><script src="models/optimal-projectile.js"></script><script src="models/shm-projection.js"></script><script src="models/vertical-spring.js"></script><script src="models/belt-wheels.js"></script><script src="models/slip-or-tip.js"></script><script src="models/block-stack.js"></script><script src="models/self-pull.js"></script><script src="models/moving-atwood.js"></script><script src="models/conveyor-friction.js"></script><script src="models/bike-turn.js"></script><script src="models/projectile-explosion.js"></script><script src="models/recoiling-wedge.js"></script><script src="models/person-boat.js"></script><script src="models/ring-ball.js"></script><script src="models/half-circle.js"></script><script src="models/pulled-spool.js"></script><script src="models/noninertial.js"></script><script src="models/hole-table.js"></script><script src="models/binary-stars.js"></script><script src="models/intercontinental.js"></script><script src="models/projectile-cone.js"></script><script src="models/wall-spring-pair.js"></script><script src="models/spring-wire-cut.js"></script><script src="models/falling-spring.js"></script><script src="models/vertical-spring-pair.js"></script><script src="models/resonance-bank.js"></script><script src="models/coupled-oscillators.js"></script><script src="models/spring-atwood.js"></script><script src="models/ball-rod.js"></script><script src="models/rough-bounce.js"></script><script src="models/joule-experiment.js"></script><script src="models/thermal-lattice.js"></script><script src="models/ideal-gas.js"></script><script src="models/maxwell-distribution.js"></script><script src="models/equipartition.js"></script><script src="models/adiabatic-pistons.js"></script><script src="models/wave-core.js"></script><script src="models/basic-waves.js"></script><script src="models/standing-waves.js"></script><script src="models/string-interface.js"></script><script src="models/wave-function.js"></script><script src="models/two-source-interference.js"></script><script src="models/string-wave-energy.js"></script><script src="models/wave-polarization.js"></script><script src="models/longitudinal-tube.js"></script><script src="models/acoustic-core.js"></script><script src="models/resonance-column.js"></script><script src="models/vacuum-bell.js"></script><script src="models/sound-speed.js"></script><script src="models/echo.js"></script><script src="models/doppler.js"></script><script src="models/sound-elements.js"></script><script src="models/violin-fourier.js"></script><script src="models/sun-earth-moon.js"></script><script src="models/fourier-square.js"></script><script src="models/plane-mirror.js"></script><script src="models/shared-mirror.js"></script><script src="models/double-mirror.js"></script><script src="models/conic-mirror.js"></script><script src="models/image-drawing.js"></script><script src="models/refraction-cart.js"></script><script src="models/layered-refraction.js"></script><script src="models/straw-cup.js"></script><script src="models/apparent-depth.js"></script><script src="models/sphere-lens.js"></script><script src="models/fresnel-core.js"></script><script src="models/fresnel.js"></script><script src="models/eye-lens.js"></script><script src="models/dancing-image.js"></script><script src="models/half-lens.js"></script><script src="models/optical-parallax.js"></script><script src="models/ray-matrix.js"></script><script src="models/optical-instruments.js"></script><script src="models/rainbow.js"></script><script src="models/dolly-zoom.js"></script><script src="models/celestial-sphere.js"></script><script src="models/floating-block-shm.js"></script><script src="models/electroscope.js"></script><script src="models/rgb-lights.js"></script><script src="models/aperture-pattern.js"></script><script src="models/diffraction-amplitudes.js"></script><script src="models/two-charges.js"></script><script src="models/optical-grating.js"></script><script src="models/pv-path.js"></script><script src="models/magnetic-induction.js"></script><script src="models/circuit-rc.js"></script><script src="models/photoelectric.js"></script><script src="models/blackbody-radiation.js"></script><script src="models/hydrogen-spectrum.js"></script><script src="models/radioactive-decay.js"></script><script src="models/thin-film.js"></script><script src="models/matter-wave.js"></script><script src="models/parallel-capacitor.js"></script><script src="models/gauss-surface.js"></script><script src="models/quantum-well.js"></script><script src="models/hydrogen-orbitals.js"></script><script src="models/pn-junction.js"></script><script src="models/rlc-resonance.js"></script><script src="models/eddy-current.js"></script><script src="models/carnot-engine.js"></script><script src="models/wire-magnetic-field.js"></script><script src="models/charged-particle.js"></script><script src="models/generator-transformer.js"></script><script src="models/rutherford-scattering.js"></script><script src="models/nuclear-binding.js"></script><script src="models/optical-polarizers.js"></script><script src="models/hydrostatic-buoyancy.js"></script><script src="assets/learning-map.js"></script><script src="assets/library.js"></script></body></html>

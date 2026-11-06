@@ -1,0 +1,101 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const { domHarness } = require('./dom-harness.cjs');
+
+const root = path.resolve(__dirname, '..');
+const read = file => fs.readFileSync(path.join(root, file), 'utf8');
+const html = read('library.html');
+const { sandbox } = domHarness(html);
+for (const [, source] of html.matchAll(/<script src="([^"]+)"/g)) {
+  vm.runInContext(read(source), sandbox, { filename: source });
+}
+
+const chapters = vm.runInContext('buildLearningMap(experiments)', sandbox);
+const experimentIds = new Set(vm.runInContext('experiments.map(lab => lab.id)', sandbox));
+const experimentTitles = new Map(vm.runInContext('experiments.map(lab => [lab.id, lab.title])', sandbox));
+const activities = vm.runInContext('learningActivities', sandbox);
+for (const [id, steps] of Object.entries(activities)) {
+  assert.ok(experimentIds.has(id), 'Unknown inquiry experiment: ' + id);
+  assert.ok(steps.length >= 3 && steps.every(step => step.trim()), 'Incomplete inquiry: ' + id);
+}
+const prerequisites = vm.runInContext('prerequisites', sandbox);
+const experimentPrerequisites = vm.runInContext('experimentPrerequisites', sandbox);
+for (const [id, links] of Object.entries(experimentPrerequisites)) {
+  assert.ok(experimentIds.has(id), 'Unknown experiment prerequisite target: ' + id);
+  for (const [parent, reason] of links) assert.ok(experimentIds.has(parent) && parent !== id && reason.trim());
+}
+const learningFocus = vm.runInContext('learningFocus', sandbox);
+const chapterIds = new Set(chapters.map(chapter => chapter.id));
+const visited = new Set();
+function visit(id, path = new Set()) {
+  assert.ok(chapterIds.has(id), 'Unknown chapter: ' + id);
+  assert.ok(!path.has(id), 'Prerequisite cycle: ' + id);
+  if (visited.has(id)) return;
+  for (const parent of prerequisites[id] || []) visit(parent, new Set([...path, id]));
+  visited.add(id);
+}
+for (const id of chapterIds) visit(id);
+for (const id of Object.keys(prerequisites)) assert.ok(chapterIds.has(id));
+const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+const sections = [];
+let count = 0;
+for (const branch of new Set(chapters.map(chapter => chapter.branch))) {
+  const rows = chapters.filter(chapter => chapter.branch === branch);
+  sections.push(`<section class="map-lane map-fallback" style="--branch:${rows[0].color}">`,
+    `<h3>${escape(branch)}</h3><div class="map-tree">`);
+  for (const chapter of rows) {
+    const [level, guidance] = learningFocus[chapter.id];
+    sections.push(`<details id="map-static-${chapter.id}"><summary>${chapter.id} ${escape(chapter.title)}</summary>`,
+      `<p class="map-guidance">${escape(level)} · ${escape(guidance)}</p>`);
+    const parents = prerequisites[chapter.id] || [];
+    if (parents.length) {
+      const links = parents.map(id => {
+        const parent = chapters.find(item => item.id === id);
+        assert.ok(parent, 'Unknown chapter: ' + id);
+        return `<a href="#map-static-${id}">${id} ${escape(parent.title)}</a>`;
+      });
+      sections.push(`<p>建議先備 ${links.join(' · ')}</p>`);
+    }
+    for (const topic of chapter.topics) {
+      sections.push(`<h4>${escape(topic.name)}</h4>`);
+      if (!topic.labs.length) {
+        sections.push('<p>規劃中</p>');
+        continue;
+      }
+      sections.push('<ul>');
+      for (const lab of topic.labs) {
+        assert.ok(fs.existsSync(path.join(root, lab.href.split(/[?#]/)[0])), lab.href);
+        sections.push(`<li id="map-static-lab-${escape(lab.id)}"><a href="${escape(lab.href)}">${escape(lab.title)}</a>`);
+        for (const [parent, reason] of experimentPrerequisites[lab.id] || []) {
+          sections.push(`<p><a href="#map-static-lab-${escape(parent)}" title="${escape(reason)}">先看 → ${escape(experimentTitles.get(parent))}</a></p>`);
+        }
+        if (activities[lab.id]) {
+          const [prompt, procedure, result, transfer] = activities[lab.id].map(escape);
+          const transferHtml = transfer ? `<p>換個情境 · ${transfer}</p>` : '';
+          sections.push(`<details class="map-activity"><summary>探究活動</summary><p>${prompt}</p><p>${procedure}</p><details><summary>核對觀察</summary><p>${result}</p></details>${transferHtml}</details>`);
+        }
+        sections.push('</li>');
+        count++;
+      }
+      sections.push('</ul>');
+    }
+    sections.push('</details>');
+  }
+  sections.push('</div></section>');
+}
+assert.equal(sections.filter(line => line.startsWith('<section')).length, 4);
+assert.equal(chapters.length, 19);
+assert.deepEqual(Object.keys(learningFocus).sort(), [...chapterIds].sort());
+assert.equal(count, experimentIds.size);
+const marker = /(<div class="map-board" id="map-board">)[\s\S]*?(<!-- end map fallback --><\/div>)/;
+assert.match(html, marker);
+const generated = html.replace(marker, (_, start, end) =>
+  start + '\n<!-- Generated by tools/build-map-fallback.cjs -->\n' + sections.join('\n') + '\n' + end);
+if (process.argv.includes('--check')) assert.equal(html, generated, 'Run node tools/build-map-fallback.cjs');
+else fs.writeFileSync(path.join(root, 'library.html'), generated);
+console.log(`PASS: static map, 4 branches, 19 chapters and ${count} valid experiment links.`);

@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('node:assert/strict');
+const M=require('./mechanics-models.js');
+const def=M.defs.find(d=>d.id==='optical-polarizers');
+const p=M.defaults(def);
+const at=(overrides,t=0)=>def.build({...p,...overrides}).sample(t);
+assert.ok(Math.abs(at({}).output-12.5)<1e-10);
+assert.ok(at({middle:0}).output<1e-10);
+assert.equal(at({middle:0,analyzer:0}).output,50);
+assert.ok(Math.abs(at({middle:0,input:1,inputAngle:60,analyzer:0}).output-25)<1e-10);
+assert.equal(at({sweep:1},4).analyzerAngle,90);
+console.log('PASS optical-polarizers: Malus law, crossed axes, middle plate and sweep');
