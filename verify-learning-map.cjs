@@ -26,7 +26,7 @@ function openMap(hash = '', state = null) {
 
 const {ids,sandbox,listeners} = openMap();
 const graph = ids['map-board'].children;
-assert.equal(graph.find(node=>node.className==='map-legend').children.length,4);
+assert.equal(ids['map-branches'].children.length,5);
 assert.equal(graph.filter(node=>node.className==='map-point map-hub').length,19);
 const catalogue = vm.runInContext('experiments',sandbox);
 assert.equal(graph.filter(node=>node.className==='map-point').length,catalogue.length);
@@ -38,6 +38,23 @@ for (const lab of catalogue) {
   }
 }
 const activate = node => node.listeners.click({preventDefault(){}});
+const [,mechanicsBranch,wavesBranch] = ids['map-branches'].children;
+activate(wavesBranch);
+assert.equal(wavesBranch.attrs['aria-pressed'],'true');
+assert.equal(ids['map-point-1.1'].attrs['data-muted'],'true');
+assert.equal(ids['map-point-1.1'].tabIndex,-1);
+assert.equal(ids['map-point-2.1'].attrs['data-muted'],'false');
+activate(ids['map-selection'].children.find(node=>node.className==='map-chapter-button'));
+assert.equal(sandbox.location.hash,'#map-2.1');
+assert.equal(ids['map-details-panel'].open,false);
+activate(ids['map-selection'].children.find(node=>node.className==='map-open'));
+assert.equal(ids['map-details-panel'].open,true);
+activate(mechanicsBranch);
+assert.equal(ids['map-details-panel'].hidden,true);
+activate(ids['map-branches'].children[0]);
+activate(ids['map-selection'].children.find(node=>node.className==='map-open'));
+assert.equal(sandbox.location.hash,'#map-1.1/vertical');
+assert.ok(ids['map-selection'].children.some(node=>node.href==='mechanics.html#experiment=vertical'));
 for (const [query,chapter,id,href] of [
   ['腳踏車煞車','1.2','bicycle-friction'],
   ['透鏡遮一半','2.2','half-lens'],
@@ -86,6 +103,8 @@ assert.equal(reopened.ids['map-board'].style.width,'');
 assert.equal(reopened.ids['map-viewport'].scrollLeft,0);
 assert.equal(reopened.ids['map-viewport'].scrollTop,0);
 assert.equal(reopened.ids['map-point-photoelectric'].style.left,positionBefore);
+activate(reopened.ids['map-rotate']);
+assert.notEqual(reopened.ids['map-point-photoelectric'].style.left,positionBefore);
 const semiconductor=openMap('#map-4.6/pn-junction');
 const findLink=(node,href)=>{
   if(node.href===href)return node;
@@ -99,4 +118,4 @@ assert.ok(electricField);
 activate(electricField);
 assert.equal(semiconductor.sandbox.location.hash,'#map-3.1/two-charges');
 assert.equal(semiconductor.ids['map-lab-two-charges'].attrs['aria-current'],'location');
-console.log('PASS: map chapters, searchable experiment links, shareable selection, saved zoom/pan and reset.');
+console.log('PASS: map topic filters, chapter and experiment actions, search, rotation, zoom, and saved view.');

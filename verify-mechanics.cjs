@@ -113,7 +113,7 @@ vm.runInContext(`for(const d of Mechanics.defs){selectExperiment(d.id,false);if(
 const libraryHtml=fs.readFileSync('library.html','utf8'),library=domHarness(libraryHtml);
 for(const match of libraryHtml.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(match[1],'utf8'),library.sandbox);
 const graph=library.ids['map-board'].children;
-assert.equal(graph.find(node=>node.className==='map-legend').children.length,4);
+assert.equal(library.ids['map-branches'].children.length,5);
 assert.equal(graph.filter(node=>node.className==='map-point map-hub').length,19);
 const mapSearch=library.ids['map-search'];
 mapSearch.value='腳踏車煞車';mapSearch.listeners.input();

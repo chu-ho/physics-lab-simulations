@@ -311,10 +311,14 @@ function mountLearningMap(catalogue) {
   const search = document.getElementById('map-search');
   const viewport = document.getElementById('map-viewport');
   const selection = document.getElementById('map-selection');
+  const branches = document.getElementById('map-branches');
+  const detailPanel = document.getElementById('map-details-panel');
   const points = new Map();
   const edges = [];
+  const branchButtons = new Map();
   const home = {yaw: .24, pitch: -.12};
   let scale = 1, yaw = home.yaw, pitch = home.pitch;
+  let activeBranch = '';
 
   function node(tag, content, className) {
     const element = document.createElement(tag);
@@ -324,7 +328,7 @@ function mountLearningMap(catalogue) {
   }
 
   function rememberView() {
-    const mapView = {scale, yaw, pitch, left: viewport.scrollLeft || 0, top: viewport.scrollTop || 0};
+    const mapView = {scale, yaw, pitch, branch: activeBranch, left: viewport.scrollLeft || 0, top: viewport.scrollTop || 0};
     history.replaceState({...history.state, mapView}, '');
     return mapView;
   }
@@ -340,6 +344,7 @@ function mountLearningMap(catalogue) {
     scale = view?.scale ?? 1;
     yaw = view?.yaw ?? home.yaw;
     pitch = view?.pitch ?? home.pitch;
+    activeBranch = branchButtons.has(view?.branch) ? view.branch : '';
     projectGraph();
     applyScale();
     viewport.scrollLeft = view?.left ?? 0;
@@ -349,43 +354,102 @@ function mountLearningMap(catalogue) {
   function choose(chapter, lab, scroll = true) {
     const hash = '#map-' + chapter.id + (lab ? '/' + lab.id : '');
     if (location.hash !== hash) history.pushState({mapView: rememberView()}, '', hash);
+    if (activeBranch && activeBranch !== chapter.branch) activeBranch = chapter.branch;
+    rememberView();
     renderChapter();
-    if (scroll) requestAnimationFrame(() => detail.scrollIntoView({ block: 'nearest' }));
+    if (scroll) showDetails();
     else if (window.matchMedia?.('(max-width: 760px)')?.matches) {
-      requestAnimationFrame(() => selection.scrollIntoView({ block: 'nearest' }));
+      requestAnimationFrame(() => selection.scrollIntoView({ block: 'start' }));
     }
+  }
+
+  function showDetails() {
+    detailPanel.open = true;
+    requestAnimationFrame(() => detailPanel.scrollIntoView({ block: 'start' }));
+  }
+
+  function browseBranch(branch) {
+    if (location.hash !== '#learning-map') {
+      history.pushState({mapView: rememberView()}, '', '#learning-map');
+    }
+    activeBranch = branch;
+    rememberView();
+    renderChapter();
   }
 
   function renderSelection(active) {
     const adjacent = new Map();
+    for (const [branch, button] of branchButtons) {
+      button.setAttribute('aria-pressed', String(branch === activeBranch));
+    }
     for (const edge of edges) {
       const neighbor = edge.from === active ? edge.to : edge.to === active ? edge.from : null;
       if (neighbor) adjacent.set(neighbor, edge.kind === 'cross' ? (edge.to === active ? '建議先備' : '可接續') : '');
       edge.line.setAttribute('data-active', String(Boolean(neighbor)));
+      edge.line.setAttribute('data-muted', String(Boolean(activeBranch && (edge.from.chapter.branch !== activeBranch || edge.to.chapter.branch !== activeBranch) && !neighbor)));
     }
     board.setAttribute('data-selection', String(Boolean(active)));
     for (const point of points.values()) {
       point.button.setAttribute('aria-pressed', String(point === active));
       point.button.setAttribute('data-state', point === active ? 'selected' : adjacent.has(point) ? 'neighbor' : active ? 'quiet' : 'idle');
+      const muted = Boolean(activeBranch && point.chapter.branch !== activeBranch && !adjacent.has(point));
+      point.button.setAttribute('data-muted', String(muted));
+      point.button.tabIndex = muted ? -1 : 0;
     }
     selection.replaceChildren();
+    selection.scrollTop = 0;
     if (!active) {
-      selection.append(node('p', '四條學習路徑', 'map-selection-kicker'));
-      selection.append(node('h3', '從任意一點開始'));
-      selection.append(node('p', '大點是章節，小點是實驗。點一下，就能查看附近的節點。拖曳旋轉，或聚焦圖面後使用方向鍵。'));
+      const matching = chapters.filter(chapter => chapter.branch === activeBranch);
+      selection.style.setProperty('--branch', matching[0]?.color || 'var(--mint)');
+      selection.append(node('h3', activeBranch || '選個主題開始'));
+      if (matching.length) {
+        for (const chapter of matching) {
+          const button = node('button', '', 'map-chapter-button');
+          button.type = 'button';
+          button.append(node('span', chapter.id, 'map-chapter-number'), node('span', chapter.title));
+          button.addEventListener('click', () => {
+            choose(chapter, null, false);
+            selection.children[1].focus({preventScroll:true});
+          });
+          selection.append(button);
+        }
+      } else {
+        const keys = node('div', '', 'map-point-key');
+        keys.append(node('span', '章節', 'map-key-hub'), node('span', '實驗', 'map-key-lab'));
+        const example = node('button', '試試自由落體', 'map-open');
+        example.type = 'button';
+        example.addEventListener('click', () => {
+          const point = points.get('vertical');
+          choose(point.chapter, point.lab, false);
+          selection.children[1].focus({preventScroll:true});
+        });
+        selection.append(keys, example);
+      }
       return;
     }
     selection.style.setProperty('--branch', active.chapter.color);
-    selection.append(node('p', active.chapter.branch + ' / ' + active.chapter.id, 'map-selection-kicker'));
-    selection.append(node('h3', active.title));
+    const back = node('button', '‹ ' + active.chapter.branch, 'map-back');
+    back.type = 'button';
+    back.addEventListener('click', () => {
+      browseBranch(active.chapter.branch);
+      selection.children[1].focus();
+    });
+    const title = node('h3', active.title);
+    title.tabIndex = -1;
+    selection.append(back, title);
     if (active.lab) {
       const open = node('a', '開啟實驗 ↗', 'map-open');
       open.href = active.lab.href;
       open.addEventListener('click', rememberView);
       selection.append(open);
     } else {
-      const [level, guidance] = learningFocus[active.chapter.id];
-      selection.append(node('p', level + ' · ' + guidance));
+      const open = node('button', '看本章實驗 ↓', 'map-open');
+      open.type = 'button';
+      open.addEventListener('click', () => {
+        showDetails();
+        detail.children[1].focus({preventScroll:true});
+      });
+      selection.append(open);
     }
     selection.append(node('h4', '相鄰節點 · ' + adjacent.size));
     for (const [neighbor, relationship] of adjacent) {
@@ -394,7 +458,7 @@ function mountLearningMap(catalogue) {
       button.style.setProperty('--branch', neighbor.chapter.color);
       button.addEventListener('click', () => {
         choose(neighbor.chapter, neighbor.lab, false);
-        neighbor.button.focus();
+        selection.children[1].focus({preventScroll:true});
       });
       selection.append(button);
     }
@@ -405,10 +469,9 @@ function mountLearningMap(catalogue) {
     const chapter = chapters.find(item => chapterHash === '#map-' + item.id);
     renderSelection(chapter ? points.get(labId) || points.get(chapter.id) : null);
     detail.replaceChildren();
-    if (!chapter) {
-      detail.append(node('p', '選擇章節，展開概念、實驗和建議先備路線。'));
-      return;
-    }
+    detailPanel.hidden = !chapter;
+    detailPanel.open = false;
+    if (!chapter) return;
     detail.style.setProperty('--branch', chapter.color);
     detail.append(node('p', chapter.branch + ' / ' + chapter.id, 'map-path'));
     const heading = node('h3', chapter.title);
@@ -520,17 +583,21 @@ function mountLearningMap(catalogue) {
     edges.push({from, to, kind, line});
   }
 
-  const legend = node('div', '', 'map-legend');
-  graph.push(legend);
+  for (const [branch, color] of [['', '#b9cdd8'], ...learningBranches]) {
+    const button = node('button', branch || '全部', 'map-route-name');
+    button.type = 'button';
+    button.style.setProperty('--branch', color);
+    button.setAttribute('aria-controls', 'map-viewport map-selection');
+    button.addEventListener('click', () => browseBranch(branch));
+    branches.append(button);
+    branchButtons.set(branch, button);
+  }
   function route(branch, progress) {
     const angle = [-1.56,-2.99,-.04,1.60][branch] + progress * .64;
     const radius = 39 + 290 * progress ** .82;
     return [Math.sin(angle)*radius, 287 - 585*progress, Math.cos(angle)*radius];
   }
   for (const [branch, items] of columns.entries()) {
-    const label = node('h3', items[0].branch, 'map-route-name');
-    label.style.setProperty('--branch', items[0].color);
-    legend.append(label);
     let previous;
     for (const [index, chapter] of items.entries()) {
       const start = (index + .25) / items.length;
@@ -607,7 +674,9 @@ function mountLearningMap(catalogue) {
         if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
         choose(chapter, lab, false);
-        points.get(lab?.id || chapter.id)?.button.focus();
+        search.value = '';
+        results.replaceChildren();
+        selection.children[1].focus({preventScroll:true});
       });
       results.append(link);
     }
@@ -615,6 +684,7 @@ function mountLearningMap(catalogue) {
   for (const [id, step] of [['out', -.2], ['in', .2], ['reset', 0]]) {
     const button = document.getElementById('map-zoom-' + id);
     button.addEventListener('click', () => {
+      const previous = scale;
       scale = step ? Math.min(1.8, Math.max(1, scale + step)) : 1;
       applyScale();
       if (!step) {
@@ -623,6 +693,9 @@ function mountLearningMap(catalogue) {
         projectGraph();
         viewport.scrollLeft = 0;
         viewport.scrollTop = 0;
+      } else if (viewport.clientWidth) {
+        viewport.scrollLeft += (viewport.scrollLeft + viewport.clientWidth / 2) * (scale / previous - 1);
+        viewport.scrollTop += (viewport.scrollTop + viewport.clientHeight / 2) * (scale / previous - 1);
       }
       rememberView();
     });
@@ -633,6 +706,10 @@ function mountLearningMap(catalogue) {
     pitch = Math.max(-1.15, Math.min(1.15, pitch + dy));
     projectGraph();
   }
+  document.getElementById('map-rotate').addEventListener('click', () => {
+    rotate(.45, 0);
+    rememberView();
+  });
   board.addEventListener('pointerdown', event => {
     if (event.button !== 0 || !event.isPrimary) return;
     gesture = {id: event.pointerId, x: event.clientX, y: event.clientY};
@@ -674,17 +751,18 @@ function mountLearningMap(catalogue) {
   });
 
   window.addEventListener('hashchange', () => {
-    renderChapter();
     restoreView();
+    renderChapter();
   });
   window.addEventListener('pagehide', rememberView);
   board.classList.add('map-graph');
-  board.style.setProperty('--graph-ratio', graphWidth + ' / ' + graphHeight);
   board.replaceChildren(...graph);
   document.getElementById('map-stage').classList.add('map-stage-active');
   selection.hidden = false;
-  renderChapter();
   restoreView();
+  renderChapter();
   document.getElementById('map-tools').hidden = false;
+  document.getElementById('map-viewbar').hidden = false;
+  branches.hidden = false;
   document.getElementById('map-fallback-hint').hidden = true;
 }
