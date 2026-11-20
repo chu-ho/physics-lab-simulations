@@ -442,6 +442,11 @@ function mountLearningMap(catalogue) {
       open.href = active.lab.href;
       open.addEventListener('click', rememberView);
       selection.append(open);
+      if (typeof Textbook !== 'undefined') {
+        const textbook = node('div', '', 'textbook-tags');
+        Textbook.render(textbook, active.lab.id, document);
+        if (!textbook.hidden) selection.append(textbook);
+      }
     } else {
       const open = node('button', '看本章實驗 ↓', 'map-open');
       open.type = 'button';
@@ -509,6 +514,7 @@ function mountLearningMap(catalogue) {
         const link = node('a', lab.title + ' ↗');
         link.id = 'map-lab-' + lab.id;
         link.href = lab.href;
+        if (typeof Textbook !== 'undefined') link.title = Textbook.lookup(lab.id).map(item => item.full).join('\n');
         if (lab.id === labId) link.setAttribute('aria-current', 'location');
         link.addEventListener('click', rememberView);
         section.append(link);

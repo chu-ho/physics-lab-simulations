@@ -12,3 +12,5 @@ header>div:first-child{min-width:0}header h1{white-space:nowrap;overflow:hidden;
 .plot-choice[hidden]{display:none}
 
 .annotation-panel{margin:12px 0;padding:12px;border:1px solid var(--line,#ccd9da);border-radius:12px}.annotation-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.annotation-actions label{display:flex;align-items:center;gap:6px}.annotation-actions button[aria-pressed="true"]{background:#d7e9e6;color:#215852}
+
+.textbook-tags{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:12px 0 0}.textbook-tags[hidden]{display:none}.textbook-heading{font-size:10px;letter-spacing:1px;color:var(--muted);margin-right:2px}.textbook-chip{font-size:11px;line-height:1.45;padding:2px 8px;border-radius:999px;border:1px solid #3d5561;color:#b9ccd4;background:#1d2f3a}.textbook-chip.primary{border-color:#8ee0c080;color:#bff0dc;background:#1f3b36}.textbook-chip.extension{border-style:dashed;color:#d8c09a;background:transparent}

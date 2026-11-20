@@ -80,3 +80,11 @@ simulation.events / markers → 事件文字 / 高度標線
 `models/doppler.js`重用聲速，另解均勻風下的移動源／接收者遲滯時間；不以當前位置方向替代發射波線。`models/sound-elements.js`同一Fourier係數產生畫面及PeriodicWave，屬schematic訊號觀察空間；後續頻譜／方波題應擴充重用。
 
 `tools/dom-harness.cjs`為無測試副作用的共用Canvas／DOM支架。verify-mechanics與render-previews都直接使用；完整驗證仍由verify-all或verify-mechanics明確執行，預覽不隱式重跑全部物理測試。
+
+## 課本章節標籤
+
+`assets/textbook-hanlin.js` 保存翰林版 108 課綱必修與選修Ⅰ–Ⅴ的章節，以及每個實驗 ID 對應的 1–3 個節次（第一個為主要章節）。library.html 與 mechanics.html 在 library.js／mechanics-app.js 之前載入；新增實驗時同步補上標籤，否則 `verify-textbook-tags.cjs` 會失敗。
+
+## 學習地圖的兩種檢視
+
+`assets/course-route.js` 的 `mountCourseRoute` 產生預設的課程路線圖，重用 `assets/learning-map.js` 的 `learningBranches`、`buildLearningMap`、`prerequisites`、`learningFocus`、`aliases` 與 `learningActivities`，因此章節歸屬只維護一份。library.js 先掛載路線圖，再掛載星圖；`#learning-map` 的 `data-view`（route／star）以 CSS 隱藏 `.star-only` 元素，選擇存在 localStorage。`#map-章節/實驗` 深連結兩種檢視都會處理。驗證：`verify-course-route.cjs`。
