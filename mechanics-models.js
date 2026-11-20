@@ -1,182 +1,1712 @@
 /* SI units throughout. Independent of DOM; also loaded by the verification suite. */
-(function(root){
-'use strict';
-const G=9.81,rad=d=>d*Math.PI/180,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-const P=(id,label,min,max,step,value,unit='')=>({id,label,min,max,step,value,unit});
-const mass=P('m','質量',.5,10,.5,2,'kg'),gravity=P('g','重力加速度',1,15,.01,G,'m/s²');
-const speed=P('v','初速',-10,15,.5,4,'m/s'),mu=P('mu','動摩擦係數',0,.8,.02,.2);
-const oscillation=[mass,P('k','彈簧常數',1,30,.5,8,'N/m'),P('A','初始伸長量',.1,3,.1,1.5,'m')];
-function trajectory(duration,fn,extra={}){return {duration:Math.max(0,duration),sample:t=>Object.assign({x:0,y:.4,z:0,vx:0,vy:0,vz:0,fx:0,fy:0,fz:0},fn(clamp(t,0,Math.max(0,duration)))),...extra}}
-function integrated(duration,initial,derivative,map,dt=1/240){
- const n=Math.ceil(duration/dt),states=[initial.slice()];let state=initial.slice();
- for(let i=0;i<n;i++){const t=i*dt,k1=derivative(t,state),k2=derivative(t+dt/2,state.map((v,j)=>v+k1[j]*dt/2)),k3=derivative(t+dt/2,state.map((v,j)=>v+k2[j]*dt/2)),k4=derivative(t+dt,state.map((v,j)=>v+k3[j]*dt));state=state.map((v,j)=>v+dt/6*(k1[j]+2*k2[j]+2*k3[j]+k4[j]));states.push(state)}
- return trajectory(duration,t=>{const f=t/dt,i=Math.min(states.length-2,Math.floor(f)),a=f-i;const u=derivative(i*dt,states[i]),v=derivative((i+1)*dt,states[i+1]),a2=a*a,a3=a2*a;return map(states[i].map((x,j)=>(2*a3-3*a2+1)*x+(a3-2*a2+a)*dt*u[j]+(-2*a3+3*a2)*states[i+1][j]+(a3-a2)*dt*v[j]),t)})
-}
-const defs=[];
-function add(id,title,group,kind,params,metrics,formula,note,questions,build,source='mechanics-models.js'){defs.push({id,title,group,kind,params,metrics,formula,note,questions,build,source})}
-const M=(key,label,unit)=>({key,label,unit});
-const linearMetrics=[M('x','位置 x','m'),M('vx','速度 vₓ','m/s'),M('ax','加速度','m/s²')];
-const energyMetrics=[M('K','動能','J'),M('U','位能','J'),M('E','機械能','J')];
-
-add('acceleration','等加速度直線運動','運動學','cart',[speed,P('a','加速度',-5,5,.2,1.2,'m/s²'),P('T','觀察時間',2,15,1,8,'s')],linearMetrics,
- 'x = v₀t + ½at²；v = v₀ + at', '沿 x 軸運動，位置可以為負；加速度為固定值。無碰撞邊界；合力箭頭以 1 kg 質點計算。',['初速與加速度反向時，何時改變方向？','位移—時間圖的斜率與速度有何關係？'],p=>trajectory(p.T,t=>({x:p.v*t+.5*p.a*t*t,vx:p.v+p.a*t,ax:p.a,fx:p.a,K:.5*(p.v+p.a*t)**2})));
-
-add('vertical','自由落體與鉛直上拋','運動學','ball',[P('h','初始高度',0,20,.5,8,'m'),P('v','初始鉛直速度',-10,20,.5,8,'m/s'),gravity],[M('y','高度','m'),M('vy','鉛直速度','m/s'),M('K','動能（1 kg）','J')],
- 'y = h₀ + v₀t − ½gt²；vᵧ = v₀ − gt', 'y 軸向上；到達 y = 0 時停止，顯示碰撞前速度。質量取 1 kg，無空氣阻力。',['最高點的加速度是否為零？','從同一高度向上與向下拋出，落地速率如何比較？'],p=>{const T=(p.v+Math.sqrt(p.v*p.v+2*p.g*p.h))/p.g;return trajectory(T,t=>({y:Math.max(0,p.h+p.v*t-.5*p.g*t*t),vy:p.v-p.g*t,fy:-p.g,K:.5*(p.v-p.g*t)**2}))});
-
-add('river','渡河與相對速度','運動學','river',[P('v','船相對水速率',1,8,.2,3,'m/s'),P('u','水流速率',-5,5,.1,1.5,'m/s'),P('angle','朝上游偏角',-60,60,1,20,'°'),P('width','河寬',5,30,1,15,'m')],[M('x','順流位移','m'),M('z','渡河距離','m'),M('drift','預計漂流','m')],
- 'v地 = v船／水 + v水／地；T = 河寬 / (v cosθ)', '河流沿 +x，對岸沿 +z；正偏角朝上游。水流均勻，抵達對岸即停止。',['如何使落點正好位於正對岸？何時做不到？','最短時間與最短路徑需要相同的航向嗎？'],p=>{const vx=p.u-p.v*Math.sin(rad(p.angle)),vz=p.v*Math.cos(rad(p.angle)),T=p.width/vz;return trajectory(T,t=>({x:vx*t,z:vz*t,y:.3,vx,vz,drift:vx*T}))});
-
-add('pursuit','追及與會車','運動學','two-carts',[P('v','後車初速',0,12,.5,5,'m/s'),P('v2','前車速度',-8,12,.5,3,'m/s'),P('a','後車加速度',0,3,.1,.5,'m/s²'),P('gap','初始間距',2,30,1,15,'m')],[M('x','後車位置','m'),M('x2','前車位置','m'),M('gap','相距','m')],
- 'x₁ = v₁t + ½at²；x₂ = d + v₂t', '兩車在平行車道運動；相遇表示同一 x 座標，不進行碰撞。觀察時間 12 秒，合力箭頭以後車質量 1 kg 計算。',['等速時，哪一種情況永遠追不上？','前車迎面而來時，相對速度如何改變？'],p=>trajectory(12,t=>({x:p.v*t+.5*p.a*t*t,x2:p.gap+p.v2*t,vx:p.v+p.a*t,v2:p.v2,gap:Math.abs(p.gap+p.v2*t-p.v*t-.5*p.a*t*t),ax:p.a,fx:p.a})));
-
-add('drag','空氣阻力與終端速度','運動學','fall',[mass,P('b','線性阻力係數',.2,8,.2,2,'kg/s'),gravity],[M('fall','下落距離','m'),M('down','向下速率','m/s'),M('terminal','終端速率','m/s')],
- 'm dv/dt = mg − bv；v = (mg/b)(1 − e^(−bt/m))', '由靜止下落，採線性阻力 F = −bv。場景跟隨下落距離以縮尺顯示；不設地板碰撞。',['質量加倍如何改變終端速度？','為什麼終端速度時物體仍在運動？'],p=>{const terminal=p.m*p.g/p.b,tau=p.m/p.b;return trajectory(10,t=>{const v=terminal*(1-Math.exp(-t/tau)),d=terminal*(t-tau*(1-Math.exp(-t/tau)));return{y:-d,vy:-v,fy:-p.m*p.g+p.b*v,fall:d,down:v,terminal,K:.5*p.m*v*v}})});
-
-add('friction','水平受力與靜、動摩擦','牛頓定律','cart',[mass,P('F','水平外力',-30,30,.5,8,'N'),mu,P('mus','靜摩擦係數',0,1,.02,.4),gravity],[M('x','位置','m'),M('friction','摩擦力','N'),M('ax','加速度','m/s²')],
- '靜止：|F| ≤ μₛN；滑動：fₖ = μₖN；a = (F − fₖ)/m', '由靜止開始。有效靜摩擦係數取 max(μₛ, μₖ)，避免靜摩擦小於動摩擦；拉桿下方會顯示實際採用值。',['外力未達最大靜摩擦力時，摩擦力是多少？','剛開始滑動時，加速度會連續改變嗎？'],p=>{const ms=Math.max(p.mus,p.mu),moving=Math.abs(p.F)>ms*p.m*p.g,friction=moving?-Math.sign(p.F)*p.mu*p.m*p.g:-p.F,a=(p.F+friction)/p.m;return trajectory(6,t=>({x:.5*a*t*t,vx:a*t,ax:a,friction,fx:p.F+friction,N:p.m*p.g,mus:ms}))});
-
-add('incline','斜面滑動與摩擦','牛頓定律','incline',[mass,P('angle','斜面傾角',0,60,1,25,'°'),mu,P('mus','靜摩擦係數',0,1,.02,.4),gravity],[M('s','沿坡位移','m'),M('ax','沿坡加速度','m/s²'),M('N','正向力','N')],
- 'N = mg cosα；a = g(sinα − μₖcosα)', '從坡頂靜止釋放，沿坡可移動 12 m，到坡底即停止並保留碰撞前速度。有效 μₛ = max(μₛ, μₖ)。',['開始滑動的臨界角度與質量有關嗎？','為什麼增加質量不改變加速度？'],p=>{const a=rad(p.angle),N=p.m*p.g*Math.cos(a),drive=p.m*p.g*Math.sin(a),moving=drive>Math.max(p.mus,p.mu)*N,acc=moving?(drive-p.mu*N)/p.m:0,T=acc>0?Math.sqrt(24/acc):8;return trajectory(T,t=>{const d=.5*acc*t*t;return{x:d*Math.cos(a)-5+.4*Math.sin(a),y:(12-d)*Math.sin(a)+.4*Math.cos(a),vx:acc*t*Math.cos(a),vy:-acc*t*Math.sin(a),s:d,ax:acc,N,friction:moving?p.mu*N:drive,fx:p.m*acc*Math.cos(a),fy:-p.m*acc*Math.sin(a),mus:Math.max(p.mus,p.mu)}})});
-
-add('atwood','阿特伍德機','牛頓定律','pulley',[P('m1','左側質量',.5,10,.5,2,'kg'),P('m2','右側質量',.5,10,.5,3,'kg'),gravity],[M('a','左側向上加速度','m/s²'),M('tension','繩張力','N'),M('s','繩位移','m')],
- 'a = (m₂ − m₁)g/(m₁ + m₂)；T = 2m₁m₂g/(m₁ + m₂)', '繩無質量、不可伸長，滑輪無摩擦、無轉動慣量。重物由靜止釋放，任一側移動 3 m 後停止。',['兩側質量相同時，張力等於多少？','為什麼張力不等於較重物體的重量？'],p=>{const a=(p.m2-p.m1)*p.g/(p.m1+p.m2),T=Math.abs(a)>1e-10?Math.sqrt(6/Math.abs(a)):8;return trajectory(T,t=>({x:-2,y:4+.5*a*t*t,x2:2,y2:4-.5*a*t*t,vy:a*t,a,tension:2*p.m1*p.m2*p.g/(p.m1+p.m2),s:.5*a*t*t,fy:p.m1*a}))});
-
-add('table-pulley','桌面物塊與懸掛重物','牛頓定律','table-pulley',[mass,P('m2','懸掛質量',.5,8,.5,1,'kg'),mu,gravity],[M('x','桌面位移','m'),M('tension','繩張力','N'),M('ax','加速度','m/s²')],
- 'a = (m₂g − μmg)/(m + m₂)；T = m₂(g − a)', '初始已向滑輪方向緩慢滑動（0.2 m/s）；使用動摩擦。若減速至零則停止並視為靜摩擦可維持，不模擬反向。到桌邊或下落 5 m 結束。',['加重桌上物塊為什麼會降低加速度？','張力對兩個物體的作功會互相抵消嗎？'],p=>{const a=(p.m2*p.g-p.mu*p.m*p.g)/(p.m+p.m2),v=.2,dist=5,T=a<0?Math.min(-v/a,(-v+Math.sqrt(Math.max(0,v*v+2*a*dist)))/a||Infinity):a>0?(-v+Math.sqrt(v*v+2*a*dist))/a:dist/v;const disc=v*v+2*a*dist,edge=Math.abs(a)<1e-12?dist/v:disc>=0?2*dist/(v+Math.sqrt(disc)):Infinity,duration=Math.min(a<0?-v/a:Infinity,edge);return trajectory(duration,t=>{const d=v*t+.5*a*t*t;return{x:d-3,y:6,x2:3,y2:5-d,vx:v+a*t,ax:a,tension:p.m2*(p.g-a),s:d,fx:p.m*a}})});
-
-add('elevator','電梯與視重量','牛頓定律','elevator',[mass,P('a','電梯加速度',-8,8,.2,2,'m/s²'),gravity],[M('N','秤的讀數','N'),M('a','乘客加速度','m/s²'),M('vy','鉛直速度','m/s')],
- '接觸時 N = m(g + a)；失去接觸時 N = 0', '電梯由靜止開始加速 3 秒。a < −g 時乘客脫離地板並自由落下；不模擬與天花板碰撞。秤顯示力（N）。',['電梯向上移動時，體重一定變重嗎？','電梯自由落體時秤會顯示多少？'],p=>trajectory(3,t=>{const a=Math.max(p.a,-p.g),y=2+.5*a*t*t;return{y,vy:a*t,a,N:Math.max(0,p.m*(p.g+p.a)),floor:1+.5*p.a*t*t,fy:p.m*a}}));
-
-add('work','變力作功與動能定理','能量與動量','cart',[mass,P('F','初始外力',1,15,.5,5,'N'),P('k','外力隨位置增加率',0,3,.1,.5,'N/m')],[M('W','外力作功','J'),M('K','動能','J'),M('error','K − W','J')],
- 'F(x) = F₀ + kx；W = F₀x + ½kx² = ΔK', '光滑水平面，由靜止開始。k 為外力梯度，不是回復彈簧。到 x = 15 m 時結束。',['相同的力—位移圖面積是否產生相同動能？','質量加倍，走相同距離時速率如何改變？'],p=>{const w=Math.sqrt(p.k/p.m),T=p.k>0?Math.acosh(1+15*p.k/p.F)/w:Math.sqrt(30*p.m/p.F);return trajectory(T,t=>{const x=p.k>0?p.F/p.k*(Math.cosh(w*t)-1):.5*p.F/p.m*t*t,v=p.k>0?p.F/p.k*w*Math.sinh(w*t):p.F/p.m*t,W=p.F*x+.5*p.k*x*x,K=.5*p.m*v*v;return{x,vx:v,fx:p.F+p.k*x,W,K,error:K-W}})});
-
-add('energy-track','無摩擦軌道與能量守恆','能量與動量','track',[mass,P('h','起點高度',1,8,.5,5,'m'),gravity],energyMetrics,
- '軌道 y = hx²/36；½mv² + mgy = mgh', '質點在雙面光滑拋物線導軌上由左側 x = −6 m 靜止釋放；以完整切向運動方程積分。位能零點 y = 0。',['最低點速率由哪些因素決定？','軌道形狀會改變到達最低點的時間嗎？'],p=>integrated(12,[-6,0],(_,s)=>{const slope=p.h*s[0]/18,second=p.h/18;return[s[1],(-p.g*slope-slope*second*s[1]*s[1])/(1+slope*slope)]},s=>{const x=s[0],y=p.h*x*x/36,vy=p.h*x/18*s[1],K=.5*p.m*(s[1]**2+vy**2),U=p.m*p.g*y;return{x,y:y+.3,vx:s[1],vy,K,U,E:K+U,fx:p.m*(-p.g*(p.h*x/18)-(p.h*x/18)*(p.h/18)*s[1]**2)/(1+(p.h*x/18)**2),fy:p.m*((p.h/18)*s[1]**2+(p.h*x/18)*(-p.g*(p.h*x/18)-(p.h*x/18)*(p.h/18)*s[1]**2)/(1+(p.h*x/18)**2))}}));
-
-add('collision','一維碰撞與恢復係數','能量與動量','collision',[P('m1','左球質量',.5,8,.5,2,'kg'),P('m2','右球質量',.5,8,.5,3,'kg'),P('v','左球初速',1,8,.5,4,'m/s'),P('v2','右球初速',-5,0,.5,-1,'m/s'),P('e','恢復係數（瞬時模式）',0,1,.05,1),P('contactMode','接觸：0瞬時／1彈性彈簧',0,1,1,0),P('contactK','接觸彈簧常數',1000,10000,500,2000,'N/m')],[M('momentum','總動量','kg·m/s'),M('K','總動能','J'),M('loss','損失動能','J')],
- '動量守恆；彈簧接觸：μδ̈+kδ=0，μ=m₁m₂/(m₁+m₂)；K+½kδ²守恆。瞬時模式：v₂−v₁=e(u₁−u₂)。',
-'兩球初始中心距8m、半徑各0.5m，無外力或摩擦。模式0為原有瞬時衝量，中心距1m時碰撞，可調恢復係數。模式1在兩球間加入自然長1m、無質量接觸彈簧，中心距2m時開始壓縮，經半個相對振動週期恢復原長並分離；此模式固定完全彈性，恢復係數拉桿僅作用於模式0。接觸時總動能下降是轉為彈簧位能，並非耗散；圖表可查看彈性位能與總機械能。彈簧常數範圍避免球體重疊；接觸力連續且只推不拉。碰撞後再觀察3秒。',
-['為什麼彈簧最大壓縮時兩球速度相等？','提高彈簧常數會如何改變接觸時間、最大壓縮及碰撞後速度？'],p=>{
- const total=p.m1+p.m2,mu=p.m1*p.m2/total,c=p.v-p.v2,V=(p.m1*p.v+p.m2*p.v2)/total,K0=.5*p.m1*p.v*p.v+.5*p.m2*p.v2*p.v2,spring=!!p.contactMode,e=spring?1:p.e,hit=(spring?6:7)/c,w=Math.sqrt(p.contactK/mu),contactTime=spring?Math.PI/w:0,release=hit+contactTime,v1=V-p.m2/total*e*c,v2=V+p.m1/total*e*c;
- return trajectory(release+3,t=>{let x,x2,a,b,compression=0,force=0,phase=0;
- if(t<hit){x=-4+p.v*t;x2=4+p.v2*t;a=p.v;b=p.v2;}
- else if(spring&&t<release){const tau=t-hit,cm=(-4*p.m1+4*p.m2)/total+V*t;compression=c/w*Math.sin(w*tau);const gap=2-compression,gapV=-c*Math.cos(w*tau);x=cm-p.m2/total*gap;x2=cm+p.m1/total*gap;a=V-p.m2/total*gapV;b=V+p.m1/total*gapV;force=p.contactK*compression;phase=1;}
- else {const cm=(-4*p.m1+4*p.m2)/total+V*release,gap=spring?2:1;x=cm-p.m2/total*gap+v1*(t-release);x2=cm+p.m1/total*gap+v2*(t-release);a=v1;b=v2;phase=2;}
- const K=.5*p.m1*a*a+.5*p.m2*b*b,U=.5*p.contactK*compression*compression;return{x,x2,y:1,y2:1,z2:0,vx:a,v2:b,vx2:b,fx:-force,fx2:force,momentum:p.m1*a+p.m2*b,K,U,E:K+U,loss:spring?0:K0-K,hit:t<hit?0:1,compression,contactForce:force,phase};},{events:spring?[{t:hit,label:'彈簧開始接觸'},{t:hit+contactTime/2,label:'最大壓縮：兩球同速'},{t:release,label:'恢復自然長，分離'}]:[{t:hit,label:'瞬時碰撞'}],contactTime,hitTime:hit,releaseTime:release});
-});
-const collisionDef=defs.find(d=>d.id==='collision');collisionDef.plotMetrics=[M('U','接觸彈性位能','J'),M('E','總機械能','J'),M('compression','彈簧壓縮量','m'),M('contactForce','接觸力大小','N'),M('vx','左球速度','m/s'),M('v2','右球速度','m/s')];
-
-add('ballistic-pendulum','彈道擺','能量與動量','ballistic',[P('m','彈丸質量',.05,.5,.05,.1,'kg'),P('M','擺塊質量',1,5,.5,2,'kg'),P('v','彈丸初速',5,30,1,20,'m/s'),P('L','擺長',2,6,.5,4,'m'),gravity],[M('angle','擺角','°'),M('rise','上升高度','m'),M('loss','碰撞損失','J')],
- '碰撞：mu = (m + M)V；擺動：½(m + M)V² = (m + M)gh', '彈丸嵌入擺塊。碰撞後以非線性擺方程積分，使用剛性無質量擺桿，極端設定可整圈轉動。碰撞前後動量守恆，動能不守恆。',['如何由最大上升高度反推彈丸初速？','為什麼不能直接將碰撞前動能等於擺到最高點的位能？'],p=>{const V=p.m*p.v/(p.m+p.M),hit=3/p.v,loss=.5*p.m*p.v*p.v-.5*(p.m+p.M)*V*V,pend=integrated(10,[0,V/p.L],(_,s)=>[s[1],-p.g/p.L*Math.sin(s[0])],s=>({x:p.L*Math.sin(s[0]),y:1+p.L*(1-Math.cos(s[0])),vx:p.L*Math.cos(s[0])*s[1],vy:p.L*Math.sin(s[0])*s[1],angle:s[0]*180/Math.PI,rise:p.L*(1-Math.cos(s[0])),loss,fx:(p.m+p.M)*(-p.g*Math.sin(s[0])*Math.cos(s[0])-p.L*s[1]**2*Math.sin(s[0])),fy:(p.m+p.M)*(-p.g*Math.sin(s[0])**2+p.L*s[1]**2*Math.cos(s[0]))}));return trajectory(10+hit,t=>t<hit?{x:0,y:1,bulletX:-3+p.v*t,angle:0,rise:0,loss:0}:Object.assign(pend.sample(t-hit),{bulletX:null}),{events:[{t:hit,label:'嵌入碰撞'}]})});
-
-add('rocket','火箭與變質量','能量與動量','rocket',[P('m0','初始質量',5,20,1,10,'kg'),P('fuel','燃料比例',.1,.7,.05,.5),P('ve','相對排氣速率',5,30,1,15,'m/s'),P('burn','燃燒時間',2,10,.5,5,'s')],[M('vx','火箭速率','m/s'),M('mass','剩餘質量','kg'),M('thrust','推力','N')],
- 'v = vₑ ln(m₀/m)；F = vₑ(−dm/dt)', '深空一維火箭，無重力與阻力。固定質量流率，燃燒結束後等速飛行 3 秒；排氣方向與火箭運動相反。',['相同燃料比例下，增加火箭總質量會改變最終速度嗎？','增加燃燒時間會改變速度增量，還是只改變推力？'],p=>{const flow=p.m0*p.fuel/p.burn;return trajectory(p.burn+3,t=>{const b=Math.min(t,p.burn),m=p.m0-flow*b,v=p.ve*Math.log(p.m0/m),x=p.ve*(b-m/flow*Math.log(p.m0/m))+v*Math.max(0,t-p.burn);return{x,vx:v,mass:m,thrust:t<p.burn?p.ve*flow:0,fx:t<p.burn?p.ve*flow:0}})});
-
-add('circular','等速圓周運動','圓周與轉動','circle',[mass,P('R','半徑',1,8,.5,4,'m'),P('v','速率',.5,8,.5,3,'m/s')],[M('speed','速率','m/s'),M('acc','向心加速度','m/s²'),M('force','向心合力','N')],
- 'ω = v/R；a = v²/R；F = mv²/R', '在水平 x–z 平面以固定速率運動，約束裝置提供向心合力。箭頭顯示瞬時速度與合力。',['速率不變為什麼仍有加速度？','速率加倍，向心力會變成幾倍？'],p=>trajectory(Math.min(30,4*Math.PI*p.R/p.v),t=>{const a=p.v/p.R*t,x=p.R*Math.cos(a),z=p.R*Math.sin(a),force=p.m*p.v*p.v/p.R;return{x,z,y:1,vx:-p.v*Math.sin(a),vz:p.v*Math.cos(a),fx:-force*Math.cos(a),fz:-force*Math.sin(a),speed:p.v,acc:p.v*p.v/p.R,force}}));
-
-add('banked','傾斜彎道','圓周與轉動','banked',[mass,P('R','彎道半徑',2,10,.5,5,'m'),P('angle','彎道傾角',5,50,1,25,'°'),gravity],[M('speed','無摩擦安全速率','m/s'),M('N','正向力','N'),M('acc','向心加速度','m/s²')],
- 'N cosθ = mg；N sinθ = mv²/R；v = √(Rg tanθ)', '無摩擦傾斜彎道，車輛以恰好不需摩擦力的速率行駛。只調半徑與傾角，速率由受力平衡決定。',['無摩擦安全速率與車輛質量有關嗎？','同樣半徑下，較大的傾角容許更快還是更慢？'],p=>{const v=Math.sqrt(p.R*p.g*Math.tan(rad(p.angle)));return trajectory(Math.min(30,4*Math.PI*p.R/v),t=>{const a=v/p.R*t;return{x:p.R*Math.cos(a),z:p.R*Math.sin(a),y:1,vx:-v*Math.sin(a),vz:v*Math.cos(a),fx:-p.m*v*v/p.R*Math.cos(a),fz:-p.m*v*v/p.R*Math.sin(a),speed:v,N:p.m*p.g/Math.cos(rad(p.angle)),acc:v*v/p.R}})});
-
-add('conical','圓錐擺與角動量','圓周與轉動','conical',[mass,P('L','繩長',2,8,.5,5,'m'),P('angle','繩與鉛直夾角',5,65,1,30,'°'),gravity,{...P('angularView','向量：0關／1受力／2角動量／3力矩',0,3,1,2),visual:true},{...P('origin','參考點：0懸點／1圓心',0,1,1,0),visual:true}],[M('period','週期','s'),M('tension','繩張力','N'),M('speed','速率','m/s')],
-'T cosθ = mg；ω² = g/(L cosθ)；L = r × mv；τ = r × F = dL/dt',
-'無質量不可伸長繩，擺球維持固定夾角的水平圓周運動。取 y 向上；由 +y 俯視本運動的角動量 y 分量為負。以懸點為原點，張力無力矩，重力造成水平力矩，角動量大小與 y 分量固定，但整個向量持續轉向。以圓心為原點，角動量為固定鉛直向量；張力與重力的力矩互相抵銷，合力矩為零。向量模式與參考點只改顯示，保留播放與時間。L與τ箭頭各自正規化成2m的圖示長度，只表示方向；量值請讀圖表及標籤，不能比較不同物理量箭頭長度。未預設顯示位置向量。',
-['以懸點為原點，角動量大小不變是否代表向量守恆？','切換圓心為原點，為什麼合力矩為零？'],p=>{const a=rad(p.angle),R=p.L*Math.sin(a),H=p.L*Math.cos(a),w=Math.sqrt(p.g/H),Ln=p.m*R*w*p.L,Tn=p.m*H*R*w*w;
-return trajectory(4*Math.PI/w,t=>{const c=Math.cos(w*t),sn=Math.sin(w*t),fx=-p.m*R*w*w*c,fz=-p.m*R*w*w*sn;return{x:R*c,z:R*sn,y:2,vx:-R*w*sn,vz:R*w*c,fx,fz,period:2*Math.PI/w,tension:p.m*p.g/Math.cos(a),speed:R*w,pivotY:2+H,LPx:-p.m*H*R*w*c,LPy:-p.m*R*R*w,LPz:-p.m*H*R*w*sn,LPnorm:Ln,LCx:0,LCy:-p.m*R*R*w,LCz:0,LCnorm:p.m*R*R*w,tauPx:p.m*H*R*w*w*sn,tauPy:0,tauPz:-p.m*H*R*w*w*c,tauPnorm:Tn,tauCx:0,tauCy:0,tauCz:0,tensionFx:fx,tensionFy:p.m*p.g,tensionFz:fz,gravityFy:-p.m*p.g};},{bounds:{min:[-Math.max(R+1,3),0,-Math.max(R+1,3)],max:[Math.max(R+1,3),H+5,Math.max(R+1,3)]}})});
-const conical=defs.find(d=>d.id==='conical');conical.plotMetrics=[M('LPx','懸點 Lx','kg·m²/s'),M('LPy','懸點 Ly','kg·m²/s'),M('LPz','懸點 Lz','kg·m²/s'),M('LPnorm','懸點 |L|','kg·m²/s'),M('LCy','圓心 Ly','kg·m²/s'),M('tauPx','懸點 τx','N·m'),M('tauPz','懸點 τz','N·m'),M('tauPnorm','懸點 |τ|','N·m'),M('tauCy','圓心合力矩','N·m')];
-
-add('vertical-circle','鉛直圓環與能量','圓周與轉動','vertical-circle',[mass,P('R','圓環半徑',1,5,.5,3,'m'),P('v','最低點初速',1,16,.5,12,'m/s'),gravity],[M('speed','速率','m/s'),M('N','向內約束力','N'),M('E','機械能','J')],
- 'θ̈ = −(g/R)sinθ；N = m(v²/R + g cosθ)', '雙面導軌拘束質點沿鉛直圓環運動，因此 N 可以為負（外向）。這不是可能鬆弛的繩圈；低速時會往返擺動。',['最高點和最低點的速率差由什麼決定？','如果改用繩子，哪一段會不再符合本模型？'],p=>integrated(12,[0,p.v/p.R],(_,s)=>[s[1],-p.g/p.R*Math.sin(s[0])],s=>{const a=s[0],w=s[1],v=p.R*w,y=p.R*(1-Math.cos(a)),N=p.m*(v*v/p.R+p.g*Math.cos(a));return{x:p.R*Math.sin(a),y:y+.3,vx:v*Math.cos(a),vy:v*Math.sin(a),speed:Math.abs(v),N,E:.5*p.m*v*v+p.m*p.g*y,fx:p.m*(-p.g*Math.sin(a)*Math.cos(a)-p.R*w*w*Math.sin(a)),fy:p.m*(-p.g*Math.sin(a)**2+p.R*w*w*Math.cos(a))}}));
-
-add('torque','固定軸轉動與力矩','圓周與轉動','rotor',[mass,P('R','圓盤半徑',1,5,.5,3,'m'),P('F','切向力',-10,10,.5,3,'N')],[M('omega','角速度','rad/s'),M('alpha','角加速度','rad/s²'),M('torque','力矩','N·m')],
- 'I = ½mR²；τ = FR；α = τ/I；ω = αt', '均勻圓盤固定軸旋轉，切向外力持續作用在邊緣。不計軸摩擦，初始靜止；觀察 6 秒。',['相同外力與質量，半徑加倍如何改變角加速度？','角速度增加時，角加速度是否也增加？'],p=>{const I=.5*p.m*p.R*p.R,alpha=p.F*p.R/I;return trajectory(6,t=>({x:0,y:1,theta:.5*alpha*t*t,omega:alpha*t,alpha,torque:p.F*p.R,K:.5*I*(alpha*t)**2}))});
-
-add('rolling','斜面純滾動','圓周與轉動','rolling',[mass,P('R','半徑',.3,1,.1,.5,'m'),P('angle','斜面傾角',5,45,1,20,'°'),P('beta','慣量係數 I/(mR²)',.4,1,.1,.5),gravity],[M('speed','質心速率','m/s'),M('omega','角速度','rad/s'),M('E','機械能','J')],
- 'a = g sinα/(1 + β)；ω = v/R；I = βmR²', '無滑動純滾動；β = 0.4 實心球、0.5 圓柱、1 薄環。假設靜摩擦足夠，位能零點為起始質心下降 12sinα 的位置。',['為什麼純滾動的靜摩擦不耗散機械能？','不同半徑但相同 β 的物體，誰先到坡底？'],p=>{const a=rad(p.angle),acc=p.g*Math.sin(a)/(1+p.beta),T=Math.sqrt(24/acc);return trajectory(T,t=>{const s=.5*acc*t*t,v=acc*t,K=.5*p.m*v*v*(1+p.beta),U=p.m*p.g*(12-s)*Math.sin(a);return{x:s*Math.cos(a)-5+p.R*Math.sin(a),y:(12-s)*Math.sin(a)+p.R*Math.cos(a),vx:v*Math.cos(a),vy:-v*Math.sin(a),speed:v,omega:v/p.R,theta:s/p.R,E:K+U,K,U,s,ax:acc,fx:p.m*acc*Math.cos(a),fy:-p.m*acc*Math.sin(a)}})});
-
-add('lever','槓桿平衡與合力矩','圓周與轉動','lever',[P('m1','左側質量',.5,10,.5,2,'kg'),P('m2','右側質量',.5,10,.5,3,'kg'),P('L1','左側力臂',.5,4,.5,3,'m'),P('L2','右側力臂',.5,4,.5,2,'m'),gravity],[M('left','左側力矩大小','N·m'),M('right','右側力矩大小','N·m'),M('net','合力矩（逆時針正）','N·m')],
- 'Στ = m₁gL₁ − m₂gL₂；平衡時 Στ = 0', '靜力學實驗，槓桿固定在水平位置以量測所需約束力矩；播放不會讓失衡槓桿自行旋轉。支點垂直支持力為 (m₁ + m₂)g。',['把較輕的重物放得更遠，能否平衡？','力矩平衡是否同時保證合力為零？'],p=>trajectory(1,()=>({x:0,y:3,left:p.m1*p.g*p.L1,right:p.m2*p.g*p.L2,net:p.g*(p.m1*p.L1-p.m2*p.L2),support:(p.m1+p.m2)*p.g})));
-
-add('spring','彈簧簡諧運動','振動','spring',oscillation,[M('q','相對平衡位移','m'),M('vx','速度','m/s'),M('E','機械能','J')],
- 'ω = √(k/m)；x = A cosωt；T = 2π√(m/k)', '水平光滑面，理想彈簧與質點，無阻尼；從最大伸長處靜止釋放。位能以平衡點為零。',['振幅加倍如何改變週期與總能量？','動能與位能各自在什麼位置最大？'],p=>{const w=Math.sqrt(p.k/p.m);return trajectory(Math.min(30,8*Math.PI/w),t=>{const x=p.A*Math.cos(w*t),v=-p.A*w*Math.sin(w*t),K=.5*p.m*v*v,U=.5*p.k*x*x;return{x,q:x,vx:v,fx:-p.k*x,K,U,E:K+U}} ,{positionPlot:{min:-p.A,max:p.A,key:'q',label:'相對平衡位置',unit:'m',series:[{key:'K',label:'動能',color:'#8ee0c0',value:x=>.5*p.k*(p.A*p.A-x*x)},{key:'U',label:'彈性位能',color:'#ffb36b',value:x=>.5*p.k*x*x},{key:'E',label:'總能',color:'#bc9de5',value:()=>.5*p.k*p.A*p.A}]}})});
-defs.at(-1).plotMetrics=[...defs.at(-1).metrics,M('K','動能','J'),M('U','彈性位能','J')];
-
-function oscillator(p,driven){const c=p.c,F=driven?p.F:0,w=driven?p.w:0;return integrated(20,[p.A,0],(t,s)=>[s[1],(-p.k*s[0]-c*s[1]+F*Math.cos(w*t))/p.m],(s,t)=>{const K=.5*p.m*s[1]**2,U=.5*p.k*s[0]**2;return{x:s[0],q:s[0],vx:s[1],fx:-p.k*s[0]-c*s[1]+F*Math.cos(w*t),K,U,E:K+U,drive:F*Math.cos(w*t)}})}
-add('damped','阻尼振動：鉛直彈簧與阻尼器','振動','damped-vertical',[...oscillation,P('c','阻尼係數',0,12,.2,1,'kg/s')],energyMetrics,
- 'mq̈+cq̇+kq=0；Ė=−cq̇²；ζ=c/(2√mk)',
-'鉛直理想彈簧與黏滯阻尼器並聯，上端固定。q向上為正、以靜力平衡位置為零，初始q=A、速度零；重力9.81m/s²已包含在平衡伸長中，運動方程不再重複加入mg。彈簧可拉可推，不採鬆繩近似。阻尼力為−cq̇，和速度反向；彈簧力=mg−kq、重力=−mg，因此合力為−kq−cq̇。ζ<1欠阻尼、ζ=1臨界、ζ>1過阻尼；改變m、k後臨界c也會改變。能量採相對平衡點的有效位能kq²/2，與真實彈性＋重力位能僅差常數。耗散能=初始能−目前能。裝置高度自動調整避免地面接觸；觀察20秒。',
-['臨界阻尼c=2√(mk)時，回到平衡位置有何特色？','阻尼力最大時與能量耗散最快時有什麼關係？'],p=>{const motion=oscillator(p,false),height=Math.max(4,p.A+1),rest=p.A+1,pivot=height+rest+p.m*9.81/p.k;return trajectory(motion.duration,t=>{const s=motion.sample(t),q=s.q,v=s.vx;return{x:0,y:height+q,z:0,vx:0,vy:v,fx:0,fy:s.fx,q,velocity:v,K:s.K,U:s.U,E:s.E,springForce:p.m*9.81-p.k*q,damperForce:-p.c*v,gravityForce:-p.m*9.81,dissipated:.5*p.k*p.A*p.A-s.E,dissipationRate:p.c*v*v,dampingRatio:p.c/(2*Math.sqrt(p.m*p.k)),criticalC:2*Math.sqrt(p.m*p.k)};},{equilibriumY:height,pivotY:pivot,events:[{t:0,label:'從平衡位置上方靜止釋放；ζ='+(p.c/(2*Math.sqrt(p.m*p.k))).toFixed(3)}],bounds:{min:[-2,0,-1],max:[2,pivot+1,1]}})});
-const dampedDef=defs.find(d=>d.id==='damped');dampedDef.plotMetrics=[M('q','相對平衡位移 ↑','m'),M('velocity','鉛直速度 ↑','m/s'),M('springForce','彈簧力 ↑','N'),M('damperForce','阻尼力 ↑','N'),M('dissipated','耗散能量','J'),M('dissipationRate','耗散功率','W'),M('dampingRatio','阻尼比ζ',''),M('criticalC','臨界阻尼係數','kg/s')];
-add('driven','受迫振動與共振','振動','spring',[...oscillation,P('c','阻尼係數',.2,8,.2,1,'kg/s'),P('F','驅動力振幅',0,10,.5,3,'N'),P('w','驅動角頻率',.2,6,.1,2,'rad/s')],[M('q','位移','m'),M('drive','瞬時驅動力','N'),M('E','機械能','J')],
- 'mẍ + cẋ + kx = F₀ cosΩt；ω₀ = √(k/m)', '顯示初始暫態與持續驅動的合成運動。觀察 20 秒，不假定已達穩態；小阻尼時可看到拍頻與共振增幅。',['驅動頻率接近固有頻率時會發生什麼？','阻尼增大會如何改變共振峰？'],p=>oscillator(p,true));
-
-add('pendulum','單擺與大角度擺動','振動','pendulum',[mass,P('L','擺長',1,8,.5,4,'m'),P('angle','初始擺角',5,100,1,35,'°'),gravity],[M('angle','擺角','°'),M('speed','速率','m/s'),M('E','機械能','J')],
- 'θ̈ = −(g/L)sinθ；小角近似 T ≈ 2π√(L/g)', '由指定角度靜止釋放，採完整非線性方程；使用剛性無質量擺桿，因此大於 90° 時仍維持約束。忽略阻力與支點摩擦。',['大角度時週期是否仍與振幅無關？','擺球質量會影響週期嗎？'],p=>integrated(Math.min(30,8*Math.PI*Math.sqrt(p.L/p.g)),[rad(p.angle),0],(_,s)=>[s[1],-p.g/p.L*Math.sin(s[0])],s=>{const a=s[0],v=p.L*s[1],y=p.L*(1-Math.cos(a)),K=.5*p.m*v*v,U=p.m*p.g*y;return{x:p.L*Math.sin(a),y:y+1,vx:v*Math.cos(a),vy:v*Math.sin(a),angle:a*180/Math.PI,speed:Math.abs(v),K,U,E:K+U,fx:p.m*(-p.g*Math.sin(a)*Math.cos(a)-p.L*s[1]**2*Math.sin(a)),fy:p.m*(-p.g*Math.sin(a)**2+p.L*s[1]**2*Math.cos(a))}}));
-
-add('orbit','行星軌道與距離指數','萬有引力','orbit',[P('GM','初始半徑重力參數 GM',20,300,10,100,'m³/s²'),P('R','初始距離',3,12,.5,6,'m'),P('ratio','初速／圓軌道速率',.65,1.6,.05,1),P('N','中心引力距離指數',-1,4,.1,2)],[M('r','距中心距離','m'),M('energy','單位質量機械能','J/kg'),M('angular','單位質量角動量','m²/s')],
-'a = −(GM/R₀²)(R₀/r)ᴺ r̂；v圓(R₀)=√(GM/R₀)；U′(r)=GM R₀⁽ᴺ⁻²⁾/rᴺ',
-'教學尺度的中心力模型，測試質量1kg；初速沿+z。N=2為平方反比引力，N=1位能為對數。改變N時固定初始半徑R₀的引力GM/R₀²，因此可直接比較相同初速下的軌道；並非把不同量綱的係數當成相同GM。位能以U(R₀)=−GM/R₀統一零點；N=2恰為−GM/r，其餘N不以正負能量直接判定逃逸。球為質點，中心球圖示不參與幾何碰撞。自適應RK4步長，以兩次半步檢查誤差；觀察至多兩個初始圓軌道週期（上限60秒）。接近r=0.6m或超出50R₀時於界線前停止，保留速度，不模擬中心碰撞；可能進動或不閉合，不強制套橢圓。',
-['非平方反比引力的軌道是否仍為閉合橢圓？','為何所有中心力仍保存角動量與面積速率？'],p=>{
- const N=p.N??2,v=p.ratio*Math.sqrt(p.GM/p.R),limit=Math.min(60,4*Math.PI*Math.sqrt(p.R**3/p.GM)),rows=[[0,p.R,0,0,v]],f=s=>{const r=Math.hypot(s[0],s[1]),factor=-p.GM/(p.R*p.R)*Math.pow(p.R/Math.max(r,.01),N)/Math.max(r,.01);return[s[2],s[3],factor*s[0],factor*s[1]];},rk=(s,h)=>{const a=f(s),b=f(s.map((v,j)=>v+h*a[j]/2)),c=f(s.map((v,j)=>v+h*b[j]/2)),d=f(s.map((v,j)=>v+h*c[j]));return s.map((v,j)=>v+h*(a[j]+2*b[j]+2*c[j]+d[j])/6);};let time=0,state=rows[0].slice(1),h=.005*Math.sqrt(p.R**3/p.GM),endLabel='觀察時間結束';
- for(let i=0;time<limit&&i<200000;i++){h=Math.min(h,limit-time,.03*Math.sqrt(p.R**3/p.GM));const full=rk(state,h),half=rk(rk(state,h/2),h/2),error=Math.max(...half.map((x,j)=>Math.abs(x-full[j])/(1+Math.abs(x))));if(error>1e-10&&h>1e-8){h*=Math.max(.2,.8*Math.pow(1e-10/error,.2));continue;}const r=Math.hypot(half[0],half[1]);if(r<=.6||r>=50*p.R){const inner=r<=.6,bound=inner?.6:50*p.R;let l=0,u=h;for(let k=0;k<45;k++){const m=(l+u)/2,s=rk(rk(state,m/2),m/2),rr=Math.hypot(s[0],s[1]);if(inner?rr>bound:rr<bound)l=m;else u=m;}h=(l+u)/2;state=rk(rk(state,h/2),h/2);time+=h;rows.push([time,...state]);endLabel=inner?'接近中心0.6m界線，碰撞前停止':'超出50倍初始半徑，停止觀察';break;}state=half;time+=h;rows.push([time,...state]);h*=error<1e-14?2:Math.min(2,.9*Math.pow(1e-10/error,.2));}
- if(time<limit&&endLabel==='觀察時間結束')endLabel='達自適應步數上限，停止於最後已解狀態';
- return trajectory(time,t=>{let lo=0,hi=rows.length-1;while(hi-lo>1){const mid=(lo+hi)>>1;if(rows[mid][0]<=t)lo=mid;else hi=mid;}const a=rows[lo],dt=t-a[0],s=rk(rk(a.slice(1),dt/2),dt/2),r=Math.hypot(s[0],s[1]),K=.5*(s[2]*s[2]+s[3]*s[3]),log=Math.log(r/p.R),U=p.GM/p.R*(Math.abs(N-1)<1e-10?log:Math.expm1((1-N)*log)/(1-N))-p.GM/p.R,acc=f(s);return{x:s[0],z:s[1],y:1,vx:s[2],vz:s[3],fx:acc[2],fz:acc[3],r,energy:K+U,angular:s[0]*s[3]-s[1]*s[2],K,U,areaRate:(s[0]*s[3]-s[1]*s[2])/2,force:Math.hypot(acc[2],acc[3])};},{events:[{t:0,label:'距離指數N='+N.toFixed(1)},{t:time,label:endLabel}],endLabel,acceptedSteps:rows.length-1});
-});
-const orbitDef=defs.find(d=>d.id==='orbit');orbitDef.plotMetrics=[M('K','單位質量動能','J/kg'),M('U','單位質量位能','J/kg'),M('areaRate','面積速率','m²/s'),M('force','引力（1kg）','N')];
-
-add('collision-2d','二維偏心碰撞與自轉','能量與動量','collision2d',[P('m1','球1質量',.5,8,.5,2,'kg'),P('m2','球2質量',.5,8,.5,2,'kg'),P('v','球1初速',1,8,.5,4,'m/s'),P('b','球1初始 z 偏心',-.9,.9,.05,.5,'m'),P('e','法向恢復係數',0,1,.05,1),P('angle1','球1方向（+x往+z）',-180,180,10,0,'°'),P('v2','球2初速',0,8,.5,0,'m/s'),P('angle2','球2方向（+x往+z）',-180,180,10,180,'°'),P('roughMode','表面：0光滑／1摩擦／2切向不滑',0,2,1,0),P('muContact','接觸摩擦係數',0,1.5,.1,.5),P('spin1','球1初始自轉（+y）',-10,10,1,0,'rad/s'),P('spin2','球2初始自轉（+y）',-10,10,1,0,'rad/s')],[M('px','總 x 動量','kg·m/s'),M('pz','總 z 動量','kg·m/s'),M('K','平動＋轉動動能','J')],
-'Jₙ=(1+e)gₙ/(1/m₁+1/m₂)；Jₜ=clamp(gₜ/D, ±μJₙ)；D=1/m₁+1/m₂+R²/I₁+R²/I₂',
-'水平面兩個半徑0.5m均勻實心球，I=2mR²/5。只處理一次瞬時球間碰撞，地面只支撐重力，不提供水平摩擦或滾動拘束。初始球1=(-4,b)、球2=(0,0)，方向角由+x轉向+z。精確解相對軌跡與接觸圓交點；無接近交點則無碰撞，不強迫相撞。光滑模式無切向衝量；摩擦模式以μJₙ限制使相對接觸切向速度歸零所需衝量；切向不滑模式等同摩擦上限無限。切向衝量同時改變兩球平動與自轉，不採切向彈性回彈。即使法向e=1，粗糙接觸仍可耗能。自轉以+y為正，圖上色點表示姿態。最長等待12秒，命中後再觀察3秒；沒有邊牆碰撞。',
-['兩球等質量、球2靜止、光滑彈性碰撞時，出射速度為何垂直？','切向衝量如何同時改變平動、自轉與總動能？'],p=>{
- const R=.5,I1=.4*p.m1*R*R,I2=.4*p.m2*R*R,a1=rad(p.angle1),a2=rad(p.angle2),u1=[p.v*Math.cos(a1),p.v*Math.sin(a1)],u2=[p.v2*Math.cos(a2),p.v2*Math.sin(a2)],q=[-4,p.b],u=[u1[0]-u2[0],u1[1]-u2[1]],A=u[0]*u[0]+u[1]*u[1],B=q[0]*u[0]+q[1]*u[1],C=q[0]*q[0]+q[1]*q[1]-1,disc=B*B-A*C,candidate=A>1e-15&&B<0&&disc>=0?(-B-Math.sqrt(disc))/A:null,hit=candidate!==null&&candidate>=0&&candidate<=12?candidate:null;
- let nx=1,nz=0,Jn=0,Jt=0,w1=p.spin1,w2=p.spin2,v1=u1.slice(),v2=u2.slice();
- if(hit!==null){nx=-(q[0]+u[0]*hit);nz=-(q[1]+u[1]*hit);const gn=u[0]*nx+u[1]*nz,gt=-u[0]*nz+u[1]*nx-R*(w1+w2),D=1/p.m1+1/p.m2+R*R/I1+R*R/I2;Jn=(1+p.e)*Math.max(0,gn)/(1/p.m1+1/p.m2);const need=gt/D;Jt=Jn<=1e-10?0:p.roughMode===2?need:p.roughMode===1?clamp(need,-p.muContact*Jn,p.muContact*Jn):0;const ix=Jn*nx-Jt*nz,iz=Jn*nz+Jt*nx;v1=[u1[0]-ix/p.m1,u1[1]-iz/p.m1];v2=[u2[0]+ix/p.m2,u2[1]+iz/p.m2];w1+=R*Jt/I1;w2+=R*Jt/I2;}
- const K0=.5*p.m1*p.v*p.v+.5*p.m2*p.v2*p.v2+.5*I1*p.spin1*p.spin1+.5*I2*p.spin2*p.spin2;
- return trajectory(hit===null?6:hit+3,t=>{const after=hit!==null&&t>=hit,dt=after?t-hit:0,pre=after?hit:t,a=after?v1:u1,b=after?v2:u2,spin1=after?w1:p.spin1,spin2=after?w2:p.spin2,x=-4+u1[0]*pre+v1[0]*dt,z=p.b+u1[1]*pre+v1[1]*dt,x2=u2[0]*pre+v2[0]*dt,z2=u2[1]*pre+v2[1]*dt,Ktrans=.5*p.m1*(a[0]*a[0]+a[1]*a[1])+.5*p.m2*(b[0]*b[0]+b[1]*b[1]),Krot=.5*I1*spin1*spin1+.5*I2*spin2*spin2,K=Ktrans+Krot;return{x,y:1,z,x2,y2:1,z2,vx:a[0],vz:a[1],vx2:b[0],vz2:b[1],px:p.m1*a[0]+p.m2*b[0],pz:p.m1*a[1]+p.m2*b[1],K,Ktrans,Krot,loss:Math.max(0,K0-K),spin1,spin2,theta1:p.spin1*pre+w1*dt,theta2:p.spin2*pre+w2*dt,Jn:after?Jn:0,Jt:after?Jt:0,collided:+after,angularMomentum:p.m1*(z*a[0]-x*a[1])+p.m2*(z2*b[0]-x2*b[1])+I1*spin1+I2*spin2};},{hitTime:hit,normal:[nx,nz],impulses:[Jn,Jt],inertias:[I1,I2],events:hit===null?[{t:0,label:'目前初值在12秒等待內不接觸'}]:[{t:hit,label:'球間碰撞：法向與切向衝量'}]});
-});
-const collision2dDef=defs.find(d=>d.id==='collision-2d');collision2dDef.plotMetrics=[M('Ktrans','平動動能','J'),M('Krot','轉動動能','J'),M('loss','耗散能量','J'),M('spin1','球1自轉','rad/s'),M('spin2','球2自轉','rad/s'),M('angularMomentum','總 y 角動量','kg·m²/s')];
-
-add('center-of-mass','質心與內力','能量與動量','pair-spring',[P('m1','左側質量',.5,8,.5,2,'kg'),P('m2','右側質量',.5,8,.5,3,'kg'),P('k','內部彈簧常數',1,20,.5,5,'N/m'),P('A','初始伸長量',.2,2,.1,1,'m'),P('v','質心初速',-2,2,.2,0,'m/s')],[M('com','質心位置','m'),M('momentum','總動量','kg·m/s'),M('E','總機械能','J')],
- 'M ẍ質心 = F外 = 0；ω² = k(1/m₁ + 1/m₂)', '光滑水平軌道上兩物塊以無質量彈簧相連，原長 4 m；內力大小相等、方向相反。質心等速移動，即使兩塊持續振動。',['不相等質量的兩物塊，誰相對質心的振幅較大？','內力能否讓整個系統的質心加速？'],p=>{const M=p.m1+p.m2,w=Math.sqrt(p.k*(1/p.m1+1/p.m2));return trajectory(Math.min(20,8*Math.PI/w),t=>{const q=p.A*Math.cos(w*t),r=4+q,dr=-p.A*w*Math.sin(w*t),com=p.v*t,v1=p.v-p.m2/M*dr,v2=p.v+p.m1/M*dr,K=.5*p.m1*v1*v1+.5*p.m2*v2*v2,U=.5*p.k*q*q;return{x:com-p.m2/M*r,x2:com+p.m1/M*r,y:.5,vx:v1,v2,com,momentum:p.m1*v1+p.m2*v2,K,U,E:K+U,fx:p.k*q}})});
-
-add('angular-momentum','收臂旋轉與角動量','圓周與轉動','skater',[P('m','每個手持物質量',.5,4,.5,1,'kg'),P('I','身體轉動慣量',1,8,.5,2,'kg·m²'),P('r0','初始臂長',.5,3,.1,2,'m'),P('r1','最後臂長',.5,3,.1,.6,'m'),P('w','初始角速度',.2,3,.1,1,'rad/s')],[M('inertia','總轉動慣量','kg·m²'),M('omega','角速度','rad/s'),M('angular','角動量','kg·m²/s')],
- 'L = I總ω = 常數；I總 = I身體 + 2mr²', '水平無外力矩轉台，兩個手持物對稱移動。4 秒內以平滑曲線改變臂長，之後維持；角動量守恆。收臂由內部致動器作功，因此轉動動能可以增加。速度箭頭顯示手持物，整體合力為零。',['收臂時增加的動能從哪裡來？','若反過來伸臂，角速度會如何變化？'],p=>{const angular=(p.I+2*p.m*p.r0**2)*p.w,radius=t=>{const f=clamp(t/4,0,1);return p.r0+(p.r1-p.r0)*(3*f*f-2*f*f*f)};return integrated(8,[0],(t)=>[angular/(p.I+2*p.m*radius(t)**2)],(s,t)=>{const r=radius(t),inertia=p.I+2*p.m*r*r,omega=angular/inertia;return{x:0,y:1,theta:s[0],radius:r,rdot:t<4?(p.r1-p.r0)*(6*(t/4)-6*(t/4)**2)/4:0,inertia,omega,angular,K:.5*inertia*omega*omega}})});
-
-add('massive-pulley','有轉動慣量的滑輪','圓周與轉動','massive-pulley',[P('m1','左側質量',.5,8,.5,2,'kg'),P('m2','右側質量',.5,8,.5,3,'kg'),P('mp','滑輪質量',.5,8,.5,2,'kg'),P('R','滑輪半徑',1,2,.1,1.5,'m'),gravity],[M('a','左側向上加速度','m/s²'),M('T1','左側張力','N'),M('T2','右側張力','N')],
- 'I = ½M滑輪R²；a = (m₂ − m₁)g/(m₁ + m₂ + I/R²)；(T₂ − T₁)R = Iα', '均勻圓盤滑輪，繩不打滑且無質量；軸無摩擦。兩側張力一般不同。任一側由靜止移動 3 m 後停止；圓盤標線顯示轉角。',['為什麼有慣量的滑輪兩側張力不相等？','固定滑輪質量，改變半徑為何不改變線加速度？'],p=>{const a=(p.m2-p.m1)*p.g/(p.m1+p.m2+.5*p.mp),T=Math.abs(a)>1e-10?Math.sqrt(6/Math.abs(a)):8;return trajectory(T,t=>({x:-p.R,y:4+.5*a*t*t,x2:p.R,y2:4-.5*a*t*t,vy:a*t,a,T1:p.m1*(p.g+a),T2:p.m2*(p.g-a),theta:.5*a*t*t/p.R,s:.5*a*t*t,fy:p.m1*a}))});
-
-add('bungee','高空彈跳','振動','bungee',[
- P('h','跳台高度',20,140,5,80,'m'),P('L','繩索原長',5,60,1,25,'m'),
- P('m','跳躍者質量',40,120,5,70,'kg'),P('k','繩索彈性係數',20,200,5,90,'N/m'),
- P('c','繩索阻尼係數',0,120,5,35,'kg/s'),gravity
-],[M('y','離地高度','m'),M('vy','鉛直速度','m/s'),M('tension','繩索張力','N')],
- '伸長量 e = max(0, h − y − L)；拉緊時 T = max(0, ke − cvᵧ)；mÿ = T − mg',
- '由跳台靜止落下，y 軸向上。繩索鬆弛時張力為零；伸長後採彈性與黏滯阻尼，繩索只能拉、不能推。人物以腳踝繩索連接點的質點計算，忽略空氣阻力、繩重及人體姿態。觀察 30 秒，若連接點抵達地面則在接觸前瞬間停止。人物大小僅為示意。',
- ['繩索拉直時，速度會立刻變成零嗎？','固定繩長與質量，增加彈性係數或阻尼，最低點和反彈幅度如何改變？'],p=>{
-  const tension=(y,v)=>{const e=p.h-y-p.L;return e>=0?Math.max(0,p.k*e-p.c*v):0},taut=Math.sqrt(2*p.L/p.g);
-  const stretched=integrated(30-taut,[p.h-p.L,-p.g*taut],(_,s)=>[s[1],tension(s[0],s[1])/p.m-p.g],s=>{
-   const extension=Math.max(0,p.h-s[0]-p.L),T=tension(s[0],s[1]),K=.5*p.m*s[1]**2,U=p.m*p.g*s[0]+.5*p.k*extension**2;
-   return{y:s[0],vy:s[1],fy:T-p.m*p.g,tension:T,extension,drop:p.h-s[0],K,U,E:K+U};
-  });
-  const motion=trajectory(30,t=>t<taut?{y:p.h-.5*p.g*t*t,vy:-p.g*t,fy:-p.m*p.g,tension:0,extension:0,drop:.5*p.g*t*t,K:.5*p.m*(p.g*t)**2,U:p.m*p.g*(p.h-.5*p.g*t*t),E:p.m*p.g*p.h}:stretched.sample(t-taut));
-  let duration=30,contact=false;
-  for(let i=1;i<=7200;i++){const time=i/240;if(motion.sample(time).y<=0){let lo=(i-1)/240,hi=time;for(let j=0;j<40;j++){const mid=(lo+hi)/2;if(motion.sample(mid).y>0)lo=mid;else hi=mid}duration=(lo+hi)/2;contact=true;break}}
-  const events=[],markers=[],elasticHeight=p.h-p.L-p.m*p.g/p.k;
-  function mark(key,time,label,color){const y=Math.max(0,motion.sample(time).y),event={key,t:time,y,label,color};events.push(event);markers.push(event);return event}
-  function crossing(fn,start,direction){if(start>=duration)return null;let a=start,fa=fn(motion.sample(a));for(let b=Math.min(start+1/120,duration);b<=duration;b=Math.min(b+1/120,duration)){const fb=fn(motion.sample(b));if((direction>0?fa< -1e-7&&fb>1e-7:fa>1e-7&&fb< -1e-7)){let lo=a,hi=b;for(let j=0;j<40;j++){const mid=(lo+hi)/2,f=fn(motion.sample(mid));if(direction*f>0)hi=mid;else lo=mid}return(lo+hi)/2}if(Math.abs(fb)>1e-7){a=b;fa=fb}if(b===duration)break}return null}
-  if(taut<=duration){
-   mark('taut',taut,'繩索首次拉直','#416e8c');
-   const elastic=crossing(s=>p.k*s.extension-p.m*p.g,taut,1);
-   if(elastic!==null)mark('elastic',elastic,p.c===0?'彈力＝重力／合力為零':'彈力＝重力（未含阻尼）','#168579');
-   if(p.c>0){const up=crossing(s=>s.fy,taut+1e-6,1),down=crossing(s=>s.fy,taut+1e-6,-1),balance=up===null?down:down===null?up:Math.min(up,down);if(balance!==null&&Math.abs(motion.sample(balance).fy)<.001)mark('balance',balance,'繩索總拉力＝重力／合力為零','#8b5ac4')}
-   const low=crossing(s=>s.vy,taut,1);if(low!==null){mark('lowest',low,'首次最低點（速度為零）','#b76b26');const high=crossing(s=>s.vy,low+1e-5,-1);if(high!==null)mark('rebound',high,'首次反彈最高點','#a65073')}
+(function (root) {
+  'use strict';
+  const G = 9.81,
+    rad = d => (d * Math.PI) / 180,
+    clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const P = (id, label, min, max, step, value, unit = '') => ({ id, label, min, max, step, value, unit });
+  const mass = P('m', '質量', 0.5, 10, 0.5, 2, 'kg'),
+    gravity = P('g', '重力加速度', 1, 15, 0.01, G, 'm/s²');
+  const speed = P('v', '初速', -10, 15, 0.5, 4, 'm/s'),
+    mu = P('mu', '動摩擦係數', 0, 0.8, 0.02, 0.2);
+  const oscillation = [mass, P('k', '彈簧常數', 1, 30, 0.5, 8, 'N/m'), P('A', '初始伸長量', 0.1, 3, 0.1, 1.5, 'm')];
+  function trajectory(duration, fn, extra = {}) {
+    return {
+      duration: Math.max(0, duration),
+      sample: t =>
+        Object.assign(
+          { x: 0, y: 0.4, z: 0, vx: 0, vy: 0, vz: 0, fx: 0, fy: 0, fz: 0 },
+          fn(clamp(t, 0, Math.max(0, duration)))
+        ),
+      ...extra
+    };
   }
-  if(contact)mark('ground',duration,'抵達地面，停止模擬','#a74739');events.sort((a,b)=>a.t-b.t);
-  return trajectory(duration,t=>{const s=motion.sample(t);return{...s,y:Math.max(0,s.y)}},{events,markers,elasticHeight,endLabel:contact?'已抵達地面 · 接觸前瞬間':'觀察結束 · 30 秒'});
- });
+  function integrated(duration, initial, derivative, map, dt = 1 / 240) {
+    const n = Math.ceil(duration / dt),
+      states = [initial.slice()];
+    let state = initial.slice();
+    for (let i = 0; i < n; i++) {
+      const t = i * dt,
+        k1 = derivative(t, state),
+        k2 = derivative(
+          t + dt / 2,
+          state.map((v, j) => v + (k1[j] * dt) / 2)
+        ),
+        k3 = derivative(
+          t + dt / 2,
+          state.map((v, j) => v + (k2[j] * dt) / 2)
+        ),
+        k4 = derivative(
+          t + dt,
+          state.map((v, j) => v + k3[j] * dt)
+        );
+      state = state.map((v, j) => v + (dt / 6) * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j]));
+      states.push(state);
+    }
+    return trajectory(duration, t => {
+      const f = t / dt,
+        i = Math.min(states.length - 2, Math.floor(f)),
+        a = f - i;
+      const u = derivative(i * dt, states[i]),
+        v = derivative((i + 1) * dt, states[i + 1]),
+        a2 = a * a,
+        a3 = a2 * a;
+      return map(
+        states[i].map(
+          (x, j) =>
+            (2 * a3 - 3 * a2 + 1) * x +
+            (a3 - 2 * a2 + a) * dt * u[j] +
+            (-2 * a3 + 3 * a2) * states[i + 1][j] +
+            (a3 - a2) * dt * v[j]
+        ),
+        t
+      );
+    });
+  }
+  const defs = [];
+  function add(
+    id,
+    title,
+    group,
+    kind,
+    params,
+    metrics,
+    formula,
+    note,
+    questions,
+    build,
+    source = 'mechanics-models.js'
+  ) {
+    defs.push({ id, title, group, kind, params, metrics, formula, note, questions, build, source });
+  }
+  const M = (key, label, unit) => ({ key, label, unit });
+  const linearMetrics = [M('x', '位置 x', 'm'), M('vx', '速度 vₓ', 'm/s'), M('ax', '加速度', 'm/s²')];
+  const energyMetrics = [M('K', '動能', 'J'), M('U', '位能', 'J'), M('E', '機械能', 'J')];
 
-const api={defs,G,defaults:d=>Object.fromEntries(d.params.map(p=>[p.id,p.value])),integrated,register:add,helpers:{P,M,trajectory,integrated,rad,clamp,G}};
-if(typeof module!=='undefined'&&module.exports)module.exports=api;root.Mechanics=api;
-if(typeof module!=='undefined'&&module.exports){require('./models/moon-earth.js');require('./models/pendulum-angle-comparison.js');require('./models/extended-mechanics.js');require('./models/wave-optics.js');require('./models/airplane-drop.js');require('./models/safe-parabola.js');require('./models/relative-motion.js');require('./models/shoot-monkey.js');require('./models/incline-shadow.js');require('./models/optimal-projectile.js');require('./models/shm-projection.js');require('./models/vertical-spring.js');require('./models/belt-wheels.js');require('./models/slip-or-tip.js');require('./models/block-stack.js');require('./models/self-pull.js');require('./models/moving-atwood.js');require('./models/conveyor-friction.js');require('./models/bike-turn.js');require('./models/projectile-explosion.js');require('./models/recoiling-wedge.js');require('./models/person-boat.js');require('./models/ring-ball.js');require('./models/half-circle.js');require('./models/pulled-spool.js');require('./models/noninertial.js');require('./models/hole-table.js');require('./models/binary-stars.js');require('./models/intercontinental.js');require('./models/projectile-cone.js');require('./models/wall-spring-pair.js');require('./models/spring-wire-cut.js');require('./models/falling-spring.js');require('./models/vertical-spring-pair.js');require('./models/resonance-bank.js');require('./models/coupled-oscillators.js');require('./models/spring-atwood.js');require('./models/ball-rod.js');require('./models/rough-bounce.js');require('./models/joule-experiment.js');require('./models/thermal-lattice.js');require('./models/ideal-gas.js');require('./models/maxwell-distribution.js');require('./models/equipartition.js');require('./models/adiabatic-pistons.js');require('./models/wave-core.js');require('./models/basic-waves.js');require('./models/standing-waves.js');require('./models/longitudinal-tube.js');require('./models/acoustic-core.js');require('./models/resonance-column.js');require('./models/vacuum-bell.js');require('./models/sound-speed.js');require('./models/echo.js');require('./models/doppler.js');require('./models/sound-elements.js');require('./models/violin-fourier.js');require('./models/sun-earth-moon.js');require('./models/fourier-square.js');require('./models/plane-mirror.js');require('./models/shared-mirror.js');require('./models/double-mirror.js');require('./models/conic-mirror.js');require('./models/image-drawing.js');require('./models/refraction-cart.js');require('./models/layered-refraction.js');require('./models/straw-cup.js');require('./models/apparent-depth.js');require('./models/sphere-lens.js');require('./models/fresnel-core.js');require('./models/fresnel.js');require('./models/eye-lens.js');require('./models/dancing-image.js');require('./models/half-lens.js');require('./models/optical-parallax.js');require('./models/ray-matrix.js');require('./models/optical-instruments.js');require('./models/rainbow.js');require('./models/dolly-zoom.js');require('./models/sun-earth.js');require('./models/celestial-sphere.js');require('./models/floating-block-shm.js');require('./models/electroscope.js');require('./models/rgb-lights.js');require('./models/aperture-pattern.js');require('./models/diffraction-amplitudes.js');require('./models/two-charges.js');require('./models/optical-grating.js');require('./models/string-interface.js');require('./models/wave-polarization.js');require('./models/wave-function.js');require('./models/string-wave-energy.js');require('./models/two-source-interference.js');require('./models/pv-path.js');require('./models/magnetic-induction.js');require('./models/circuit-rc.js');require('./models/photoelectric.js');require('./models/blackbody-radiation.js');require('./models/hydrogen-spectrum.js');require('./models/radioactive-decay.js');require('./models/thin-film.js');require('./models/matter-wave.js');require('./models/parallel-capacitor.js');require('./models/gauss-surface.js');require('./models/quantum-well.js');require('./models/hydrogen-orbitals.js');require('./models/pn-junction.js');require('./models/rlc-resonance.js');require('./models/eddy-current.js');require('./models/carnot-engine.js');require('./models/wire-magnetic-field.js');require('./models/charged-particle.js');require('./models/generator-transformer.js');require('./models/rutherford-scattering.js');require('./models/nuclear-binding.js');require('./models/optical-polarizers.js');require('./models/hydrostatic-buoyancy.js')}
-})(typeof globalThis!=='undefined'?globalThis:this);
+  add(
+    'acceleration',
+    '等加速度直線運動',
+    '運動學',
+    'cart',
+    [speed, P('a', '加速度', -5, 5, 0.2, 1.2, 'm/s²'), P('T', '觀察時間', 2, 15, 1, 8, 's')],
+    linearMetrics,
+    'x = v₀t + ½at²；v = v₀ + at',
+    '沿 x 軸運動，位置可以為負；加速度為固定值。無碰撞邊界；合力箭頭以 1 kg 質點計算。',
+    ['初速與加速度反向時，何時改變方向？', '位移—時間圖的斜率與速度有何關係？'],
+    p =>
+      trajectory(p.T, t => ({
+        x: p.v * t + 0.5 * p.a * t * t,
+        vx: p.v + p.a * t,
+        ax: p.a,
+        fx: p.a,
+        K: 0.5 * (p.v + p.a * t) ** 2
+      }))
+  );
+
+  add(
+    'vertical',
+    '自由落體與鉛直上拋',
+    '運動學',
+    'ball',
+    [P('h', '初始高度', 0, 20, 0.5, 8, 'm'), P('v', '初始鉛直速度', -10, 20, 0.5, 8, 'm/s'), gravity],
+    [M('y', '高度', 'm'), M('vy', '鉛直速度', 'm/s'), M('K', '動能（1 kg）', 'J')],
+    'y = h₀ + v₀t − ½gt²；vᵧ = v₀ − gt',
+    'y 軸向上；到達 y = 0 時停止，顯示碰撞前速度。質量取 1 kg，無空氣阻力。',
+    ['最高點的加速度是否為零？', '從同一高度向上與向下拋出，落地速率如何比較？'],
+    p => {
+      const T = (p.v + Math.sqrt(p.v * p.v + 2 * p.g * p.h)) / p.g;
+      return trajectory(T, t => ({
+        y: Math.max(0, p.h + p.v * t - 0.5 * p.g * t * t),
+        vy: p.v - p.g * t,
+        fy: -p.g,
+        K: 0.5 * (p.v - p.g * t) ** 2
+      }));
+    }
+  );
+
+  add(
+    'river',
+    '渡河與相對速度',
+    '運動學',
+    'river',
+    [
+      P('v', '船相對水速率', 1, 8, 0.2, 3, 'm/s'),
+      P('u', '水流速率', -5, 5, 0.1, 1.5, 'm/s'),
+      P('angle', '朝上游偏角', -60, 60, 1, 20, '°'),
+      P('width', '河寬', 5, 30, 1, 15, 'm')
+    ],
+    [M('x', '順流位移', 'm'), M('z', '渡河距離', 'm'), M('drift', '預計漂流', 'm')],
+    'v地 = v船／水 + v水／地；T = 河寬 / (v cosθ)',
+    '河流沿 +x，對岸沿 +z；正偏角朝上游。水流均勻，抵達對岸即停止。',
+    ['如何使落點正好位於正對岸？何時做不到？', '最短時間與最短路徑需要相同的航向嗎？'],
+    p => {
+      const vx = p.u - p.v * Math.sin(rad(p.angle)),
+        vz = p.v * Math.cos(rad(p.angle)),
+        T = p.width / vz;
+      return trajectory(T, t => ({ x: vx * t, z: vz * t, y: 0.3, vx, vz, drift: vx * T }));
+    }
+  );
+
+  add(
+    'pursuit',
+    '追及與會車',
+    '運動學',
+    'two-carts',
+    [
+      P('v', '後車初速', 0, 12, 0.5, 5, 'm/s'),
+      P('v2', '前車速度', -8, 12, 0.5, 3, 'm/s'),
+      P('a', '後車加速度', 0, 3, 0.1, 0.5, 'm/s²'),
+      P('gap', '初始間距', 2, 30, 1, 15, 'm')
+    ],
+    [M('x', '後車位置', 'm'), M('x2', '前車位置', 'm'), M('gap', '相距', 'm')],
+    'x₁ = v₁t + ½at²；x₂ = d + v₂t',
+    '兩車在平行車道運動；相遇表示同一 x 座標，不進行碰撞。觀察時間 12 秒，合力箭頭以後車質量 1 kg 計算。',
+    ['等速時，哪一種情況永遠追不上？', '前車迎面而來時，相對速度如何改變？'],
+    p =>
+      trajectory(12, t => ({
+        x: p.v * t + 0.5 * p.a * t * t,
+        x2: p.gap + p.v2 * t,
+        vx: p.v + p.a * t,
+        v2: p.v2,
+        gap: Math.abs(p.gap + p.v2 * t - p.v * t - 0.5 * p.a * t * t),
+        ax: p.a,
+        fx: p.a
+      }))
+  );
+
+  add(
+    'drag',
+    '空氣阻力與終端速度',
+    '運動學',
+    'fall',
+    [mass, P('b', '線性阻力係數', 0.2, 8, 0.2, 2, 'kg/s'), gravity],
+    [M('fall', '下落距離', 'm'), M('down', '向下速率', 'm/s'), M('terminal', '終端速率', 'm/s')],
+    'm dv/dt = mg − bv；v = (mg/b)(1 − e^(−bt/m))',
+    '由靜止下落，採線性阻力 F = −bv。場景跟隨下落距離以縮尺顯示；不設地板碰撞。',
+    ['質量加倍如何改變終端速度？', '為什麼終端速度時物體仍在運動？'],
+    p => {
+      const terminal = (p.m * p.g) / p.b,
+        tau = p.m / p.b;
+      return trajectory(10, t => {
+        const v = terminal * (1 - Math.exp(-t / tau)),
+          d = terminal * (t - tau * (1 - Math.exp(-t / tau)));
+        return { y: -d, vy: -v, fy: -p.m * p.g + p.b * v, fall: d, down: v, terminal, K: 0.5 * p.m * v * v };
+      });
+    }
+  );
+
+  add(
+    'friction',
+    '水平受力與靜、動摩擦',
+    '牛頓定律',
+    'cart',
+    [mass, P('F', '水平外力', -30, 30, 0.5, 8, 'N'), mu, P('mus', '靜摩擦係數', 0, 1, 0.02, 0.4), gravity],
+    [M('x', '位置', 'm'), M('friction', '摩擦力', 'N'), M('ax', '加速度', 'm/s²')],
+    '靜止：|F| ≤ μₛN；滑動：fₖ = μₖN；a = (F − fₖ)/m',
+    '由靜止開始。有效靜摩擦係數取 max(μₛ, μₖ)，避免靜摩擦小於動摩擦；拉桿下方會顯示實際採用值。',
+    ['外力未達最大靜摩擦力時，摩擦力是多少？', '剛開始滑動時，加速度會連續改變嗎？'],
+    p => {
+      const ms = Math.max(p.mus, p.mu),
+        moving = Math.abs(p.F) > ms * p.m * p.g,
+        friction = moving ? -Math.sign(p.F) * p.mu * p.m * p.g : -p.F,
+        a = (p.F + friction) / p.m;
+      return trajectory(6, t => ({
+        x: 0.5 * a * t * t,
+        vx: a * t,
+        ax: a,
+        friction,
+        fx: p.F + friction,
+        N: p.m * p.g,
+        mus: ms
+      }));
+    }
+  );
+
+  add(
+    'incline',
+    '斜面滑動與摩擦',
+    '牛頓定律',
+    'incline',
+    [mass, P('angle', '斜面傾角', 0, 60, 1, 25, '°'), mu, P('mus', '靜摩擦係數', 0, 1, 0.02, 0.4), gravity],
+    [M('s', '沿坡位移', 'm'), M('ax', '沿坡加速度', 'm/s²'), M('N', '正向力', 'N')],
+    'N = mg cosα；a = g(sinα − μₖcosα)',
+    '從坡頂靜止釋放，沿坡可移動 12 m，到坡底即停止並保留碰撞前速度。有效 μₛ = max(μₛ, μₖ)。',
+    ['開始滑動的臨界角度與質量有關嗎？', '為什麼增加質量不改變加速度？'],
+    p => {
+      const a = rad(p.angle),
+        N = p.m * p.g * Math.cos(a),
+        drive = p.m * p.g * Math.sin(a),
+        moving = drive > Math.max(p.mus, p.mu) * N,
+        acc = moving ? (drive - p.mu * N) / p.m : 0,
+        T = acc > 0 ? Math.sqrt(24 / acc) : 8;
+      return trajectory(T, t => {
+        const d = 0.5 * acc * t * t;
+        return {
+          x: d * Math.cos(a) - 5 + 0.4 * Math.sin(a),
+          y: (12 - d) * Math.sin(a) + 0.4 * Math.cos(a),
+          vx: acc * t * Math.cos(a),
+          vy: -acc * t * Math.sin(a),
+          s: d,
+          ax: acc,
+          N,
+          friction: moving ? p.mu * N : drive,
+          fx: p.m * acc * Math.cos(a),
+          fy: -p.m * acc * Math.sin(a),
+          mus: Math.max(p.mus, p.mu)
+        };
+      });
+    }
+  );
+
+  add(
+    'atwood',
+    '阿特伍德機',
+    '牛頓定律',
+    'pulley',
+    [P('m1', '左側質量', 0.5, 10, 0.5, 2, 'kg'), P('m2', '右側質量', 0.5, 10, 0.5, 3, 'kg'), gravity],
+    [M('a', '左側向上加速度', 'm/s²'), M('tension', '繩張力', 'N'), M('s', '繩位移', 'm')],
+    'a = (m₂ − m₁)g/(m₁ + m₂)；T = 2m₁m₂g/(m₁ + m₂)',
+    '繩無質量、不可伸長，滑輪無摩擦、無轉動慣量。重物由靜止釋放，任一側移動 3 m 後停止。',
+    ['兩側質量相同時，張力等於多少？', '為什麼張力不等於較重物體的重量？'],
+    p => {
+      const a = ((p.m2 - p.m1) * p.g) / (p.m1 + p.m2),
+        T = Math.abs(a) > 1e-10 ? Math.sqrt(6 / Math.abs(a)) : 8;
+      return trajectory(T, t => ({
+        x: -2,
+        y: 4 + 0.5 * a * t * t,
+        x2: 2,
+        y2: 4 - 0.5 * a * t * t,
+        vy: a * t,
+        a,
+        tension: (2 * p.m1 * p.m2 * p.g) / (p.m1 + p.m2),
+        s: 0.5 * a * t * t,
+        fy: p.m1 * a
+      }));
+    }
+  );
+
+  add(
+    'table-pulley',
+    '桌面物塊與懸掛重物',
+    '牛頓定律',
+    'table-pulley',
+    [mass, P('m2', '懸掛質量', 0.5, 8, 0.5, 1, 'kg'), mu, gravity],
+    [M('x', '桌面位移', 'm'), M('tension', '繩張力', 'N'), M('ax', '加速度', 'm/s²')],
+    'a = (m₂g − μmg)/(m + m₂)；T = m₂(g − a)',
+    '初始已向滑輪方向緩慢滑動（0.2 m/s）；使用動摩擦。若減速至零則停止並視為靜摩擦可維持，不模擬反向。到桌邊或下落 5 m 結束。',
+    ['加重桌上物塊為什麼會降低加速度？', '張力對兩個物體的作功會互相抵消嗎？'],
+    p => {
+      const a = (p.m2 * p.g - p.mu * p.m * p.g) / (p.m + p.m2),
+        v = 0.2,
+        dist = 5,
+        T =
+          a < 0
+            ? Math.min(-v / a, (-v + Math.sqrt(Math.max(0, v * v + 2 * a * dist))) / a || Infinity)
+            : a > 0
+              ? (-v + Math.sqrt(v * v + 2 * a * dist)) / a
+              : dist / v;
+      const disc = v * v + 2 * a * dist,
+        edge = Math.abs(a) < 1e-12 ? dist / v : disc >= 0 ? (2 * dist) / (v + Math.sqrt(disc)) : Infinity,
+        duration = Math.min(a < 0 ? -v / a : Infinity, edge);
+      return trajectory(duration, t => {
+        const d = v * t + 0.5 * a * t * t;
+        return { x: d - 3, y: 6, x2: 3, y2: 5 - d, vx: v + a * t, ax: a, tension: p.m2 * (p.g - a), s: d, fx: p.m * a };
+      });
+    }
+  );
+
+  add(
+    'elevator',
+    '電梯與視重量',
+    '牛頓定律',
+    'elevator',
+    [mass, P('a', '電梯加速度', -8, 8, 0.2, 2, 'm/s²'), gravity],
+    [M('N', '秤的讀數', 'N'), M('a', '乘客加速度', 'm/s²'), M('vy', '鉛直速度', 'm/s')],
+    '接觸時 N = m(g + a)；失去接觸時 N = 0',
+    '電梯由靜止開始加速 3 秒。a < −g 時乘客脫離地板並自由落下；不模擬與天花板碰撞。秤顯示力（N）。',
+    ['電梯向上移動時，體重一定變重嗎？', '電梯自由落體時秤會顯示多少？'],
+    p =>
+      trajectory(3, t => {
+        const a = Math.max(p.a, -p.g),
+          y = 2 + 0.5 * a * t * t;
+        return { y, vy: a * t, a, N: Math.max(0, p.m * (p.g + p.a)), floor: 1 + 0.5 * p.a * t * t, fy: p.m * a };
+      })
+  );
+
+  add(
+    'work',
+    '變力作功與動能定理',
+    '能量與動量',
+    'cart',
+    [mass, P('F', '初始外力', 1, 15, 0.5, 5, 'N'), P('k', '外力隨位置增加率', 0, 3, 0.1, 0.5, 'N/m')],
+    [M('W', '外力作功', 'J'), M('K', '動能', 'J'), M('error', 'K − W', 'J')],
+    'F(x) = F₀ + kx；W = F₀x + ½kx² = ΔK',
+    '光滑水平面，由靜止開始。k 為外力梯度，不是回復彈簧。到 x = 15 m 時結束。',
+    ['相同的力—位移圖面積是否產生相同動能？', '質量加倍，走相同距離時速率如何改變？'],
+    p => {
+      const w = Math.sqrt(p.k / p.m),
+        T = p.k > 0 ? Math.acosh(1 + (15 * p.k) / p.F) / w : Math.sqrt((30 * p.m) / p.F);
+      return trajectory(T, t => {
+        const x = p.k > 0 ? (p.F / p.k) * (Math.cosh(w * t) - 1) : ((0.5 * p.F) / p.m) * t * t,
+          v = p.k > 0 ? (p.F / p.k) * w * Math.sinh(w * t) : (p.F / p.m) * t,
+          W = p.F * x + 0.5 * p.k * x * x,
+          K = 0.5 * p.m * v * v;
+        return { x, vx: v, fx: p.F + p.k * x, W, K, error: K - W };
+      });
+    }
+  );
+
+  add(
+    'energy-track',
+    '無摩擦軌道與能量守恆',
+    '能量與動量',
+    'track',
+    [mass, P('h', '起點高度', 1, 8, 0.5, 5, 'm'), gravity],
+    energyMetrics,
+    '軌道 y = hx²/36；½mv² + mgy = mgh',
+    '質點在雙面光滑拋物線導軌上由左側 x = −6 m 靜止釋放；以完整切向運動方程積分。位能零點 y = 0。',
+    ['最低點速率由哪些因素決定？', '軌道形狀會改變到達最低點的時間嗎？'],
+    p =>
+      integrated(
+        12,
+        [-6, 0],
+        (_, s) => {
+          const slope = (p.h * s[0]) / 18,
+            second = p.h / 18;
+          return [s[1], (-p.g * slope - slope * second * s[1] * s[1]) / (1 + slope * slope)];
+        },
+        s => {
+          const x = s[0],
+            y = (p.h * x * x) / 36,
+            vy = ((p.h * x) / 18) * s[1],
+            K = 0.5 * p.m * (s[1] ** 2 + vy ** 2),
+            U = p.m * p.g * y;
+          return {
+            x,
+            y: y + 0.3,
+            vx: s[1],
+            vy,
+            K,
+            U,
+            E: K + U,
+            fx:
+              (p.m * (-p.g * ((p.h * x) / 18) - ((p.h * x) / 18) * (p.h / 18) * s[1] ** 2)) /
+              (1 + ((p.h * x) / 18) ** 2),
+            fy:
+              p.m *
+              ((p.h / 18) * s[1] ** 2 +
+                (((p.h * x) / 18) * (-p.g * ((p.h * x) / 18) - ((p.h * x) / 18) * (p.h / 18) * s[1] ** 2)) /
+                  (1 + ((p.h * x) / 18) ** 2))
+          };
+        }
+      )
+  );
+
+  add(
+    'collision',
+    '一維碰撞與恢復係數',
+    '能量與動量',
+    'collision',
+    [
+      P('m1', '左球質量', 0.5, 8, 0.5, 2, 'kg'),
+      P('m2', '右球質量', 0.5, 8, 0.5, 3, 'kg'),
+      P('v', '左球初速', 1, 8, 0.5, 4, 'm/s'),
+      P('v2', '右球初速', -5, 0, 0.5, -1, 'm/s'),
+      P('e', '恢復係數（瞬時模式）', 0, 1, 0.05, 1),
+      P('contactMode', '接觸：0瞬時／1彈性彈簧', 0, 1, 1, 0),
+      P('contactK', '接觸彈簧常數', 1000, 10000, 500, 2000, 'N/m')
+    ],
+    [M('momentum', '總動量', 'kg·m/s'), M('K', '總動能', 'J'), M('loss', '損失動能', 'J')],
+    '動量守恆；彈簧接觸：μδ̈+kδ=0，μ=m₁m₂/(m₁+m₂)；K+½kδ²守恆。瞬時模式：v₂−v₁=e(u₁−u₂)。',
+    '兩球初始中心距8m、半徑各0.5m，無外力或摩擦。模式0為原有瞬時衝量，中心距1m時碰撞，可調恢復係數。模式1在兩球間加入自然長1m、無質量接觸彈簧，中心距2m時開始壓縮，經半個相對振動週期恢復原長並分離；此模式固定完全彈性，恢復係數拉桿僅作用於模式0。接觸時總動能下降是轉為彈簧位能，並非耗散；圖表可查看彈性位能與總機械能。彈簧常數範圍避免球體重疊；接觸力連續且只推不拉。碰撞後再觀察3秒。',
+    ['為什麼彈簧最大壓縮時兩球速度相等？', '提高彈簧常數會如何改變接觸時間、最大壓縮及碰撞後速度？'],
+    p => {
+      const total = p.m1 + p.m2,
+        mu = (p.m1 * p.m2) / total,
+        c = p.v - p.v2,
+        V = (p.m1 * p.v + p.m2 * p.v2) / total,
+        K0 = 0.5 * p.m1 * p.v * p.v + 0.5 * p.m2 * p.v2 * p.v2,
+        spring = !!p.contactMode,
+        e = spring ? 1 : p.e,
+        hit = (spring ? 6 : 7) / c,
+        w = Math.sqrt(p.contactK / mu),
+        contactTime = spring ? Math.PI / w : 0,
+        release = hit + contactTime,
+        v1 = V - (p.m2 / total) * e * c,
+        v2 = V + (p.m1 / total) * e * c;
+      return trajectory(
+        release + 3,
+        t => {
+          let x,
+            x2,
+            a,
+            b,
+            compression = 0,
+            force = 0,
+            phase = 0;
+          if (t < hit) {
+            x = -4 + p.v * t;
+            x2 = 4 + p.v2 * t;
+            a = p.v;
+            b = p.v2;
+          } else if (spring && t < release) {
+            const tau = t - hit,
+              cm = (-4 * p.m1 + 4 * p.m2) / total + V * t;
+            compression = (c / w) * Math.sin(w * tau);
+            const gap = 2 - compression,
+              gapV = -c * Math.cos(w * tau);
+            x = cm - (p.m2 / total) * gap;
+            x2 = cm + (p.m1 / total) * gap;
+            a = V - (p.m2 / total) * gapV;
+            b = V + (p.m1 / total) * gapV;
+            force = p.contactK * compression;
+            phase = 1;
+          } else {
+            const cm = (-4 * p.m1 + 4 * p.m2) / total + V * release,
+              gap = spring ? 2 : 1;
+            x = cm - (p.m2 / total) * gap + v1 * (t - release);
+            x2 = cm + (p.m1 / total) * gap + v2 * (t - release);
+            a = v1;
+            b = v2;
+            phase = 2;
+          }
+          const K = 0.5 * p.m1 * a * a + 0.5 * p.m2 * b * b,
+            U = 0.5 * p.contactK * compression * compression;
+          return {
+            x,
+            x2,
+            y: 1,
+            y2: 1,
+            z2: 0,
+            vx: a,
+            v2: b,
+            vx2: b,
+            fx: -force,
+            fx2: force,
+            momentum: p.m1 * a + p.m2 * b,
+            K,
+            U,
+            E: K + U,
+            loss: spring ? 0 : K0 - K,
+            hit: t < hit ? 0 : 1,
+            compression,
+            contactForce: force,
+            phase
+          };
+        },
+        {
+          events: spring
+            ? [
+                { t: hit, label: '彈簧開始接觸' },
+                { t: hit + contactTime / 2, label: '最大壓縮：兩球同速' },
+                { t: release, label: '恢復自然長，分離' }
+              ]
+            : [{ t: hit, label: '瞬時碰撞' }],
+          contactTime,
+          hitTime: hit,
+          releaseTime: release
+        }
+      );
+    }
+  );
+  const collisionDef = defs.find(d => d.id === 'collision');
+  collisionDef.plotMetrics = [
+    M('U', '接觸彈性位能', 'J'),
+    M('E', '總機械能', 'J'),
+    M('compression', '彈簧壓縮量', 'm'),
+    M('contactForce', '接觸力大小', 'N'),
+    M('vx', '左球速度', 'm/s'),
+    M('v2', '右球速度', 'm/s')
+  ];
+
+  add(
+    'ballistic-pendulum',
+    '彈道擺',
+    '能量與動量',
+    'ballistic',
+    [
+      P('m', '彈丸質量', 0.05, 0.5, 0.05, 0.1, 'kg'),
+      P('M', '擺塊質量', 1, 5, 0.5, 2, 'kg'),
+      P('v', '彈丸初速', 5, 30, 1, 20, 'm/s'),
+      P('L', '擺長', 2, 6, 0.5, 4, 'm'),
+      gravity
+    ],
+    [M('angle', '擺角', '°'), M('rise', '上升高度', 'm'), M('loss', '碰撞損失', 'J')],
+    '碰撞：mu = (m + M)V；擺動：½(m + M)V² = (m + M)gh',
+    '彈丸嵌入擺塊。碰撞後以非線性擺方程積分，使用剛性無質量擺桿，極端設定可整圈轉動。碰撞前後動量守恆，動能不守恆。',
+    ['如何由最大上升高度反推彈丸初速？', '為什麼不能直接將碰撞前動能等於擺到最高點的位能？'],
+    p => {
+      const V = (p.m * p.v) / (p.m + p.M),
+        hit = 3 / p.v,
+        loss = 0.5 * p.m * p.v * p.v - 0.5 * (p.m + p.M) * V * V,
+        pend = integrated(
+          10,
+          [0, V / p.L],
+          (_, s) => [s[1], (-p.g / p.L) * Math.sin(s[0])],
+          s => ({
+            x: p.L * Math.sin(s[0]),
+            y: 1 + p.L * (1 - Math.cos(s[0])),
+            vx: p.L * Math.cos(s[0]) * s[1],
+            vy: p.L * Math.sin(s[0]) * s[1],
+            angle: (s[0] * 180) / Math.PI,
+            rise: p.L * (1 - Math.cos(s[0])),
+            loss,
+            fx: (p.m + p.M) * (-p.g * Math.sin(s[0]) * Math.cos(s[0]) - p.L * s[1] ** 2 * Math.sin(s[0])),
+            fy: (p.m + p.M) * (-p.g * Math.sin(s[0]) ** 2 + p.L * s[1] ** 2 * Math.cos(s[0]))
+          })
+        );
+      return trajectory(
+        10 + hit,
+        t =>
+          t < hit
+            ? { x: 0, y: 1, bulletX: -3 + p.v * t, angle: 0, rise: 0, loss: 0 }
+            : Object.assign(pend.sample(t - hit), { bulletX: null }),
+        { events: [{ t: hit, label: '嵌入碰撞' }] }
+      );
+    }
+  );
+
+  add(
+    'rocket',
+    '火箭與變質量',
+    '能量與動量',
+    'rocket',
+    [
+      P('m0', '初始質量', 5, 20, 1, 10, 'kg'),
+      P('fuel', '燃料比例', 0.1, 0.7, 0.05, 0.5),
+      P('ve', '相對排氣速率', 5, 30, 1, 15, 'm/s'),
+      P('burn', '燃燒時間', 2, 10, 0.5, 5, 's')
+    ],
+    [M('vx', '火箭速率', 'm/s'), M('mass', '剩餘質量', 'kg'), M('thrust', '推力', 'N')],
+    'v = vₑ ln(m₀/m)；F = vₑ(−dm/dt)',
+    '深空一維火箭，無重力與阻力。固定質量流率，燃燒結束後等速飛行 3 秒；排氣方向與火箭運動相反。',
+    ['相同燃料比例下，增加火箭總質量會改變最終速度嗎？', '增加燃燒時間會改變速度增量，還是只改變推力？'],
+    p => {
+      const flow = (p.m0 * p.fuel) / p.burn;
+      return trajectory(p.burn + 3, t => {
+        const b = Math.min(t, p.burn),
+          m = p.m0 - flow * b,
+          v = p.ve * Math.log(p.m0 / m),
+          x = p.ve * (b - (m / flow) * Math.log(p.m0 / m)) + v * Math.max(0, t - p.burn);
+        return { x, vx: v, mass: m, thrust: t < p.burn ? p.ve * flow : 0, fx: t < p.burn ? p.ve * flow : 0 };
+      });
+    }
+  );
+
+  add(
+    'circular',
+    '等速圓周運動',
+    '圓周與轉動',
+    'circle',
+    [mass, P('R', '半徑', 1, 8, 0.5, 4, 'm'), P('v', '速率', 0.5, 8, 0.5, 3, 'm/s')],
+    [M('speed', '速率', 'm/s'), M('acc', '向心加速度', 'm/s²'), M('force', '向心合力', 'N')],
+    'ω = v/R；a = v²/R；F = mv²/R',
+    '在水平 x–z 平面以固定速率運動，約束裝置提供向心合力。箭頭顯示瞬時速度與合力。',
+    ['速率不變為什麼仍有加速度？', '速率加倍，向心力會變成幾倍？'],
+    p =>
+      trajectory(Math.min(30, (4 * Math.PI * p.R) / p.v), t => {
+        const a = (p.v / p.R) * t,
+          x = p.R * Math.cos(a),
+          z = p.R * Math.sin(a),
+          force = (p.m * p.v * p.v) / p.R;
+        return {
+          x,
+          z,
+          y: 1,
+          vx: -p.v * Math.sin(a),
+          vz: p.v * Math.cos(a),
+          fx: -force * Math.cos(a),
+          fz: -force * Math.sin(a),
+          speed: p.v,
+          acc: (p.v * p.v) / p.R,
+          force
+        };
+      })
+  );
+
+  add(
+    'banked',
+    '傾斜彎道',
+    '圓周與轉動',
+    'banked',
+    [mass, P('R', '彎道半徑', 2, 10, 0.5, 5, 'm'), P('angle', '彎道傾角', 5, 50, 1, 25, '°'), gravity],
+    [M('speed', '無摩擦安全速率', 'm/s'), M('N', '正向力', 'N'), M('acc', '向心加速度', 'm/s²')],
+    'N cosθ = mg；N sinθ = mv²/R；v = √(Rg tanθ)',
+    '無摩擦傾斜彎道，車輛以恰好不需摩擦力的速率行駛。只調半徑與傾角，速率由受力平衡決定。',
+    ['無摩擦安全速率與車輛質量有關嗎？', '同樣半徑下，較大的傾角容許更快還是更慢？'],
+    p => {
+      const v = Math.sqrt(p.R * p.g * Math.tan(rad(p.angle)));
+      return trajectory(Math.min(30, (4 * Math.PI * p.R) / v), t => {
+        const a = (v / p.R) * t;
+        return {
+          x: p.R * Math.cos(a),
+          z: p.R * Math.sin(a),
+          y: 1,
+          vx: -v * Math.sin(a),
+          vz: v * Math.cos(a),
+          fx: ((-p.m * v * v) / p.R) * Math.cos(a),
+          fz: ((-p.m * v * v) / p.R) * Math.sin(a),
+          speed: v,
+          N: (p.m * p.g) / Math.cos(rad(p.angle)),
+          acc: (v * v) / p.R
+        };
+      });
+    }
+  );
+
+  add(
+    'conical',
+    '圓錐擺與角動量',
+    '圓周與轉動',
+    'conical',
+    [
+      mass,
+      P('L', '繩長', 2, 8, 0.5, 5, 'm'),
+      P('angle', '繩與鉛直夾角', 5, 65, 1, 30, '°'),
+      gravity,
+      { ...P('angularView', '向量：0關／1受力／2角動量／3力矩', 0, 3, 1, 2), visual: true },
+      { ...P('origin', '參考點：0懸點／1圓心', 0, 1, 1, 0), visual: true }
+    ],
+    [M('period', '週期', 's'), M('tension', '繩張力', 'N'), M('speed', '速率', 'm/s')],
+    'T cosθ = mg；ω² = g/(L cosθ)；L = r × mv；τ = r × F = dL/dt',
+    '無質量不可伸長繩，擺球維持固定夾角的水平圓周運動。取 y 向上；由 +y 俯視本運動的角動量 y 分量為負。以懸點為原點，張力無力矩，重力造成水平力矩，角動量大小與 y 分量固定，但整個向量持續轉向。以圓心為原點，角動量為固定鉛直向量；張力與重力的力矩互相抵銷，合力矩為零。向量模式與參考點只改顯示，保留播放與時間。L與τ箭頭各自正規化成2m的圖示長度，只表示方向；量值請讀圖表及標籤，不能比較不同物理量箭頭長度。未預設顯示位置向量。',
+    ['以懸點為原點，角動量大小不變是否代表向量守恆？', '切換圓心為原點，為什麼合力矩為零？'],
+    p => {
+      const a = rad(p.angle),
+        R = p.L * Math.sin(a),
+        H = p.L * Math.cos(a),
+        w = Math.sqrt(p.g / H),
+        Ln = p.m * R * w * p.L,
+        Tn = p.m * H * R * w * w;
+      return trajectory(
+        (4 * Math.PI) / w,
+        t => {
+          const c = Math.cos(w * t),
+            sn = Math.sin(w * t),
+            fx = -p.m * R * w * w * c,
+            fz = -p.m * R * w * w * sn;
+          return {
+            x: R * c,
+            z: R * sn,
+            y: 2,
+            vx: -R * w * sn,
+            vz: R * w * c,
+            fx,
+            fz,
+            period: (2 * Math.PI) / w,
+            tension: (p.m * p.g) / Math.cos(a),
+            speed: R * w,
+            pivotY: 2 + H,
+            LPx: -p.m * H * R * w * c,
+            LPy: -p.m * R * R * w,
+            LPz: -p.m * H * R * w * sn,
+            LPnorm: Ln,
+            LCx: 0,
+            LCy: -p.m * R * R * w,
+            LCz: 0,
+            LCnorm: p.m * R * R * w,
+            tauPx: p.m * H * R * w * w * sn,
+            tauPy: 0,
+            tauPz: -p.m * H * R * w * w * c,
+            tauPnorm: Tn,
+            tauCx: 0,
+            tauCy: 0,
+            tauCz: 0,
+            tensionFx: fx,
+            tensionFy: p.m * p.g,
+            tensionFz: fz,
+            gravityFy: -p.m * p.g
+          };
+        },
+        {
+          bounds: {
+            min: [-Math.max(R + 1, 3), 0, -Math.max(R + 1, 3)],
+            max: [Math.max(R + 1, 3), H + 5, Math.max(R + 1, 3)]
+          }
+        }
+      );
+    }
+  );
+  const conical = defs.find(d => d.id === 'conical');
+  conical.plotMetrics = [
+    M('LPx', '懸點 Lx', 'kg·m²/s'),
+    M('LPy', '懸點 Ly', 'kg·m²/s'),
+    M('LPz', '懸點 Lz', 'kg·m²/s'),
+    M('LPnorm', '懸點 |L|', 'kg·m²/s'),
+    M('LCy', '圓心 Ly', 'kg·m²/s'),
+    M('tauPx', '懸點 τx', 'N·m'),
+    M('tauPz', '懸點 τz', 'N·m'),
+    M('tauPnorm', '懸點 |τ|', 'N·m'),
+    M('tauCy', '圓心合力矩', 'N·m')
+  ];
+
+  add(
+    'vertical-circle',
+    '鉛直圓環與能量',
+    '圓周與轉動',
+    'vertical-circle',
+    [mass, P('R', '圓環半徑', 1, 5, 0.5, 3, 'm'), P('v', '最低點初速', 1, 16, 0.5, 12, 'm/s'), gravity],
+    [M('speed', '速率', 'm/s'), M('N', '向內約束力', 'N'), M('E', '機械能', 'J')],
+    'θ̈ = −(g/R)sinθ；N = m(v²/R + g cosθ)',
+    '雙面導軌拘束質點沿鉛直圓環運動，因此 N 可以為負（外向）。這不是可能鬆弛的繩圈；低速時會往返擺動。',
+    ['最高點和最低點的速率差由什麼決定？', '如果改用繩子，哪一段會不再符合本模型？'],
+    p =>
+      integrated(
+        12,
+        [0, p.v / p.R],
+        (_, s) => [s[1], (-p.g / p.R) * Math.sin(s[0])],
+        s => {
+          const a = s[0],
+            w = s[1],
+            v = p.R * w,
+            y = p.R * (1 - Math.cos(a)),
+            N = p.m * ((v * v) / p.R + p.g * Math.cos(a));
+          return {
+            x: p.R * Math.sin(a),
+            y: y + 0.3,
+            vx: v * Math.cos(a),
+            vy: v * Math.sin(a),
+            speed: Math.abs(v),
+            N,
+            E: 0.5 * p.m * v * v + p.m * p.g * y,
+            fx: p.m * (-p.g * Math.sin(a) * Math.cos(a) - p.R * w * w * Math.sin(a)),
+            fy: p.m * (-p.g * Math.sin(a) ** 2 + p.R * w * w * Math.cos(a))
+          };
+        }
+      )
+  );
+
+  add(
+    'torque',
+    '固定軸轉動與力矩',
+    '圓周與轉動',
+    'rotor',
+    [mass, P('R', '圓盤半徑', 1, 5, 0.5, 3, 'm'), P('F', '切向力', -10, 10, 0.5, 3, 'N')],
+    [M('omega', '角速度', 'rad/s'), M('alpha', '角加速度', 'rad/s²'), M('torque', '力矩', 'N·m')],
+    'I = ½mR²；τ = FR；α = τ/I；ω = αt',
+    '均勻圓盤固定軸旋轉，切向外力持續作用在邊緣。不計軸摩擦，初始靜止；觀察 6 秒。',
+    ['相同外力與質量，半徑加倍如何改變角加速度？', '角速度增加時，角加速度是否也增加？'],
+    p => {
+      const I = 0.5 * p.m * p.R * p.R,
+        alpha = (p.F * p.R) / I;
+      return trajectory(6, t => ({
+        x: 0,
+        y: 1,
+        theta: 0.5 * alpha * t * t,
+        omega: alpha * t,
+        alpha,
+        torque: p.F * p.R,
+        K: 0.5 * I * (alpha * t) ** 2
+      }));
+    }
+  );
+
+  add(
+    'rolling',
+    '斜面純滾動',
+    '圓周與轉動',
+    'rolling',
+    [
+      mass,
+      P('R', '半徑', 0.3, 1, 0.1, 0.5, 'm'),
+      P('angle', '斜面傾角', 5, 45, 1, 20, '°'),
+      P('beta', '慣量係數 I/(mR²)', 0.4, 1, 0.1, 0.5),
+      gravity
+    ],
+    [M('speed', '質心速率', 'm/s'), M('omega', '角速度', 'rad/s'), M('E', '機械能', 'J')],
+    'a = g sinα/(1 + β)；ω = v/R；I = βmR²',
+    '無滑動純滾動；β = 0.4 實心球、0.5 圓柱、1 薄環。假設靜摩擦足夠，位能零點為起始質心下降 12sinα 的位置。',
+    ['為什麼純滾動的靜摩擦不耗散機械能？', '不同半徑但相同 β 的物體，誰先到坡底？'],
+    p => {
+      const a = rad(p.angle),
+        acc = (p.g * Math.sin(a)) / (1 + p.beta),
+        T = Math.sqrt(24 / acc);
+      return trajectory(T, t => {
+        const s = 0.5 * acc * t * t,
+          v = acc * t,
+          K = 0.5 * p.m * v * v * (1 + p.beta),
+          U = p.m * p.g * (12 - s) * Math.sin(a);
+        return {
+          x: s * Math.cos(a) - 5 + p.R * Math.sin(a),
+          y: (12 - s) * Math.sin(a) + p.R * Math.cos(a),
+          vx: v * Math.cos(a),
+          vy: -v * Math.sin(a),
+          speed: v,
+          omega: v / p.R,
+          theta: s / p.R,
+          E: K + U,
+          K,
+          U,
+          s,
+          ax: acc,
+          fx: p.m * acc * Math.cos(a),
+          fy: -p.m * acc * Math.sin(a)
+        };
+      });
+    }
+  );
+
+  add(
+    'lever',
+    '槓桿平衡與合力矩',
+    '圓周與轉動',
+    'lever',
+    [
+      P('m1', '左側質量', 0.5, 10, 0.5, 2, 'kg'),
+      P('m2', '右側質量', 0.5, 10, 0.5, 3, 'kg'),
+      P('L1', '左側力臂', 0.5, 4, 0.5, 3, 'm'),
+      P('L2', '右側力臂', 0.5, 4, 0.5, 2, 'm'),
+      gravity
+    ],
+    [M('left', '左側力矩大小', 'N·m'), M('right', '右側力矩大小', 'N·m'), M('net', '合力矩（逆時針正）', 'N·m')],
+    'Στ = m₁gL₁ − m₂gL₂；平衡時 Στ = 0',
+    '靜力學實驗，槓桿固定在水平位置以量測所需約束力矩；播放不會讓失衡槓桿自行旋轉。支點垂直支持力為 (m₁ + m₂)g。',
+    ['把較輕的重物放得更遠，能否平衡？', '力矩平衡是否同時保證合力為零？'],
+    p =>
+      trajectory(1, () => ({
+        x: 0,
+        y: 3,
+        left: p.m1 * p.g * p.L1,
+        right: p.m2 * p.g * p.L2,
+        net: p.g * (p.m1 * p.L1 - p.m2 * p.L2),
+        support: (p.m1 + p.m2) * p.g
+      }))
+  );
+
+  add(
+    'spring',
+    '彈簧簡諧運動',
+    '振動',
+    'spring',
+    oscillation,
+    [M('q', '相對平衡位移', 'm'), M('vx', '速度', 'm/s'), M('E', '機械能', 'J')],
+    'ω = √(k/m)；x = A cosωt；T = 2π√(m/k)',
+    '水平光滑面，理想彈簧與質點，無阻尼；從最大伸長處靜止釋放。位能以平衡點為零。',
+    ['振幅加倍如何改變週期與總能量？', '動能與位能各自在什麼位置最大？'],
+    p => {
+      const w = Math.sqrt(p.k / p.m);
+      return trajectory(
+        Math.min(30, (8 * Math.PI) / w),
+        t => {
+          const x = p.A * Math.cos(w * t),
+            v = -p.A * w * Math.sin(w * t),
+            K = 0.5 * p.m * v * v,
+            U = 0.5 * p.k * x * x;
+          return { x, q: x, vx: v, fx: -p.k * x, K, U, E: K + U };
+        },
+        {
+          positionPlot: {
+            min: -p.A,
+            max: p.A,
+            key: 'q',
+            label: '相對平衡位置',
+            unit: 'm',
+            series: [
+              { key: 'K', label: '動能', color: '#8ee0c0', value: x => 0.5 * p.k * (p.A * p.A - x * x) },
+              { key: 'U', label: '彈性位能', color: '#ffb36b', value: x => 0.5 * p.k * x * x },
+              { key: 'E', label: '總能', color: '#bc9de5', value: () => 0.5 * p.k * p.A * p.A }
+            ]
+          }
+        }
+      );
+    }
+  );
+  defs.at(-1).plotMetrics = [...defs.at(-1).metrics, M('K', '動能', 'J'), M('U', '彈性位能', 'J')];
+
+  function oscillator(p, driven) {
+    const c = p.c,
+      F = driven ? p.F : 0,
+      w = driven ? p.w : 0;
+    return integrated(
+      20,
+      [p.A, 0],
+      (t, s) => [s[1], (-p.k * s[0] - c * s[1] + F * Math.cos(w * t)) / p.m],
+      (s, t) => {
+        const K = 0.5 * p.m * s[1] ** 2,
+          U = 0.5 * p.k * s[0] ** 2;
+        return {
+          x: s[0],
+          q: s[0],
+          vx: s[1],
+          fx: -p.k * s[0] - c * s[1] + F * Math.cos(w * t),
+          K,
+          U,
+          E: K + U,
+          drive: F * Math.cos(w * t)
+        };
+      }
+    );
+  }
+  add(
+    'damped',
+    '阻尼振動：鉛直彈簧與阻尼器',
+    '振動',
+    'damped-vertical',
+    [...oscillation, P('c', '阻尼係數', 0, 12, 0.2, 1, 'kg/s')],
+    energyMetrics,
+    'mq̈+cq̇+kq=0；Ė=−cq̇²；ζ=c/(2√mk)',
+    '鉛直理想彈簧與黏滯阻尼器並聯，上端固定。q向上為正、以靜力平衡位置為零，初始q=A、速度零；重力9.81m/s²已包含在平衡伸長中，運動方程不再重複加入mg。彈簧可拉可推，不採鬆繩近似。阻尼力為−cq̇，和速度反向；彈簧力=mg−kq、重力=−mg，因此合力為−kq−cq̇。ζ<1欠阻尼、ζ=1臨界、ζ>1過阻尼；改變m、k後臨界c也會改變。能量採相對平衡點的有效位能kq²/2，與真實彈性＋重力位能僅差常數。耗散能=初始能−目前能。裝置高度自動調整避免地面接觸；觀察20秒。',
+    ['臨界阻尼c=2√(mk)時，回到平衡位置有何特色？', '阻尼力最大時與能量耗散最快時有什麼關係？'],
+    p => {
+      const motion = oscillator(p, false),
+        height = Math.max(4, p.A + 1),
+        rest = p.A + 1,
+        pivot = height + rest + (p.m * 9.81) / p.k;
+      return trajectory(
+        motion.duration,
+        t => {
+          const s = motion.sample(t),
+            q = s.q,
+            v = s.vx;
+          return {
+            x: 0,
+            y: height + q,
+            z: 0,
+            vx: 0,
+            vy: v,
+            fx: 0,
+            fy: s.fx,
+            q,
+            velocity: v,
+            K: s.K,
+            U: s.U,
+            E: s.E,
+            springForce: p.m * 9.81 - p.k * q,
+            damperForce: -p.c * v,
+            gravityForce: -p.m * 9.81,
+            dissipated: 0.5 * p.k * p.A * p.A - s.E,
+            dissipationRate: p.c * v * v,
+            dampingRatio: p.c / (2 * Math.sqrt(p.m * p.k)),
+            criticalC: 2 * Math.sqrt(p.m * p.k)
+          };
+        },
+        {
+          equilibriumY: height,
+          pivotY: pivot,
+          events: [{ t: 0, label: '從平衡位置上方靜止釋放；ζ=' + (p.c / (2 * Math.sqrt(p.m * p.k))).toFixed(3) }],
+          bounds: { min: [-2, 0, -1], max: [2, pivot + 1, 1] }
+        }
+      );
+    }
+  );
+  const dampedDef = defs.find(d => d.id === 'damped');
+  dampedDef.plotMetrics = [
+    M('q', '相對平衡位移 ↑', 'm'),
+    M('velocity', '鉛直速度 ↑', 'm/s'),
+    M('springForce', '彈簧力 ↑', 'N'),
+    M('damperForce', '阻尼力 ↑', 'N'),
+    M('dissipated', '耗散能量', 'J'),
+    M('dissipationRate', '耗散功率', 'W'),
+    M('dampingRatio', '阻尼比ζ', ''),
+    M('criticalC', '臨界阻尼係數', 'kg/s')
+  ];
+  add(
+    'driven',
+    '受迫振動與共振',
+    '振動',
+    'spring',
+    [
+      ...oscillation,
+      P('c', '阻尼係數', 0.2, 8, 0.2, 1, 'kg/s'),
+      P('F', '驅動力振幅', 0, 10, 0.5, 3, 'N'),
+      P('w', '驅動角頻率', 0.2, 6, 0.1, 2, 'rad/s')
+    ],
+    [M('q', '位移', 'm'), M('drive', '瞬時驅動力', 'N'), M('E', '機械能', 'J')],
+    'mẍ + cẋ + kx = F₀ cosΩt；ω₀ = √(k/m)',
+    '顯示初始暫態與持續驅動的合成運動。觀察 20 秒，不假定已達穩態；小阻尼時可看到拍頻與共振增幅。',
+    ['驅動頻率接近固有頻率時會發生什麼？', '阻尼增大會如何改變共振峰？'],
+    p => oscillator(p, true)
+  );
+
+  add(
+    'pendulum',
+    '單擺與大角度擺動',
+    '振動',
+    'pendulum',
+    [mass, P('L', '擺長', 1, 8, 0.5, 4, 'm'), P('angle', '初始擺角', 5, 100, 1, 35, '°'), gravity],
+    [M('angle', '擺角', '°'), M('speed', '速率', 'm/s'), M('E', '機械能', 'J')],
+    'θ̈ = −(g/L)sinθ；小角近似 T ≈ 2π√(L/g)',
+    '由指定角度靜止釋放，採完整非線性方程；使用剛性無質量擺桿，因此大於 90° 時仍維持約束。忽略阻力與支點摩擦。',
+    ['大角度時週期是否仍與振幅無關？', '擺球質量會影響週期嗎？'],
+    p =>
+      integrated(
+        Math.min(30, 8 * Math.PI * Math.sqrt(p.L / p.g)),
+        [rad(p.angle), 0],
+        (_, s) => [s[1], (-p.g / p.L) * Math.sin(s[0])],
+        s => {
+          const a = s[0],
+            v = p.L * s[1],
+            y = p.L * (1 - Math.cos(a)),
+            K = 0.5 * p.m * v * v,
+            U = p.m * p.g * y;
+          return {
+            x: p.L * Math.sin(a),
+            y: y + 1,
+            vx: v * Math.cos(a),
+            vy: v * Math.sin(a),
+            angle: (a * 180) / Math.PI,
+            speed: Math.abs(v),
+            K,
+            U,
+            E: K + U,
+            fx: p.m * (-p.g * Math.sin(a) * Math.cos(a) - p.L * s[1] ** 2 * Math.sin(a)),
+            fy: p.m * (-p.g * Math.sin(a) ** 2 + p.L * s[1] ** 2 * Math.cos(a))
+          };
+        }
+      )
+  );
+
+  add(
+    'orbit',
+    '行星軌道與距離指數',
+    '萬有引力',
+    'orbit',
+    [
+      P('GM', '初始半徑重力參數 GM', 20, 300, 10, 100, 'm³/s²'),
+      P('R', '初始距離', 3, 12, 0.5, 6, 'm'),
+      P('ratio', '初速／圓軌道速率', 0.65, 1.6, 0.05, 1),
+      P('N', '中心引力距離指數', -1, 4, 0.1, 2)
+    ],
+    [M('r', '距中心距離', 'm'), M('energy', '單位質量機械能', 'J/kg'), M('angular', '單位質量角動量', 'm²/s')],
+    'a = −(GM/R₀²)(R₀/r)ᴺ r̂；v圓(R₀)=√(GM/R₀)；U′(r)=GM R₀⁽ᴺ⁻²⁾/rᴺ',
+    '教學尺度的中心力模型，測試質量1kg；初速沿+z。N=2為平方反比引力，N=1位能為對數。改變N時固定初始半徑R₀的引力GM/R₀²，因此可直接比較相同初速下的軌道；並非把不同量綱的係數當成相同GM。位能以U(R₀)=−GM/R₀統一零點；N=2恰為−GM/r，其餘N不以正負能量直接判定逃逸。球為質點，中心球圖示不參與幾何碰撞。自適應RK4步長，以兩次半步檢查誤差；觀察至多兩個初始圓軌道週期（上限60秒）。接近r=0.6m或超出50R₀時於界線前停止，保留速度，不模擬中心碰撞；可能進動或不閉合，不強制套橢圓。',
+    ['非平方反比引力的軌道是否仍為閉合橢圓？', '為何所有中心力仍保存角動量與面積速率？'],
+    p => {
+      const N = p.N ?? 2,
+        v = p.ratio * Math.sqrt(p.GM / p.R),
+        limit = Math.min(60, 4 * Math.PI * Math.sqrt(p.R ** 3 / p.GM)),
+        rows = [[0, p.R, 0, 0, v]],
+        f = s => {
+          const r = Math.hypot(s[0], s[1]),
+            factor = ((-p.GM / (p.R * p.R)) * Math.pow(p.R / Math.max(r, 0.01), N)) / Math.max(r, 0.01);
+          return [s[2], s[3], factor * s[0], factor * s[1]];
+        },
+        rk = (s, h) => {
+          const a = f(s),
+            b = f(s.map((v, j) => v + (h * a[j]) / 2)),
+            c = f(s.map((v, j) => v + (h * b[j]) / 2)),
+            d = f(s.map((v, j) => v + h * c[j]));
+          return s.map((v, j) => v + (h * (a[j] + 2 * b[j] + 2 * c[j] + d[j])) / 6);
+        };
+      let time = 0,
+        state = rows[0].slice(1),
+        h = 0.005 * Math.sqrt(p.R ** 3 / p.GM),
+        endLabel = '觀察時間結束';
+      for (let i = 0; time < limit && i < 200000; i++) {
+        h = Math.min(h, limit - time, 0.03 * Math.sqrt(p.R ** 3 / p.GM));
+        const full = rk(state, h),
+          half = rk(rk(state, h / 2), h / 2),
+          error = Math.max(...half.map((x, j) => Math.abs(x - full[j]) / (1 + Math.abs(x))));
+        if (error > 1e-10 && h > 1e-8) {
+          h *= Math.max(0.2, 0.8 * Math.pow(1e-10 / error, 0.2));
+          continue;
+        }
+        const r = Math.hypot(half[0], half[1]);
+        if (r <= 0.6 || r >= 50 * p.R) {
+          const inner = r <= 0.6,
+            bound = inner ? 0.6 : 50 * p.R;
+          let l = 0,
+            u = h;
+          for (let k = 0; k < 45; k++) {
+            const m = (l + u) / 2,
+              s = rk(rk(state, m / 2), m / 2),
+              rr = Math.hypot(s[0], s[1]);
+            if (inner ? rr > bound : rr < bound) l = m;
+            else u = m;
+          }
+          h = (l + u) / 2;
+          state = rk(rk(state, h / 2), h / 2);
+          time += h;
+          rows.push([time, ...state]);
+          endLabel = inner ? '接近中心0.6m界線，碰撞前停止' : '超出50倍初始半徑，停止觀察';
+          break;
+        }
+        state = half;
+        time += h;
+        rows.push([time, ...state]);
+        h *= error < 1e-14 ? 2 : Math.min(2, 0.9 * Math.pow(1e-10 / error, 0.2));
+      }
+      if (time < limit && endLabel === '觀察時間結束') endLabel = '達自適應步數上限，停止於最後已解狀態';
+      return trajectory(
+        time,
+        t => {
+          let lo = 0,
+            hi = rows.length - 1;
+          while (hi - lo > 1) {
+            const mid = (lo + hi) >> 1;
+            if (rows[mid][0] <= t) lo = mid;
+            else hi = mid;
+          }
+          const a = rows[lo],
+            dt = t - a[0],
+            s = rk(rk(a.slice(1), dt / 2), dt / 2),
+            r = Math.hypot(s[0], s[1]),
+            K = 0.5 * (s[2] * s[2] + s[3] * s[3]),
+            log = Math.log(r / p.R),
+            U = (p.GM / p.R) * (Math.abs(N - 1) < 1e-10 ? log : Math.expm1((1 - N) * log) / (1 - N)) - p.GM / p.R,
+            acc = f(s);
+          return {
+            x: s[0],
+            z: s[1],
+            y: 1,
+            vx: s[2],
+            vz: s[3],
+            fx: acc[2],
+            fz: acc[3],
+            r,
+            energy: K + U,
+            angular: s[0] * s[3] - s[1] * s[2],
+            K,
+            U,
+            areaRate: (s[0] * s[3] - s[1] * s[2]) / 2,
+            force: Math.hypot(acc[2], acc[3])
+          };
+        },
+        {
+          events: [
+            { t: 0, label: '距離指數N=' + N.toFixed(1) },
+            { t: time, label: endLabel }
+          ],
+          endLabel,
+          acceptedSteps: rows.length - 1
+        }
+      );
+    }
+  );
+  const orbitDef = defs.find(d => d.id === 'orbit');
+  orbitDef.plotMetrics = [
+    M('K', '單位質量動能', 'J/kg'),
+    M('U', '單位質量位能', 'J/kg'),
+    M('areaRate', '面積速率', 'm²/s'),
+    M('force', '引力（1kg）', 'N')
+  ];
+
+  add(
+    'collision-2d',
+    '二維偏心碰撞與自轉',
+    '能量與動量',
+    'collision2d',
+    [
+      P('m1', '球1質量', 0.5, 8, 0.5, 2, 'kg'),
+      P('m2', '球2質量', 0.5, 8, 0.5, 2, 'kg'),
+      P('v', '球1初速', 1, 8, 0.5, 4, 'm/s'),
+      P('b', '球1初始 z 偏心', -0.9, 0.9, 0.05, 0.5, 'm'),
+      P('e', '法向恢復係數', 0, 1, 0.05, 1),
+      P('angle1', '球1方向（+x往+z）', -180, 180, 10, 0, '°'),
+      P('v2', '球2初速', 0, 8, 0.5, 0, 'm/s'),
+      P('angle2', '球2方向（+x往+z）', -180, 180, 10, 180, '°'),
+      P('roughMode', '表面：0光滑／1摩擦／2切向不滑', 0, 2, 1, 0),
+      P('muContact', '接觸摩擦係數', 0, 1.5, 0.1, 0.5),
+      P('spin1', '球1初始自轉（+y）', -10, 10, 1, 0, 'rad/s'),
+      P('spin2', '球2初始自轉（+y）', -10, 10, 1, 0, 'rad/s')
+    ],
+    [M('px', '總 x 動量', 'kg·m/s'), M('pz', '總 z 動量', 'kg·m/s'), M('K', '平動＋轉動動能', 'J')],
+    'Jₙ=(1+e)gₙ/(1/m₁+1/m₂)；Jₜ=clamp(gₜ/D, ±μJₙ)；D=1/m₁+1/m₂+R²/I₁+R²/I₂',
+    '水平面兩個半徑0.5m均勻實心球，I=2mR²/5。只處理一次瞬時球間碰撞，地面只支撐重力，不提供水平摩擦或滾動拘束。初始球1=(-4,b)、球2=(0,0)，方向角由+x轉向+z。精確解相對軌跡與接觸圓交點；無接近交點則無碰撞，不強迫相撞。光滑模式無切向衝量；摩擦模式以μJₙ限制使相對接觸切向速度歸零所需衝量；切向不滑模式等同摩擦上限無限。切向衝量同時改變兩球平動與自轉，不採切向彈性回彈。即使法向e=1，粗糙接觸仍可耗能。自轉以+y為正，圖上色點表示姿態。最長等待12秒，命中後再觀察3秒；沒有邊牆碰撞。',
+    ['兩球等質量、球2靜止、光滑彈性碰撞時，出射速度為何垂直？', '切向衝量如何同時改變平動、自轉與總動能？'],
+    p => {
+      const R = 0.5,
+        I1 = 0.4 * p.m1 * R * R,
+        I2 = 0.4 * p.m2 * R * R,
+        a1 = rad(p.angle1),
+        a2 = rad(p.angle2),
+        u1 = [p.v * Math.cos(a1), p.v * Math.sin(a1)],
+        u2 = [p.v2 * Math.cos(a2), p.v2 * Math.sin(a2)],
+        q = [-4, p.b],
+        u = [u1[0] - u2[0], u1[1] - u2[1]],
+        A = u[0] * u[0] + u[1] * u[1],
+        B = q[0] * u[0] + q[1] * u[1],
+        C = q[0] * q[0] + q[1] * q[1] - 1,
+        disc = B * B - A * C,
+        candidate = A > 1e-15 && B < 0 && disc >= 0 ? (-B - Math.sqrt(disc)) / A : null,
+        hit = candidate !== null && candidate >= 0 && candidate <= 12 ? candidate : null;
+      let nx = 1,
+        nz = 0,
+        Jn = 0,
+        Jt = 0,
+        w1 = p.spin1,
+        w2 = p.spin2,
+        v1 = u1.slice(),
+        v2 = u2.slice();
+      if (hit !== null) {
+        nx = -(q[0] + u[0] * hit);
+        nz = -(q[1] + u[1] * hit);
+        const gn = u[0] * nx + u[1] * nz,
+          gt = -u[0] * nz + u[1] * nx - R * (w1 + w2),
+          D = 1 / p.m1 + 1 / p.m2 + (R * R) / I1 + (R * R) / I2;
+        Jn = ((1 + p.e) * Math.max(0, gn)) / (1 / p.m1 + 1 / p.m2);
+        const need = gt / D;
+        Jt =
+          Jn <= 1e-10
+            ? 0
+            : p.roughMode === 2
+              ? need
+              : p.roughMode === 1
+                ? clamp(need, -p.muContact * Jn, p.muContact * Jn)
+                : 0;
+        const ix = Jn * nx - Jt * nz,
+          iz = Jn * nz + Jt * nx;
+        v1 = [u1[0] - ix / p.m1, u1[1] - iz / p.m1];
+        v2 = [u2[0] + ix / p.m2, u2[1] + iz / p.m2];
+        w1 += (R * Jt) / I1;
+        w2 += (R * Jt) / I2;
+      }
+      const K0 =
+        0.5 * p.m1 * p.v * p.v + 0.5 * p.m2 * p.v2 * p.v2 + 0.5 * I1 * p.spin1 * p.spin1 + 0.5 * I2 * p.spin2 * p.spin2;
+      return trajectory(
+        hit === null ? 6 : hit + 3,
+        t => {
+          const after = hit !== null && t >= hit,
+            dt = after ? t - hit : 0,
+            pre = after ? hit : t,
+            a = after ? v1 : u1,
+            b = after ? v2 : u2,
+            spin1 = after ? w1 : p.spin1,
+            spin2 = after ? w2 : p.spin2,
+            x = -4 + u1[0] * pre + v1[0] * dt,
+            z = p.b + u1[1] * pre + v1[1] * dt,
+            x2 = u2[0] * pre + v2[0] * dt,
+            z2 = u2[1] * pre + v2[1] * dt,
+            Ktrans = 0.5 * p.m1 * (a[0] * a[0] + a[1] * a[1]) + 0.5 * p.m2 * (b[0] * b[0] + b[1] * b[1]),
+            Krot = 0.5 * I1 * spin1 * spin1 + 0.5 * I2 * spin2 * spin2,
+            K = Ktrans + Krot;
+          return {
+            x,
+            y: 1,
+            z,
+            x2,
+            y2: 1,
+            z2,
+            vx: a[0],
+            vz: a[1],
+            vx2: b[0],
+            vz2: b[1],
+            px: p.m1 * a[0] + p.m2 * b[0],
+            pz: p.m1 * a[1] + p.m2 * b[1],
+            K,
+            Ktrans,
+            Krot,
+            loss: Math.max(0, K0 - K),
+            spin1,
+            spin2,
+            theta1: p.spin1 * pre + w1 * dt,
+            theta2: p.spin2 * pre + w2 * dt,
+            Jn: after ? Jn : 0,
+            Jt: after ? Jt : 0,
+            collided: +after,
+            angularMomentum: p.m1 * (z * a[0] - x * a[1]) + p.m2 * (z2 * b[0] - x2 * b[1]) + I1 * spin1 + I2 * spin2
+          };
+        },
+        {
+          hitTime: hit,
+          normal: [nx, nz],
+          impulses: [Jn, Jt],
+          inertias: [I1, I2],
+          events:
+            hit === null
+              ? [{ t: 0, label: '目前初值在12秒等待內不接觸' }]
+              : [{ t: hit, label: '球間碰撞：法向與切向衝量' }]
+        }
+      );
+    }
+  );
+  const collision2dDef = defs.find(d => d.id === 'collision-2d');
+  collision2dDef.plotMetrics = [
+    M('Ktrans', '平動動能', 'J'),
+    M('Krot', '轉動動能', 'J'),
+    M('loss', '耗散能量', 'J'),
+    M('spin1', '球1自轉', 'rad/s'),
+    M('spin2', '球2自轉', 'rad/s'),
+    M('angularMomentum', '總 y 角動量', 'kg·m²/s')
+  ];
+
+  add(
+    'center-of-mass',
+    '質心與內力',
+    '能量與動量',
+    'pair-spring',
+    [
+      P('m1', '左側質量', 0.5, 8, 0.5, 2, 'kg'),
+      P('m2', '右側質量', 0.5, 8, 0.5, 3, 'kg'),
+      P('k', '內部彈簧常數', 1, 20, 0.5, 5, 'N/m'),
+      P('A', '初始伸長量', 0.2, 2, 0.1, 1, 'm'),
+      P('v', '質心初速', -2, 2, 0.2, 0, 'm/s')
+    ],
+    [M('com', '質心位置', 'm'), M('momentum', '總動量', 'kg·m/s'), M('E', '總機械能', 'J')],
+    'M ẍ質心 = F外 = 0；ω² = k(1/m₁ + 1/m₂)',
+    '光滑水平軌道上兩物塊以無質量彈簧相連，原長 4 m；內力大小相等、方向相反。質心等速移動，即使兩塊持續振動。',
+    ['不相等質量的兩物塊，誰相對質心的振幅較大？', '內力能否讓整個系統的質心加速？'],
+    p => {
+      const M = p.m1 + p.m2,
+        w = Math.sqrt(p.k * (1 / p.m1 + 1 / p.m2));
+      return trajectory(Math.min(20, (8 * Math.PI) / w), t => {
+        const q = p.A * Math.cos(w * t),
+          r = 4 + q,
+          dr = -p.A * w * Math.sin(w * t),
+          com = p.v * t,
+          v1 = p.v - (p.m2 / M) * dr,
+          v2 = p.v + (p.m1 / M) * dr,
+          K = 0.5 * p.m1 * v1 * v1 + 0.5 * p.m2 * v2 * v2,
+          U = 0.5 * p.k * q * q;
+        return {
+          x: com - (p.m2 / M) * r,
+          x2: com + (p.m1 / M) * r,
+          y: 0.5,
+          vx: v1,
+          v2,
+          com,
+          momentum: p.m1 * v1 + p.m2 * v2,
+          K,
+          U,
+          E: K + U,
+          fx: p.k * q
+        };
+      });
+    }
+  );
+
+  add(
+    'angular-momentum',
+    '收臂旋轉與角動量',
+    '圓周與轉動',
+    'skater',
+    [
+      P('m', '每個手持物質量', 0.5, 4, 0.5, 1, 'kg'),
+      P('I', '身體轉動慣量', 1, 8, 0.5, 2, 'kg·m²'),
+      P('r0', '初始臂長', 0.5, 3, 0.1, 2, 'm'),
+      P('r1', '最後臂長', 0.5, 3, 0.1, 0.6, 'm'),
+      P('w', '初始角速度', 0.2, 3, 0.1, 1, 'rad/s')
+    ],
+    [M('inertia', '總轉動慣量', 'kg·m²'), M('omega', '角速度', 'rad/s'), M('angular', '角動量', 'kg·m²/s')],
+    'L = I總ω = 常數；I總 = I身體 + 2mr²',
+    '水平無外力矩轉台，兩個手持物對稱移動。4 秒內以平滑曲線改變臂長，之後維持；角動量守恆。收臂由內部致動器作功，因此轉動動能可以增加。速度箭頭顯示手持物，整體合力為零。',
+    ['收臂時增加的動能從哪裡來？', '若反過來伸臂，角速度會如何變化？'],
+    p => {
+      const angular = (p.I + 2 * p.m * p.r0 ** 2) * p.w,
+        radius = t => {
+          const f = clamp(t / 4, 0, 1);
+          return p.r0 + (p.r1 - p.r0) * (3 * f * f - 2 * f * f * f);
+        };
+      return integrated(
+        8,
+        [0],
+        t => [angular / (p.I + 2 * p.m * radius(t) ** 2)],
+        (s, t) => {
+          const r = radius(t),
+            inertia = p.I + 2 * p.m * r * r,
+            omega = angular / inertia;
+          return {
+            x: 0,
+            y: 1,
+            theta: s[0],
+            radius: r,
+            rdot: t < 4 ? ((p.r1 - p.r0) * (6 * (t / 4) - 6 * (t / 4) ** 2)) / 4 : 0,
+            inertia,
+            omega,
+            angular,
+            K: 0.5 * inertia * omega * omega
+          };
+        }
+      );
+    }
+  );
+
+  add(
+    'massive-pulley',
+    '有轉動慣量的滑輪',
+    '圓周與轉動',
+    'massive-pulley',
+    [
+      P('m1', '左側質量', 0.5, 8, 0.5, 2, 'kg'),
+      P('m2', '右側質量', 0.5, 8, 0.5, 3, 'kg'),
+      P('mp', '滑輪質量', 0.5, 8, 0.5, 2, 'kg'),
+      P('R', '滑輪半徑', 1, 2, 0.1, 1.5, 'm'),
+      gravity
+    ],
+    [M('a', '左側向上加速度', 'm/s²'), M('T1', '左側張力', 'N'), M('T2', '右側張力', 'N')],
+    'I = ½M滑輪R²；a = (m₂ − m₁)g/(m₁ + m₂ + I/R²)；(T₂ − T₁)R = Iα',
+    '均勻圓盤滑輪，繩不打滑且無質量；軸無摩擦。兩側張力一般不同。任一側由靜止移動 3 m 後停止；圓盤標線顯示轉角。',
+    ['為什麼有慣量的滑輪兩側張力不相等？', '固定滑輪質量，改變半徑為何不改變線加速度？'],
+    p => {
+      const a = ((p.m2 - p.m1) * p.g) / (p.m1 + p.m2 + 0.5 * p.mp),
+        T = Math.abs(a) > 1e-10 ? Math.sqrt(6 / Math.abs(a)) : 8;
+      return trajectory(T, t => ({
+        x: -p.R,
+        y: 4 + 0.5 * a * t * t,
+        x2: p.R,
+        y2: 4 - 0.5 * a * t * t,
+        vy: a * t,
+        a,
+        T1: p.m1 * (p.g + a),
+        T2: p.m2 * (p.g - a),
+        theta: (0.5 * a * t * t) / p.R,
+        s: 0.5 * a * t * t,
+        fy: p.m1 * a
+      }));
+    }
+  );
+
+  add(
+    'bungee',
+    '高空彈跳',
+    '振動',
+    'bungee',
+    [
+      P('h', '跳台高度', 20, 140, 5, 80, 'm'),
+      P('L', '繩索原長', 5, 60, 1, 25, 'm'),
+      P('m', '跳躍者質量', 40, 120, 5, 70, 'kg'),
+      P('k', '繩索彈性係數', 20, 200, 5, 90, 'N/m'),
+      P('c', '繩索阻尼係數', 0, 120, 5, 35, 'kg/s'),
+      gravity
+    ],
+    [M('y', '離地高度', 'm'), M('vy', '鉛直速度', 'm/s'), M('tension', '繩索張力', 'N')],
+    '伸長量 e = max(0, h − y − L)；拉緊時 T = max(0, ke − cvᵧ)；mÿ = T − mg',
+    '由跳台靜止落下，y 軸向上。繩索鬆弛時張力為零；伸長後採彈性與黏滯阻尼，繩索只能拉、不能推。人物以腳踝繩索連接點的質點計算，忽略空氣阻力、繩重及人體姿態。觀察 30 秒，若連接點抵達地面則在接觸前瞬間停止。人物大小僅為示意。',
+    ['繩索拉直時，速度會立刻變成零嗎？', '固定繩長與質量，增加彈性係數或阻尼，最低點和反彈幅度如何改變？'],
+    p => {
+      const tension = (y, v) => {
+          const e = p.h - y - p.L;
+          return e >= 0 ? Math.max(0, p.k * e - p.c * v) : 0;
+        },
+        taut = Math.sqrt((2 * p.L) / p.g);
+      const stretched = integrated(
+        30 - taut,
+        [p.h - p.L, -p.g * taut],
+        (_, s) => [s[1], tension(s[0], s[1]) / p.m - p.g],
+        s => {
+          const extension = Math.max(0, p.h - s[0] - p.L),
+            T = tension(s[0], s[1]),
+            K = 0.5 * p.m * s[1] ** 2,
+            U = p.m * p.g * s[0] + 0.5 * p.k * extension ** 2;
+          return { y: s[0], vy: s[1], fy: T - p.m * p.g, tension: T, extension, drop: p.h - s[0], K, U, E: K + U };
+        }
+      );
+      const motion = trajectory(30, t =>
+        t < taut
+          ? {
+              y: p.h - 0.5 * p.g * t * t,
+              vy: -p.g * t,
+              fy: -p.m * p.g,
+              tension: 0,
+              extension: 0,
+              drop: 0.5 * p.g * t * t,
+              K: 0.5 * p.m * (p.g * t) ** 2,
+              U: p.m * p.g * (p.h - 0.5 * p.g * t * t),
+              E: p.m * p.g * p.h
+            }
+          : stretched.sample(t - taut)
+      );
+      let duration = 30,
+        contact = false;
+      for (let i = 1; i <= 7200; i++) {
+        const time = i / 240;
+        if (motion.sample(time).y <= 0) {
+          let lo = (i - 1) / 240,
+            hi = time;
+          for (let j = 0; j < 40; j++) {
+            const mid = (lo + hi) / 2;
+            if (motion.sample(mid).y > 0) lo = mid;
+            else hi = mid;
+          }
+          duration = (lo + hi) / 2;
+          contact = true;
+          break;
+        }
+      }
+      const events = [],
+        markers = [],
+        elasticHeight = p.h - p.L - (p.m * p.g) / p.k;
+      function mark(key, time, label, color) {
+        const y = Math.max(0, motion.sample(time).y),
+          event = { key, t: time, y, label, color };
+        events.push(event);
+        markers.push(event);
+        return event;
+      }
+      function crossing(fn, start, direction) {
+        if (start >= duration) return null;
+        let a = start,
+          fa = fn(motion.sample(a));
+        for (let b = Math.min(start + 1 / 120, duration); b <= duration; b = Math.min(b + 1 / 120, duration)) {
+          const fb = fn(motion.sample(b));
+          if (direction > 0 ? fa < -1e-7 && fb > 1e-7 : fa > 1e-7 && fb < -1e-7) {
+            let lo = a,
+              hi = b;
+            for (let j = 0; j < 40; j++) {
+              const mid = (lo + hi) / 2,
+                f = fn(motion.sample(mid));
+              if (direction * f > 0) hi = mid;
+              else lo = mid;
+            }
+            return (lo + hi) / 2;
+          }
+          if (Math.abs(fb) > 1e-7) {
+            a = b;
+            fa = fb;
+          }
+          if (b === duration) break;
+        }
+        return null;
+      }
+      if (taut <= duration) {
+        mark('taut', taut, '繩索首次拉直', '#416e8c');
+        const elastic = crossing(s => p.k * s.extension - p.m * p.g, taut, 1);
+        if (elastic !== null)
+          mark('elastic', elastic, p.c === 0 ? '彈力＝重力／合力為零' : '彈力＝重力（未含阻尼）', '#168579');
+        if (p.c > 0) {
+          const up = crossing(s => s.fy, taut + 1e-6, 1),
+            down = crossing(s => s.fy, taut + 1e-6, -1),
+            balance = up === null ? down : down === null ? up : Math.min(up, down);
+          if (balance !== null && Math.abs(motion.sample(balance).fy) < 0.001)
+            mark('balance', balance, '繩索總拉力＝重力／合力為零', '#8b5ac4');
+        }
+        const low = crossing(s => s.vy, taut, 1);
+        if (low !== null) {
+          mark('lowest', low, '首次最低點（速度為零）', '#b76b26');
+          const high = crossing(s => s.vy, low + 1e-5, -1);
+          if (high !== null) mark('rebound', high, '首次反彈最高點', '#a65073');
+        }
+      }
+      if (contact) mark('ground', duration, '抵達地面，停止模擬', '#a74739');
+      events.sort((a, b) => a.t - b.t);
+      return trajectory(
+        duration,
+        t => {
+          const s = motion.sample(t);
+          return { ...s, y: Math.max(0, s.y) };
+        },
+        { events, markers, elasticHeight, endLabel: contact ? '已抵達地面 · 接觸前瞬間' : '觀察結束 · 30 秒' }
+      );
+    }
+  );
+
+  const api = {
+    defs,
+    G,
+    defaults: d => Object.fromEntries(d.params.map(p => [p.id, p.value])),
+    integrated,
+    register: add,
+    helpers: { P, M, trajectory, integrated, rad, clamp, G }
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.Mechanics = api;
+  if (typeof module !== 'undefined' && module.exports) {
+    require('./models/sun-earth.js');
+    require('./models/moon-earth.js');
+    require('./models/pendulum-angle-comparison.js');
+    require('./models/extended-mechanics.js');
+    require('./models/wave-optics.js');
+    require('./models/airplane-drop.js');
+    require('./models/safe-parabola.js');
+    require('./models/relative-motion.js');
+    require('./models/shoot-monkey.js');
+    require('./models/incline-shadow.js');
+    require('./models/optimal-projectile.js');
+    require('./models/shm-projection.js');
+    require('./models/vertical-spring.js');
+    require('./models/belt-wheels.js');
+    require('./models/slip-or-tip.js');
+    require('./models/block-stack.js');
+    require('./models/self-pull.js');
+    require('./models/moving-atwood.js');
+    require('./models/conveyor-friction.js');
+    require('./models/bike-turn.js');
+    require('./models/projectile-explosion.js');
+    require('./models/recoiling-wedge.js');
+    require('./models/person-boat.js');
+    require('./models/ring-ball.js');
+    require('./models/half-circle.js');
+    require('./models/pulled-spool.js');
+    require('./models/noninertial.js');
+    require('./models/hole-table.js');
+    require('./models/binary-stars.js');
+    require('./models/intercontinental.js');
+    require('./models/projectile-cone.js');
+    require('./models/wall-spring-pair.js');
+    require('./models/spring-wire-cut.js');
+    require('./models/falling-spring.js');
+    require('./models/vertical-spring-pair.js');
+    require('./models/resonance-bank.js');
+    require('./models/coupled-oscillators.js');
+    require('./models/spring-atwood.js');
+    require('./models/ball-rod.js');
+    require('./models/rough-bounce.js');
+    require('./models/joule-experiment.js');
+    require('./models/thermal-lattice.js');
+    require('./models/ideal-gas.js');
+    require('./models/maxwell-distribution.js');
+    require('./models/equipartition.js');
+    require('./models/adiabatic-pistons.js');
+    require('./models/wave-core.js');
+    require('./models/basic-waves.js');
+    require('./models/standing-waves.js');
+    require('./models/string-interface.js');
+    require('./models/wave-function.js');
+    require('./models/two-source-interference.js');
+    require('./models/string-wave-energy.js');
+    require('./models/wave-polarization.js');
+    require('./models/longitudinal-tube.js');
+    require('./models/acoustic-core.js');
+    require('./models/resonance-column.js');
+    require('./models/vacuum-bell.js');
+    require('./models/sound-speed.js');
+    require('./models/echo.js');
+    require('./models/doppler.js');
+    require('./models/sound-elements.js');
+    require('./models/violin-fourier.js');
+    require('./models/sun-earth-moon.js');
+    require('./models/fourier-square.js');
+    require('./models/plane-mirror.js');
+    require('./models/shared-mirror.js');
+    require('./models/double-mirror.js');
+    require('./models/conic-mirror.js');
+    require('./models/image-drawing.js');
+    require('./models/refraction-cart.js');
+    require('./models/layered-refraction.js');
+    require('./models/straw-cup.js');
+    require('./models/apparent-depth.js');
+    require('./models/sphere-lens.js');
+    require('./models/fresnel-core.js');
+    require('./models/fresnel.js');
+    require('./models/eye-lens.js');
+    require('./models/dancing-image.js');
+    require('./models/half-lens.js');
+    require('./models/optical-parallax.js');
+    require('./models/ray-matrix.js');
+    require('./models/optical-instruments.js');
+    require('./models/rainbow.js');
+    require('./models/dolly-zoom.js');
+    require('./models/celestial-sphere.js');
+    require('./models/floating-block-shm.js');
+    require('./models/electroscope.js');
+    require('./models/rgb-lights.js');
+    require('./models/aperture-pattern.js');
+    require('./models/diffraction-amplitudes.js');
+    require('./models/two-charges.js');
+    require('./models/optical-grating.js');
+    require('./models/pv-path.js');
+    require('./models/magnetic-induction.js');
+    require('./models/circuit-rc.js');
+    require('./models/photoelectric.js');
+    require('./models/blackbody-radiation.js');
+    require('./models/hydrogen-spectrum.js');
+    require('./models/radioactive-decay.js');
+    require('./models/thin-film.js');
+    require('./models/matter-wave.js');
+    require('./models/parallel-capacitor.js');
+    require('./models/gauss-surface.js');
+    require('./models/quantum-well.js');
+    require('./models/hydrogen-orbitals.js');
+    require('./models/pn-junction.js');
+    require('./models/rlc-resonance.js');
+    require('./models/eddy-current.js');
+    require('./models/carnot-engine.js');
+    require('./models/wire-magnetic-field.js');
+    require('./models/charged-particle.js');
+    require('./models/generator-transformer.js');
+    require('./models/rutherford-scattering.js');
+    require('./models/nuclear-binding.js');
+    require('./models/optical-polarizers.js');
+    require('./models/hydrostatic-buoyancy.js');
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this);

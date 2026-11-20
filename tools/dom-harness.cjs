@@ -7,6 +7,9 @@ function domHarness(html,width=1100,height=760){
  for(const match of html.matchAll(/<([\w]+)[^>]*\bid="([^"]+)"[^>]*>/g)){const el=new Element(match[1]);el.id=match[2];el.value=(match[0].match(/\bvalue="([^"]*)"/)||[])[1]||'';el.checked=match[0].includes('checked')}
  class TestURL extends URL{static createObjectURL(blob){downloads.push(blob.content);return 'blob:test'}static revokeObjectURL(){}}
  class TestBlob{constructor(parts){this.content=parts.join('')}}
- ids.rate&&(ids.rate.value='1');const sandbox={window:{addEventListener(){}},console,URL:TestURL,URLSearchParams,Blob:TestBlob,Math,devicePixelRatio:1,location:{href:'https://example.test/mechanics.html',search:''},history:{replaceState(){}},requestAnimationFrame(){},ResizeObserver:class{observe(){}},setTimeout(){},document:{getElementById:id=>ids[id],createElement:tag=>new Element(tag),createElementNS:(_,tag)=>new Element(tag),createTextNode:text=>({textContent:text}),addEventListener(){}}};vm.createContext(sandbox);return{sandbox,ids,downloads};
+ ids.rate&&(ids.rate.value='1');const sandbox={window:{addEventListener(){}},console,URL:TestURL,URLSearchParams,Blob:TestBlob,Math,devicePixelRatio:1,location:{href:'https://example.test/mechanics.html',search:''},history:{replaceState(){}},requestAnimationFrame(){},ResizeObserver:class{observe(){}},setTimeout(){},document:{getElementById:id=>ids[id],createElement:tag=>new Element(tag),createElementNS:(_,tag)=>new Element(tag),createTextNode:text=>({textContent:text}),addEventListener(){}}};vm.createContext(sandbox);
+ // 實驗頁按需載入：測試環境沒有 document.write，experiment-loader.js 會改用這個函式載入全部實驗檔案（等同完整頁面）
+ sandbox.__loadScript=file=>vm.runInContext(require('node:fs').readFileSync(require('node:path').join(__dirname,'..',file),'utf8'),sandbox,{filename:file});
+ return{sandbox,ids,downloads};
 }
 module.exports={domHarness};

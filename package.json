@@ -1,0 +1,16 @@
+{
+  "name": "physics-lab-simulations",
+  "private": true,
+  "description": "3D 物理互動實驗室：無外部依賴的瀏覽器物理模擬與驗證",
+  "scripts": {
+    "test": "node verify-all.cjs",
+    "check": "node tools/build-catalog.cjs --check && node tools/build-map-fallback.cjs --check && node tools/check-context.cjs",
+    "build": "node tools/build-catalog.cjs && node tools/build-map-fallback.cjs",
+    "format": "prettier --write \"assets/**/*.{js,css}\" \"models/**/*.js\" mechanics-models.js",
+    "format:check": "prettier --check \"assets/**/*.{js,css}\" \"models/**/*.js\" mechanics-models.js",
+    "preview": "node render-previews.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

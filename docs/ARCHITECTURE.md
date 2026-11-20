@@ -98,3 +98,11 @@ library.html 的 `#learning-map` 由 `assets/atlas.js` 的 `mountAtlas` 掛載�
 | `assets/atlas.css` | 入口、路線圖、星圖與備援樣式；星圖文字以 `--u`（每像素對應的座標單位）換算成固定螢幕大小 |
 
 `#map-fallback` 是 `tools/build-map-fallback.cjs` 產生的無腳本章節清單，腳本載入後隱藏。修改章節資料後執行該工具，`verify-learning-map.cjs` 會以 `--check` 確認一致。驗證：`verify-learning-map.cjs`（資料）、`verify-course-route.cjs`（入口與路線圖）、`verify-star-map.cjs`（星圖）。
+
+## 按需載入
+
+實驗頁只固定載入 11 個共用檔（清單見 `assets/catalog.js` 的 `MechanicsStaticScripts`）；各實驗的模型、核心依賴與場景檔記錄在 `MechanicsCatalog[].files`，由 `assets/experiment-loader.js` 在解析階段以 `document.write` 依序插入（位於 mechanics-controls.js 之前，初始化流程維持同步），切換實驗時再動態載入缺少的檔案。總覽頁只讀 `catalog.js`，不載入任何模型程式。
+
+- `tools/build-catalog.cjs` 由模型定義、`docs/routes.json` 的 modelDependencies／sceneExtensions、`mechanics-scenes.js` 的 kind 分支與場景函式引用產生 catalog；新增或修改實驗後執行，`--check` 驗證一致。共用程式呼叫場景函式時必須以 `def.kind`／`def.id`／`typeof` 保護，否則產生器會報錯。
+- 實驗編號（PHYSICS LAB / NN、卡片序號）依 `mechanics-models.js` 的 require 順序，與原本 HTML 的載入順序一致。
+- DOM 測試支架提供 `__loadScript`，載入器在測試中預設載入全部實驗檔案；`verify-loading.cjs` 以 `__isolatedExperiment` 讓每個實驗只載入自己的檔案，確認清單完整。

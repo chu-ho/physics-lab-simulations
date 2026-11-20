@@ -21,6 +21,9 @@ assert.equal(chapters.length, 19);
 const placed = chapters.flatMap(chapter => chapter.topics.flatMap(topic => topic.labs.map(lab => lab.id)));
 assert.equal(placed.length, catalogue.length, 'every experiment placed exactly once');
 assert.equal(new Set(placed).size, catalogue.length);
+// 每個實驗都要明確指定主題，不可落入依分類自動建立的主題（否則同一章會出現名稱重複的星群）
+const explicit = new Set(vm.runInContext("learningBranches.flatMap(([, , rows]) => rows.flatMap(([, , , topics]) => topics.flatMap(([, ids]) => ids.split(' '))))", sandbox));
+assert.deepEqual(Array.from(catalogue.filter(lab => !explicit.has(lab.id)), lab => lab.id), [], 'experiments without an explicit topic');
 
 const ids = new Set(catalogue.map(lab => lab.id));
 const chapterIds = new Set(chapters.map(chapter => chapter.id));
