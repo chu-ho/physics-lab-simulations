@@ -4,15 +4,15 @@
 
 const learningBranches = [
   ['力學', '#8ee0c0', [
-    ['1.1', '運動學', '運動學 天文', [['運動圖表與參考系', 'acceleration pursuit river relative-motion'], ['拋體運動', 'projectile stairs inclined-projectile vertical airplane-drop safe-parabola shoot-monkey optimal-projectile'], ['天體運動與觀察', 'celestial-sphere sun-earth moon-earth sun-earth-moon']]],
-    ['1.2', '動力學', '牛頓定律 動力學 圓周與轉動 振動 萬有引力', [['受力與摩擦', 'drag friction incline elevator bicycle-friction conveyor-friction atwood table-pulley'], ['動量與碰撞', 'collision collision-2d ballistic-pendulum projectile-explosion center-of-mass ball-rod rough-bounce rocket ring-ball'], ['圓周、轉動與引力', 'circular banked conical torque rolling orbit binary-stars angular-momentum'], ['振動與共振', 'spring damped driven pendulum shm-projection resonance-bank coupled-oscillators bungee']]],
+    ['1.1', '運動學', '運動學 天文', [['運動圖表與參考系', 'acceleration pursuit river relative-motion incline-shadow'], ['拋體運動', 'projectile stairs inclined-projectile vertical airplane-drop safe-parabola shoot-monkey optimal-projectile'], ['天體運動與觀察', 'celestial-sphere sun-earth moon-earth sun-earth-moon']]],
+    ['1.2', '動力學', '牛頓定律 動力學 圓周與轉動 振動 萬有引力', [['受力與摩擦', 'drag friction incline elevator bicycle-friction conveyor-friction atwood table-pulley moving-atwood recoiling-wedge noninertial'], ['動量與碰撞', 'collision collision-2d ballistic-pendulum projectile-explosion center-of-mass ball-rod rough-bounce rocket ring-ball person-boat'], ['圓周與轉動', 'circular banked conical torque rolling angular-momentum massive-pulley belt-wheels bike-turn half-circle pulled-spool hole-table'], ['萬有引力與軌道', 'orbit binary-stars intercontinental projectile-cone'], ['振動與共振', 'spring damped driven pendulum pendulum-angle-comparison shm-projection massive-spring floating-block-shm resonance-bank coupled-oscillators bungee'], ['彈簧與接觸力', 'wall-spring-pair spring-wire-cut falling-spring vertical-spring-pair spring-atwood']]],
     ['1.3', '靜力學', '靜力學', [['平衡與力矩', 'lever block-stack slip-or-tip self-pull'], ['靜水壓與浮力', 'hydrostatic-buoyancy']]],
     ['1.4', '能量', '能量與動量', [['作功與能量守恆', 'work energy-track vertical-circle vertical-spring joule-experiment']]],
     ['1.5', '熱力學', '熱學', [['氣體狀態與熱過程', 'ideal-gas pv-path adiabatic-pistons'], ['微觀熱運動', 'thermal-lattice maxwell-distribution equipartition'], ['熱機循環與效率', 'carnot-engine']]]
   ]],
   ['波動與光學', '#9acaff', [
     ['2.1', '波動的性質', '波動 聲音', [['波形與傳播', 'basic-waves wave-function string-interface string-wave-energy wave-polarization'], ['疊加與駐波', 'standing-waves longitudinal-tube two-source-interference resonance-column'], ['聲音與頻譜', 'doppler echo sound-speed vacuum-bell sound-elements violin-fourier fourier-square']]],
-    ['2.2', '幾何光學', '幾何光學', [['反射與折射', 'plane-mirror layered-refraction straw-cup apparent-depth rainbow sphere-lens'], ['成像與光學儀器', 'image-drawing half-lens eye-lens optical-parallax optical-instruments dolly-zoom']]],
+    ['2.2', '幾何光學', '幾何光學', [['反射與面鏡', 'plane-mirror shared-mirror double-mirror conic-mirror'], ['折射與色散', 'refraction-cart layered-refraction straw-cup apparent-depth sphere-lens rainbow'], ['成像與光學儀器', 'image-drawing half-lens eye-lens dancing-image optical-parallax optical-instruments dolly-zoom']]],
     ['2.3', '物理光學', '波動光學', [['干涉與繞射', 'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film'], ['偏振與色彩', 'fresnel rgb-lights optical-polarizers']]]
   ]],
   ['電與磁', '#ffc183', [
