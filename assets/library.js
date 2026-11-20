@@ -8,5 +8,4 @@ function renderCards(){const q=document.getElementById('search').value.trim().to
 const chapterSelect=document.getElementById('chapterFilter');if(chapterSelect&&window.Textbook){for(const group of Textbook.chapterOptions()){const optgroup=document.createElement('optgroup');optgroup.label=group.label;for(const item of group.options){const option=document.createElement('option');option.value=item.value;option.textContent=item.label;optgroup.append(option)}chapterSelect.append(optgroup)}chapterSelect.addEventListener('change',renderCards)}
 document.getElementById('search').addEventListener('input',renderCards);renderCards();
 
-if(typeof mountCourseRoute==='function')mountCourseRoute(experiments);
-mountLearningMap(experiments);
+if(typeof mountAtlas==='function')mountAtlas(experiments);

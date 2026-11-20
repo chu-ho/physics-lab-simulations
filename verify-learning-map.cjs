@@ -1,121 +1,53 @@
 'use strict';
+// 學習地圖章節資料與無腳本備援：四主線十九章、每個實驗恰好一個歸屬、先備無循環、探究活動與別名有效，
+// 備援清單與資料一致（tools/build-map-fallback.cjs --check）。
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const {execFileSync} = require('node:child_process');
 const {domHarness} = require('./tools/dom-harness.cjs');
-const read = file => fs.readFileSync(path.join(__dirname,file),'utf8');
+const read = file => fs.readFileSync(path.join(__dirname, file), 'utf8');
 const html = read('library.html');
+const {sandbox} = domHarness(html);
+sandbox.window.addEventListener = () => {};
+for (const [, source] of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g)) vm.runInContext(read(source), sandbox, {filename: source});
 
-function openMap(hash = '', state = null) {
-  const {ids,sandbox} = domHarness(html);
-  const listeners = new Map();
-  sandbox.window.addEventListener = (name,handler) => listeners.set(name,handler);
-  sandbox.location.hash = hash;
-  sandbox.history.state = state;
-  sandbox.history.replaceState = value => { sandbox.history.state = value; };
-  sandbox.history.pushState = (value,_,fragment) => {
-    sandbox.history.state = value;
-    sandbox.location.hash = fragment;
-  };
-  for (const [,source] of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g)) {
-    vm.runInContext(read(source),sandbox,{filename:source});
-  }
-  return {ids,sandbox,listeners};
-}
+const catalogue = vm.runInContext('experiments', sandbox);
+const chapters = vm.runInContext('buildLearningMap(experiments)', sandbox);
+const branches = vm.runInContext('learningBranches.map(([name]) => name)', sandbox);
+assert.deepEqual(Array.from(branches), ['力學', '波動與光學', '電與磁', '近代物理']);
+assert.equal(chapters.length, 19);
+const placed = chapters.flatMap(chapter => chapter.topics.flatMap(topic => topic.labs.map(lab => lab.id)));
+assert.equal(placed.length, catalogue.length, 'every experiment placed exactly once');
+assert.equal(new Set(placed).size, catalogue.length);
 
-const {ids,sandbox,listeners} = openMap();
-const graph = ids['map-board'].children;
-assert.equal(ids['map-branches'].children.length,5);
-assert.equal(graph.filter(node=>node.className==='map-point map-hub').length,19);
-const catalogue = vm.runInContext('experiments',sandbox);
-assert.equal(graph.filter(node=>node.className==='map-point').length,catalogue.length);
-for (const lab of catalogue) {
-  if (['projectile','stairs','inclined-projectile'].includes(lab.id)) {
-    assert.ok(fs.existsSync(path.join(__dirname,lab.href)));
-  } else {
-    assert.equal(lab.href,'mechanics.html#experiment='+lab.id);
-  }
+const ids = new Set(catalogue.map(lab => lab.id));
+const chapterIds = new Set(chapters.map(chapter => chapter.id));
+const prerequisites = vm.runInContext('prerequisites', sandbox);
+const visited = new Set();
+function visit(id, trail = new Set()) {
+  assert.ok(chapterIds.has(id), 'unknown chapter ' + id);
+  assert.ok(!trail.has(id), 'prerequisite cycle at ' + id);
+  if (visited.has(id)) return;
+  for (const parent of prerequisites[id] || []) visit(parent, new Set([...trail, id]));
+  visited.add(id);
 }
-const activate = node => node.listeners.click({preventDefault(){}});
-const [,mechanicsBranch,wavesBranch] = ids['map-branches'].children;
-activate(wavesBranch);
-assert.equal(wavesBranch.attrs['aria-pressed'],'true');
-assert.equal(ids['map-point-1.1'].attrs['data-muted'],'true');
-assert.equal(ids['map-point-1.1'].tabIndex,-1);
-assert.equal(ids['map-point-2.1'].attrs['data-muted'],'false');
-activate(ids['map-selection'].children.find(node=>node.className==='map-chapter-button'));
-assert.equal(sandbox.location.hash,'#map-2.1');
-assert.equal(ids['map-details-panel'].open,false);
-activate(ids['map-selection'].children.find(node=>node.className==='map-open'));
-assert.equal(ids['map-details-panel'].open,true);
-activate(mechanicsBranch);
-assert.equal(ids['map-details-panel'].hidden,true);
-activate(ids['map-branches'].children[0]);
-activate(ids['map-selection'].children.find(node=>node.className==='map-open'));
-assert.equal(sandbox.location.hash,'#map-1.1/vertical');
-assert.ok(ids['map-selection'].children.some(node=>node.href==='mechanics.html#experiment=vertical'));
-for (const [query,chapter,id,href] of [
-  ['腳踏車煞車','1.2','bicycle-friction'],
-  ['透鏡遮一半','2.2','half-lens'],
-  ['光電效應','4.2','photoelectric']
-]) {
-  ids['map-search'].value = query;
-  ids['map-search'].listeners.input();
-  const result = ids['map-results'].children.find(node => node.href === '#map-'+chapter+'/'+id);
-  assert.ok(result, query);
-  activate(result);
-  assert.equal(sandbox.location.hash,result.href);
-  assert.equal(ids['map-lab-'+id].attrs['aria-current'],'location');
-  assert.equal(ids['map-lab-'+id].href,'mechanics.html#experiment='+id);
+for (const id of chapterIds) visit(id);
+const focus = vm.runInContext('learningFocus', sandbox);
+assert.deepEqual(Object.keys(focus).sort(), [...chapterIds].sort(), 'every chapter has a learning level and guidance');
+for (const [level, guidance] of Object.values(focus)) assert.ok(['高中入門', '高中深化', '進階'].includes(level) && guidance.trim());
+for (const [id, steps] of Object.entries(vm.runInContext('learningActivities', sandbox))) {
+  assert.ok(ids.has(id), 'activity for unknown experiment ' + id);
+  assert.ok(steps.length >= 3 && steps.every(step => step.trim()));
 }
-activate(ids['map-point-pn-junction']);
-assert.equal(ids['map-point-pn-junction'].attrs['data-state'],'selected');
-assert.equal(ids['map-point-two-charges'].attrs['data-state'],'neighbor');
-assert.equal(ids['map-point-1.1'].attrs['data-state'],'quiet');
-assert.ok(graph[0].children.some(line=>line.attrs['data-active']==='true'));
-assert.ok(ids['map-selection'].children.some(node=>node.href==='mechanics.html#experiment=pn-junction'));
-activate(ids['map-point-photoelectric']);
-const board=ids['map-board'];
-const viewport=ids['map-viewport'];
-const positionBefore=ids['map-point-photoelectric'].style.left;
-const edgeBefore=graph[0].children[0].attrs.d;
-board.listeners.pointerdown({button:0,isPrimary:true,pointerId:1,clientX:10,clientY:10});
-board.listeners.pointermove({pointerId:1,clientX:105,clientY:40});
-board.listeners.pointerup({pointerId:1});
-assert.notEqual(ids['map-point-photoelectric'].style.left,positionBefore);
-assert.notEqual(graph[0].children[0].attrs.d,edgeBefore);
-assert.notEqual(sandbox.history.state.mapView.yaw,.24);
-viewport.listeners.keydown({target:viewport,key:'ArrowRight',preventDefault(){}});
-activate(ids['map-zoom-in']);
-activate(ids['map-zoom-in']);
-ids['map-viewport'].scrollLeft=42;
-ids['map-viewport'].scrollTop=54;
-listeners.get('pagehide')();
-const reopened=openMap(sandbox.location.hash,sandbox.history.state);
-assert.equal(reopened.ids['map-board'].style.width,'140%');
-assert.equal(reopened.ids['map-viewport'].scrollLeft,42);
-assert.equal(reopened.ids['map-viewport'].scrollTop,54);
-assert.equal(reopened.ids['map-lab-photoelectric'].attrs['aria-current'],'location');
-assert.equal(reopened.ids['map-point-photoelectric'].style.left,ids['map-point-photoelectric'].style.left);
-activate(reopened.ids['map-zoom-reset']);
-assert.equal(reopened.ids['map-board'].style.width,'');
-assert.equal(reopened.ids['map-viewport'].scrollLeft,0);
-assert.equal(reopened.ids['map-viewport'].scrollTop,0);
-assert.equal(reopened.ids['map-point-photoelectric'].style.left,positionBefore);
-activate(reopened.ids['map-rotate']);
-assert.notEqual(reopened.ids['map-point-photoelectric'].style.left,positionBefore);
-const semiconductor=openMap('#map-4.6/pn-junction');
-const findLink=(node,href)=>{
-  if(node.href===href)return node;
-  for(const child of node.children){
-    const match=findLink(child,href);
-    if(match)return match;
-  }
-};
-const electricField=findLink(semiconductor.ids['map-detail'],'#map-3.1/two-charges');
-assert.ok(electricField);
-activate(electricField);
-assert.equal(semiconductor.sandbox.location.hash,'#map-3.1/two-charges');
-assert.equal(semiconductor.ids['map-lab-two-charges'].attrs['aria-current'],'location');
-console.log('PASS: map topic filters, chapter and experiment actions, search, rotation, zoom, and saved view.');
+for (const [id, links] of Object.entries(vm.runInContext('experimentPrerequisites', sandbox))) {
+  assert.ok(ids.has(id));
+  for (const [parent, reason] of links) assert.ok(ids.has(parent) && parent !== id && reason.trim());
+}
+for (const id of Object.keys(vm.runInContext('aliases', sandbox))) assert.ok(ids.has(id), 'alias for unknown experiment ' + id);
+
+// 無腳本備援：與資料一致，並在腳本載入後隱藏
+execFileSync(process.execPath, [path.join(__dirname, 'tools/build-map-fallback.cjs'), '--check'], {stdio: 'pipe'});
+assert.ok(html.includes('id="map-fallback"') && html.includes('<!-- end map fallback -->'));
+console.log('PASS learning map data: 4 trunks, 19 chapters, ' + catalogue.length + ' experiments placed once, acyclic prerequisites, valid levels/activities/aliases, static fallback in sync.');
