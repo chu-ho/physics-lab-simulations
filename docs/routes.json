@@ -116,7 +116,7 @@
         "bungee.html"
       ],
       "symbols": [
-        "const experiments=",
+        "const experiments =",
         "function renderCards("
       ],
       "checks": [
@@ -183,7 +183,7 @@
         "bungee.html"
       ],
       "symbols": [
-        "add('bungee'",
+        "'bungee',",
         "function crossing(",
         "function bungeeMarkers(",
         "case 'bungee':",

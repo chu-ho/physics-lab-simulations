@@ -61,7 +61,7 @@ assert.equal(resultCount(), 149);
 const page = read('mechanics.html');
 assert.ok(page.includes('id="textbook"'));
 assert.ok(page.indexOf('assets/textbook-hanlin.js') < page.indexOf('assets/mechanics-app.js'));
-assert.ok(read('assets/mechanics-app.js').includes("Textbook.render($('textbook'),def.id,document)"));
+assert.match(read('assets/mechanics-app.js'), /Textbook\.render\(\$\('textbook'\),\s*def\.id,\s*document\)/);
 const fake = {children: [], hidden: true, ownerDocument: {createElement: () => ({className: '', textContent: '', title: ''})},
   replaceChildren() { this.children = []; }, append(...items) { this.children.push(...items); }};
 Textbook.render(fake, 'photoelectric');

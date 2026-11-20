@@ -1,1 +1,13 @@
-'use strict';function drawWallSpringPair(s){box([-.65,1,0],[.5,2,2]);box(point(s),[.8,1,1]);box([s.x2,.5,0],[.8,1,1]);coil([s.x+.4,.5,0],[s.x2-.4,.5,0]);label([s.x,1.5,0],'m₁ '+params.m1+' kg','#657f83',11);label([s.x2,1.5,0],'m₂ '+params.m2+' kg','#657f83',11);label([0,2.6,0],s.phase?'已離牆：總動量固定':'貼牆：牆施外力','#96743a',11);if($('forces').checked&&s.wallForce>1e-9)arrow(point(s),[s.x+s.wallForce*forceScale,.5,0],'#bd7b3e','N牆');if($('vectors').checked)arrow([s.x2,.5,0],[s.x2+s.v2*velocityScale,.5,0],'#478b8e','v₂');}
+'use strict';
+function drawWallSpringPair(s) {
+  box([-0.65, 1, 0], [0.5, 2, 2]);
+  box(point(s), [0.8, 1, 1]);
+  box([s.x2, 0.5, 0], [0.8, 1, 1]);
+  coil([s.x + 0.4, 0.5, 0], [s.x2 - 0.4, 0.5, 0]);
+  label([s.x, 1.5, 0], 'm₁ ' + params.m1 + ' kg', '#657f83', 11);
+  label([s.x2, 1.5, 0], 'm₂ ' + params.m2 + ' kg', '#657f83', 11);
+  label([0, 2.6, 0], s.phase ? '已離牆：總動量固定' : '貼牆：牆施外力', '#96743a', 11);
+  if ($('forces').checked && s.wallForce > 1e-9)
+    arrow(point(s), [s.x + s.wallForce * forceScale, 0.5, 0], '#bd7b3e', 'N牆');
+  if ($('vectors').checked) arrow([s.x2, 0.5, 0], [s.x2 + s.v2 * velocityScale, 0.5, 0], '#478b8e', 'v₂');
+}

@@ -6,7 +6,8 @@ const ExperimentLoader = (() => {
   const byId = new Map(MechanicsCatalog.map(entry => [entry.id, entry]));
   const loaded = new Set();
   const pending = new Map();
-  const canWrite = typeof document !== 'undefined' && typeof document.write === 'function' && document.readyState === 'loading';
+  const canWrite =
+    typeof document !== 'undefined' && typeof document.write === 'function' && document.readyState === 'loading';
   let assumeLoaded = !canWrite;
 
   function requestedId() {
@@ -14,8 +15,12 @@ const ExperimentLoader = (() => {
     const fromHash = new URLSearchParams((location.hash || '').slice(1)).get('experiment');
     return fromHash || new URLSearchParams(location.search || '').get('experiment') || '';
   }
-  function has(id) { return byId.has(id); }
-  function files(id) { return byId.has(id) ? byId.get(id).files.slice() : []; }
+  function has(id) {
+    return byId.has(id);
+  }
+  function files(id) {
+    return byId.has(id) ? byId.get(id).files.slice() : [];
+  }
   function isReady(id) {
     if (!byId.has(id)) return true;
     if (assumeLoaded) return true;
@@ -28,8 +33,15 @@ const ExperimentLoader = (() => {
       const script = document.createElement('script');
       script.src = file;
       script.async = false;
-      script.onload = () => { loaded.add(file); pending.delete(file); resolve(); };
-      script.onerror = () => { pending.delete(file); reject(new Error('無法載入 ' + file)); };
+      script.onload = () => {
+        loaded.add(file);
+        pending.delete(file);
+        resolve();
+      };
+      script.onerror = () => {
+        pending.delete(file);
+        reject(new Error('無法載入 ' + file));
+      };
       document.head.append(script);
     });
     pending.set(file, promise);
@@ -43,11 +55,25 @@ const ExperimentLoader = (() => {
     if (!canWrite) return;
     const entry = byId.get(requestedId()) || MechanicsCatalog[0];
     for (const file of entry.files) {
-      document.write('<script src="' + file + '"><\/script>');
+      document.write('<script src="' + file + '"></script>');
       loaded.add(file);
     }
   }
-  return {has, files, isReady, load, writeInitial, requestedId, loaded, get assumeLoaded() { return assumeLoaded; }, set assumeLoaded(value) { assumeLoaded = Boolean(value); }};
+  return {
+    has,
+    files,
+    isReady,
+    load,
+    writeInitial,
+    requestedId,
+    loaded,
+    get assumeLoaded() {
+      return assumeLoaded;
+    },
+    set assumeLoaded(value) {
+      assumeLoaded = Boolean(value);
+    }
+  };
 })();
 ExperimentLoader.writeInitial();
 // DOM 測試支架（tools/dom-harness.cjs）提供 __loadScript：預設依目錄順序載入全部實驗檔案，等同完整頁面；
@@ -57,6 +83,9 @@ if (typeof __loadScript === 'function') {
   const all = [];
   for (const entry of isolated ? MechanicsCatalog.filter(item => item.id === isolated) : MechanicsCatalog)
     for (const file of entry.files) if (!all.includes(file)) all.push(file);
-  for (const file of all) { __loadScript(file); ExperimentLoader.loaded.add(file); }
+  for (const file of all) {
+    __loadScript(file);
+    ExperimentLoader.loaded.add(file);
+  }
   if (isolated) ExperimentLoader.assumeLoaded = false;
 }
