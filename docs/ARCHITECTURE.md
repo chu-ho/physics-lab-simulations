@@ -85,6 +85,16 @@ simulation.events / markers → 事件文字 / 高度標線
 
 `assets/textbook-hanlin.js` 保存翰林版 108 課綱必修與選修Ⅰ–Ⅴ的章節，以及每個實驗 ID 對應的 1–3 個節次（第一個為主要章節）。library.html 與 mechanics.html 在 library.js／mechanics-app.js 之前載入；新增實驗時同步補上標籤，否則 `verify-textbook-tags.cjs` 會失敗。
 
-## 學習地圖的兩種檢視
+## 學習地圖（入口）
 
-`assets/course-route.js` 的 `mountCourseRoute` 產生預設的課程路線圖，重用 `assets/learning-map.js` 的 `learningBranches`、`buildLearningMap`、`prerequisites`、`learningFocus`、`aliases` 與 `learningActivities`，因此章節歸屬只維護一份。library.js 先掛載路線圖，再掛載星圖；`#learning-map` 的 `data-view`（route／star）以 CSS 隱藏 `.star-only` 元素，選擇存在 localStorage。`#map-章節/實驗` 深連結兩種檢視都會處理。驗證：`verify-course-route.cjs`。
+library.html 的 `#learning-map` 由 `assets/atlas.js` 的 `mountAtlas` 掛載，載入順序為 learning-map.js → course-route.js → star-map.js → atlas.js → library.js。
+
+| 檔案 | 責任 |
+|---|---|
+| `assets/learning-map.js` | 唯一的章節資料：`learningBranches`、`buildLearningMap`、`prerequisites`、`learningFocus`、`aliases`、`experimentPrerequisites`、`learningActivities` |
+| `assets/atlas.js` | 共用篩選列（主線、搜尋、課本章節）、路線圖／星圖切換（localStorage 記憶）、`#map-章節/實驗` 深連結 |
+| `assets/course-route.js` | `createCourseRoute`：四欄路線、19 個站點與實驗列表 |
+| `assets/star-map.js` | `starLayout` 依資料計算星座版面（固定、無亂數）；`createStarMap` 處理 SVG 縮放平移、三層聚焦、標籤避讓與側欄 |
+| `assets/atlas.css` | 入口、路線圖、星圖與備援樣式；星圖文字以 `--u`（每像素對應的座標單位）換算成固定螢幕大小 |
+
+`#map-fallback` 是 `tools/build-map-fallback.cjs` 產生的無腳本章節清單，腳本載入後隱藏。修改章節資料後執行該工具，`verify-learning-map.cjs` 會以 `--check` 確認一致。驗證：`verify-learning-map.cjs`（資料）、`verify-course-route.cjs`（入口與路線圖）、`verify-star-map.cjs`（星圖）。
