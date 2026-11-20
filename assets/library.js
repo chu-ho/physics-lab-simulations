@@ -1,6 +1,6 @@
 'use strict';
 const legacy=[{id:'projectile',title:'平面斜拋',group:'運動學',href:'index.html',formula:'拋體 水平 鉛直',description:'改變初速、仰角與方位角，追蹤自由拋體的三維軌跡。'},{id:'stairs',title:'階梯斜拋與反彈',group:'運動學',href:'staircase-projectile.html',formula:'碰撞 恢復係數 階梯',description:'從高台拋向等寬等高的階梯，記錄每一次反彈的位置。'},{id:'inclined-projectile',title:'斜面上的斜拋',group:'運動學',href:'inclined-projectile.html',formula:'斜面 仰角',description:'以斜面為基準發射，探索傾角、落點與離面高度。'}];
-const experiments=[...legacy,...Mechanics.defs.map(d=>({...d,href:'mechanics.html#experiment='+encodeURIComponent(d.id),description:d.questions[0]}))];
+const experiments=[...legacy,...MechanicsCatalog.map(d=>({...d,href:'mechanics.html#experiment='+encodeURIComponent(d.id),description:d.question}))];
 const categories=['全部',...new Set(experiments.map(d=>d.group))],icons={'運動學':'↗','牛頓定律':'⇄','動力學':'⇄','靜力學':'⚖','能量與動量':'◇','圓周與轉動':'↻','振動':'∿','萬有引力':'◎','波動光學':'≋'};let selected='全部';
 document.getElementById('count').textContent=experiments.length+' 個互動實驗 · '+(categories.length-1)+' 大主題 · 自由旋轉視角';
 for(const cat of categories){const button=document.createElement('button');button.textContent=cat;button.setAttribute('aria-pressed',cat===selected);button.onclick=()=>{selected=cat;for(const b of document.getElementById('filters').children)b.setAttribute('aria-pressed',b.textContent===selected);renderCards()};document.getElementById('filters').append(button)}

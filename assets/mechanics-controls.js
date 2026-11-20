@@ -1,6 +1,6 @@
 'use strict';
 function frame(now){if(running){if(last!==null)advance(Math.min(.1,(now-last)/1000)*+$('rate').value*(simulation.playbackScale||1));last=now}else last=null;if(dirty)render();requestAnimationFrame(frame)}
-for(const d of Mechanics.defs){const option=document.createElement('option');option.value=d.id;option.textContent=d.group+' · '+d.title;$('experiment').append(option)}
+for(const d of (typeof MechanicsCatalog!=='undefined'?MechanicsCatalog:Mechanics.defs)){const option=document.createElement('option');option.value=d.id;option.textContent=d.group+' · '+d.title;$('experiment').append(option)}
 $('experiment').onchange=()=>selectExperiment($('experiment').value);
 $('plotMode').onchange=updatePlotMode;
 $('referenceFrame').onchange=()=>{collectPlotSamples();fitCamera();updateUI()};
