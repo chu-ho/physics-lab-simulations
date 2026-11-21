@@ -17,7 +17,8 @@ const learningBranches = [
             '拋體運動',
             'projectile stairs inclined-projectile vertical airplane-drop safe-parabola shoot-monkey optimal-projectile'
           ],
-          ['天體運動與觀察', 'celestial-sphere sun-earth moon-earth sun-earth-moon']
+          ['天體運動與觀察', 'celestial-sphere sun-earth moon-earth sun-earth-moon'],
+          ['測量與不確定度', 'measurement-uncertainty dimensional-analysis']
         ]
       ],
       [
@@ -37,7 +38,7 @@ const learningBranches = [
             '圓周與轉動',
             'circular banked conical torque rolling angular-momentum massive-pulley belt-wheels bike-turn half-circle pulled-spool hole-table'
           ],
-          ['萬有引力與軌道', 'orbit binary-stars intercontinental projectile-cone'],
+          ['萬有引力與軌道', 'orbit binary-stars intercontinental projectile-cone gravitation-g'],
           [
             '振動與共振',
             'spring damped driven pendulum pendulum-angle-comparison shm-projection massive-spring floating-block-shm resonance-bank coupled-oscillators bungee'
@@ -58,7 +59,7 @@ const learningBranches = [
         '1.4',
         '能量',
         '能量與動量',
-        [['作功與能量守恆', 'work energy-track vertical-circle vertical-spring joule-experiment']]
+        [['作功與能量守恆', 'work energy-track vertical-circle vertical-spring joule-experiment power-hoist']]
       ],
       [
         '1.5',
