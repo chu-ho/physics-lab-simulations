@@ -265,6 +265,7 @@
     'parallel-capacitor': ['IV1-4', 'X-uni'],
     'wire-magnetic-field': ['IV2-2', 'IV2-1', 'B4-2'],
     'charged-particle': ['IV2-4'],
+    'current-balance': ['IV2-3', 'B4-2'],
     'magnetic-induction': ['IV3-3', 'IV3-2', 'B4-3'],
     'eddy-current': ['IV3-2', 'IV3-4'],
     'generator-transformer': ['IV3-4', 'B4-3'],
