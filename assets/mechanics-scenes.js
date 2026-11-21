@@ -236,6 +236,18 @@ function apparatus(s) {
     k = def.kind,
     r = Math.min(1.1, Math.max(0.3, scale * 0.014));
   switch (k) {
+    case 'power-hoist':
+      drawPowerHoist(s);
+      break;
+    case 'gravitation-g':
+      drawGravitationG(s);
+      break;
+    case 'measurement-uncertainty':
+      drawMeasurementUncertainty(s);
+      break;
+    case 'dimensional-analysis':
+      drawDimensionalAnalysis(s);
+      break;
     case 'sun-earth-moon':
       drawSunEarthMoon(s);
       break;

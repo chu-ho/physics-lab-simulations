@@ -359,3 +359,10 @@ node tools/context.cjs --task chart
 **靜力學**
 
 - [靜水壓與浮力平衡](hydrostatic-buoyancy.html)：浸沒比例、頂底表壓與浮力。
+
+**選修補充：功率、重力與測量**
+
+- [功率：等功不同時](power-hoist.html)：兩台吊車以不同速率作相同的功，比較 P = W/t = Fv、摩擦與馬達效率。
+- [萬有引力與重力加速度](gravitation-g.html)：卡文迪西扭秤反推 G，以及地球上高度與緯度對重力加速度的影響。
+- [測量與不確定度](measurement-uncertainty.html)：固定種子反覆計時單擺，平均值、標準差、標準誤與有效數字。
+- [因次分析](dimensional-analysis.html)：自選 m、L、g 的指數，檢查因次並預測單擺週期。

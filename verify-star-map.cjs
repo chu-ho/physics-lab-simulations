@@ -29,7 +29,7 @@ const {star, filters} = api;
 assert.equal(api.state.view, 'star');
 assert.equal(ids['star-view'].hidden, false);
 
-// 版面：19 個星座互不重疊、遠離中心，149 個實驗各有一個星點且在所屬星座內
+// 版面：19 個星座互不重疊、遠離中心，153 個實驗各有一個星點且在所屬星座內
 const clusters = star.layout.clusters;
 assert.equal(clusters.length, 19);
 for (let i = 0; i < clusters.length; i++) {
@@ -39,7 +39,7 @@ for (let i = 0; i < clusters.length; i++) {
     assert.ok(Math.hypot(a.x - b.x, a.y - b.y) >= a.room + b.room + 13, a.chapter.id + ' overlaps ' + b.chapter.id);
   }
 }
-assert.equal(star.labIndex.size, 149);
+assert.equal(star.labIndex.size, 153);
 for (const entry of star.labIndex.values()) {
   const cluster = clusters.find(item => item.chapter.id === entry.chapter.id);
   assert.ok(Math.hypot(entry.x - cluster.x, entry.y - cluster.y) <= cluster.radius + 0.01, entry.lab.id + ' inside its constellation');
@@ -155,4 +155,4 @@ ids['star-svg'].listeners.wheel({deltaY: -200, clientX: 500, clientY: 380, preve
 const linked = open('#map-2.3').api.star;
 assert.equal(linked.state.focus, '2.3');
 
-console.log('PASS star map: 19 non-overlapping constellations, 149 experiment stars, label avoidance, chapter/experiment focus with Esc back, tooltip, search and trunk filters, zoom limits, drag and deep links.');
+console.log('PASS star map: 19 non-overlapping constellations, 153 experiment stars, label avoidance, chapter/experiment focus with Esc back, tooltip, search and trunk filters, zoom limits, drag and deep links.');

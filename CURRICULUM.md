@@ -219,5 +219,6 @@
 - 光學：`thin-film`（單層膜雙光束干涉、s／p 偏振）、`optical-polarizers`（馬呂斯定律與三片偏振）。
 - 近代物理：`photoelectric`、`blackbody-radiation`、`hydrogen-spectrum`、`radioactive-decay`（固定種子抽樣）、`matter-wave`（電子雙縫與路徑資訊）、`quantum-well`（無限方井定態與疊加）、`hydrogen-orbitals`（1s／2s／2p_z 機率取樣）、`pn-junction`（耗盡近似、偏壓與能帶）、`rutherford-scattering`（點核與擴散正電球）、`nuclear-binding`（NIST 質量資料計算的融合與分裂能量）。
 - 靜力學：`hydrostatic-buoyancy`（靜水壓差與浮力平衡）。
+- 選修補充：`power-hoist`（等功不同時的功率、機械與馬達效率）、`gravitation-g`（卡文迪西扭秤 θeq 與地球 g(h, φ)）、`measurement-uncertainty`（固定種子計時、標準誤、有效數字）、`dimensional-analysis`（指數搜尋 m^a L^b g^c 與單擺預測）。
 
 各題均為教學尺度的理想化模型，假設與適用範圍列在實驗側欄。
