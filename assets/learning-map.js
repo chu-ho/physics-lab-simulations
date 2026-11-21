@@ -122,7 +122,8 @@ const learningBranches = [
           ['電荷、電場與電位', 'two-charges'],
           ['感應與接地', 'electroscope'],
           ['通量與高斯定律', 'gauss-surface'],
-          ['電容與介電質', 'parallel-capacitor']
+          ['電容與介電質', 'parallel-capacitor'],
+          ['電場中的帶電粒子', 'cathode-ray']
         ]
       ],
       [
@@ -131,7 +132,8 @@ const learningBranches = [
         '',
         [
           ['通電導線與磁場', 'wire-magnetic-field'],
-          ['磁力與帶電粒子', 'charged-particle']
+          ['磁力與帶電粒子', 'charged-particle'],
+          ['載流導線受磁力', 'current-balance']
         ]
       ],
       [
@@ -150,7 +152,8 @@ const learningBranches = [
         '',
         [
           ['串並聯與 RC 暫態', 'circuit-rc'],
-          ['交流與 RLC 共振', 'rlc-resonance']
+          ['交流與 RLC 共振', 'rlc-resonance'],
+          ['電動勢與電功率', 'emf-power']
         ]
       ]
     ]
@@ -235,10 +238,15 @@ const aliases = {
   'pv-path': '打氣筒 PV圖',
   'magnetic-induction': '磁鐵穿過線圈 手搖發電',
   'circuit-rc': '燈泡 電容充放電',
+  'cathode-ray': '陰極射線管 電子槍 湯姆森 荷質比 速度選擇器',
+  'current-balance': '電流天平 安培力 右手定則',
+  'emf-power': '電池 內電阻 端電壓 燈泡亮度 最大功率',
   photoelectric: '光電管 光電子 光電流'
 };
 
 const experimentPrerequisites = {
+  'current-balance': [['wire-magnetic-field', '先確認電流會產生磁場，再看外加磁場對電流的作用力。']],
+  'cathode-ray': [['two-charges', '先區分電場、電位和電位能，再看電子經電位差獲得的動能。']],
   'charged-particle': [['circular', '先讀向心加速度，再辨認磁力提供的向心分量。']],
   'eddy-current': [['magnetic-induction', '先辨認磁通變化率與感應電壓，再觀察閉合導體的電流。']],
   'generator-transformer': [['magnetic-induction', '先用磁鐵穿線圈理解法拉第定律，再看週期性磁通。']],
@@ -298,6 +306,12 @@ const learningActivities = {
     '先看磁通圖，再用同一播放位置查看感應電壓。',
     '中心磁通達極值，變化率為零，感應電壓也過零。',
     '把速度設零，說明有磁通時為何仍可沒有電壓。'
+  ],
+  'emf-power': [
+    '電池接上較小的電阻，燈泡一定比較亮嗎？',
+    '固定 ε 與 r，打開功率—外電阻圖，把燈泡電阻從 0.5 Ω 慢慢調大，讀負載功率與端電壓。',
+    '電流變大時內耗 I²r 也變大；負載功率在 R外 = r 時最大，此時效率只有 50%。',
+    '改成兩燈串聯與並聯，說明哪種接法更接近最大功率條件。'
   ],
   'circuit-rc': [
     '電容加倍，充電到同一比例要多久？',
@@ -394,6 +408,18 @@ const learningActivities = {
     '固定探針位置，在有背景場及背景場為零時各反轉一次電流。',
     '導線磁場一定反向，有背景場時磁針指向兩者的合場。',
     '在無背景場時把距離加倍，預測磁場大小和方向。'
+  ],
+  'current-balance': [
+    '把電流與磁場的夾角從 90° 調成 30°，天平平衡所需的電流會變大還是變小？',
+    '固定砝碼、B 與 L，在兩個夾角下各播放一次，記下事件列出的平衡電流。',
+    '磁力只取決於垂直磁場的分量 B sinθ，夾角變小時需要更大的電流；θ = 0° 時磁力為零，無法平衡。',
+    '把電流反向，用右手定則預測磁力方向，說明天平為何往另一邊傾。'
+  ],
+  'cathode-ray': [
+    '只加偏向電壓時，把加速電壓加倍，螢幕上的光點偏移會減半嗎？',
+    '固定偏向電壓與板長，比較加速電壓 1000 V 與 2000 V 的光點偏移 Y。',
+    '偏移與 1/v₀² 成正比，而 v₀² 與加速電壓成正比，所以加速電壓加倍時偏移減半。',
+    '再加上磁場，把光束調回直線，用 E/B 求速度並推算電子的荷質比。'
   ],
   'charged-particle': [
     '電荷反向會讓速度變慢嗎？',

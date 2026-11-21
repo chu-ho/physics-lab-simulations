@@ -338,6 +338,9 @@ function apparatus(s) {
     case 'pn-junction':
       drawPnJunction(s);
       break;
+    case 'emf-power':
+      drawEmfPower(s);
+      break;
     case 'rlc-resonance':
       drawRlcResonance(s);
       break;
@@ -349,6 +352,12 @@ function apparatus(s) {
       break;
     case 'wire-magnetic-field':
       drawWireMagneticField(s);
+      break;
+    case 'cathode-ray':
+      drawCathodeRay(s);
+      break;
+    case 'current-balance':
+      drawCurrentBalance(s);
       break;
     case 'charged-particle':
       drawChargedParticle(s);

@@ -1708,5 +1708,8 @@
     require('./models/nuclear-binding.js');
     require('./models/optical-polarizers.js');
     require('./models/hydrostatic-buoyancy.js');
+    require('./models/emf-power.js');
+    require('./models/current-balance.js');
+    require('./models/cathode-ray.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
