@@ -25,6 +25,20 @@ function updateCamera() {
   right = norm(cross(forward, [0, 1, 0]));
   up = cross(right, forward);
   focal = Math.min(W * 0.85, Math.max(130, H - 110) * 1.2);
+  labelBoxes = [];
+}
+// 手機寬度下場景標籤縮小，並略過與已畫標籤重疊者；桌機維持原樣。
+let labelBoxes = [];
+function labelSize(size) {
+  return W >= 600 ? size : Math.max(9, Math.round(size * Math.max(0.78, W / 600)));
+}
+function labelFits(text, x, y, size, align) {
+  if (W >= 600) return true;
+  const w = ctx.measureText(text)?.width ?? text.length * size,
+    box = { l: align === 'center' ? x - w / 2 : x, r: align === 'center' ? x + w / 2 : x + w, t: y - size, b: y + 2 };
+  if (labelBoxes.some(o => box.l < o.r + 2 && box.r > o.l - 2 && box.t < o.b + 1 && box.b > o.t - 1)) return false;
+  labelBoxes.push(box);
+  return true;
 }
 function project(a) {
   const d = vector(a, eye),
@@ -87,8 +101,10 @@ function label(pos, text, color = '#355461', size = 11) {
   primitives.push({
     depth: a.d - 0.001 * scale,
     paint: () => {
-      ctx.font = `600 ${size}px system-ui`;
+      const px = labelSize(size);
+      ctx.font = `600 ${px}px system-ui`;
       ctx.textAlign = 'center';
+      if (!labelFits(text, a.x, a.y - 6, px, 'center')) return;
       ctx.fillStyle = color;
       ctx.strokeStyle = '#e5f1efcc';
       ctx.lineWidth = 3;
@@ -143,10 +159,11 @@ function arrow(a, b, color, text) {
       ctx.lineTo(B.x - 11 * Math.cos(ang - 0.4), B.y - 11 * Math.sin(ang - 0.4));
       ctx.lineTo(B.x - 11 * Math.cos(ang + 0.4), B.y - 11 * Math.sin(ang + 0.4));
       ctx.fill();
-      ctx.font = 'bold 12px system-ui';
+      const px = labelSize(12);
+      ctx.font = `bold ${px}px system-ui`;
       ctx.textAlign = 'left';
       ctx.fillStyle = '#19333f';
-      ctx.fillText(text, B.x + 7, B.y - 7);
+      if (labelFits(text, B.x + 7, B.y - 7, px, 'left')) ctx.fillText(text, B.x + 7, B.y - 7);
     }
   });
 }
