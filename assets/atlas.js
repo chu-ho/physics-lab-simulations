@@ -56,7 +56,8 @@ function createAtlasFilters(root, chapters, catalogue) {
   const search = atlasNode('input', '', 'search atlas-search');
   search.id = 'atlas-search';
   search.type = 'search';
-  search.placeholder = '搜尋實驗、生活情境或課本節名';
+  search.placeholder = '按 / 搜尋實驗、生活情境或課本節名…';
+  search.setAttribute('aria-keyshortcuts', '/');
   search.setAttribute('aria-label', '搜尋學習地圖');
   const select = atlasNode('select', '', 'atlas-select');
   select.id = 'atlas-textbook';
@@ -84,7 +85,15 @@ function createAtlasFilters(root, chapters, catalogue) {
   const fields = atlasNode('div', '', 'atlas-fields');
   const bookLabel = atlasNode('label', '', 'atlas-select-label');
   bookLabel.append(atlasNode('span', '翰林課本'), select);
-  fields.append(search, bookLabel, clear);
+  // 窄螢幕只露出搜尋框與「篩選」按鈕，主線與課本章節收進按鈕裡（寬螢幕由 CSS 隱藏按鈕）。
+  const toggle = atlasButton('篩選', 'atlas-filter-toggle');
+  toggle.id = 'atlas-filter-toggle';
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-controls', 'atlas-filters');
+  toggle.addEventListener('click', () =>
+    toggle.setAttribute('aria-expanded', String(root.classList.toggle('filters-open')))
+  );
+  fields.append(search, toggle, bookLabel, clear);
   root.replaceChildren(trunkNav, fields, status);
   root.hidden = false;
 
@@ -119,6 +128,8 @@ function createAtlasFilters(root, chapters, catalogue) {
     if (select.value !== state.textbook) select.value = state.textbook;
     for (const { item, name } of trunkButtons) item.setAttribute('aria-pressed', String(state.trunk === name));
     clear.hidden = !(filtering() || state.trunk);
+    const applied = Number(Boolean(state.trunk)) + Number(Boolean(state.textbook));
+    toggle.textContent = applied ? '篩選（' + applied + '）' : '篩選';
     const scope = state.trunk ? chapters.filter(chapter => chapter.branch === state.trunk) : chapters;
     const total = scope.reduce(
       (sum, chapter) => sum + chapter.topics.reduce((n, topic) => n + topic.labs.length, 0),
@@ -225,5 +236,12 @@ function mountAtlas(catalogue) {
   setView(saved, false);
   followHash();
   if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('hashchange', followHash);
+  // 鍵盤 / 聚焦搜尋（正在輸入時不攔截）。
+  document.addEventListener('keydown', e => {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) || e.target.isContentEditable) return;
+    e.preventDefault();
+    filters.search.focus();
+  });
   return { chapters, filters, route, star, state, setView, followHash };
 }
