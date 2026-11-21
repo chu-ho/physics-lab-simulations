@@ -283,6 +283,7 @@
     'nuclear-binding': ['V3-4', 'B5-4'],
     'millikan-oil-drop': ['V2-2'],
     'xray-bragg': ['V2-3'],
+    'em-wave': ['B4-4', 'IV3-5']
   };
 
   const sections = new Map();

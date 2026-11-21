@@ -142,6 +142,7 @@ const learningBranches = [
           ['磁通量與楞次定律', 'magnetic-induction'],
           ['渦電流與磁阻尼', 'eddy-current'],
           ['發電與變壓', 'generator-transformer'],
+          ['電磁波的傳播', 'em-wave']
         ]
       ],
       [
@@ -247,6 +248,7 @@ const aliases = {
   photoelectric: '光電管 光電子 光電流',
   'millikan-oil-drop': '油滴 基本電荷 電荷量子化',
   'xray-bragg': 'X光 倫琴射線 晶體繞射 布拉格',
+  'em-wave': '電磁波 光 無線電波 偏振 馬克士威'
 };
 
 const experimentPrerequisites = {
@@ -345,6 +347,12 @@ const learningActivities = {
     '改變電壓，讀光譜的截止波長，再固定 Kα 轉動掠射角找各階反射。',
     'λmin = hc/eV；掠射角滿足 2d sinθ = nλ 時才有強反射。',
     '改變晶面間距，預測最高階數並用角度掃描驗證。'
+  ],
+  'em-wave': [
+    '電磁波的電場、磁場與傳播方向有什麼關係？',
+    '保留線偏振，觀察 E、B 和傳播軸；轉動偏振方向，比較 E 與 B 的方向。',
+    'E、B 互相垂直，也垂直於傳播方向；E×B 指向前進方向，且 E/B 等於光速。',
+    '頻率加倍，預測波長與 E/B 的變化，再改成圓偏振比較。'
   ],
   'radioactive-decay': [
     '過一個半衰期，每次都剛好剩一半嗎？',

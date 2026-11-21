@@ -377,6 +377,9 @@ function apparatus(s) {
     case 'xray-bragg':
       drawXrayBragg(s);
       break;
+    case 'em-wave':
+      drawEmWave(s);
+      break;
     case 'electroscope':
       drawElectroscope(s);
       break;
