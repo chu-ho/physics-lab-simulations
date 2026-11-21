@@ -351,6 +351,7 @@ node tools/context.cjs --task chart
 - [放射性衰變](radioactive-decay.html)：初始核數、半衰期與固定種子的隨機抽樣。
 - [電子雙縫與物質波](matter-wave.html)：加速電壓、縫距與路徑資訊，落點可同種子重播。
 - [密立坎油滴實驗](millikan-oil-drop.html)：Stokes 終端速度、懸浮電壓與兩速度法量電荷，固定種子的 24 顆油滴電荷分布集中在基本電荷整數倍。
+- [X 射線與布拉格繞射](xray-bragg.html)：X 光管連續譜截止波長、特徵線，以及 2d sinθ = nλ 的各階反射。
 - [量子方井](quantum-well.html)：定態與兩能階疊加。
 - [氫原子軌域](hydrogen-orbitals.html)：1s、2s、2p_z 的 3D 位置取樣。
 - [矽 PN 接面](pn-junction.html)：摻雜濃度、偏壓掃描、耗盡區與能帶圖。

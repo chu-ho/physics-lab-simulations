@@ -374,6 +374,9 @@ function apparatus(s) {
     case 'millikan-oil-drop':
       drawMillikanOilDrop(s);
       break;
+    case 'xray-bragg':
+      drawXrayBragg(s);
+      break;
     case 'electroscope':
       drawElectroscope(s);
       break;

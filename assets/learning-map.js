@@ -167,6 +167,7 @@ const learningBranches = [
         '',
         [
           ['德布羅意波與電子繞射', 'matter-wave'],
+          ['X 射線與晶體繞射', 'xray-bragg']
         ]
       ],
       [
@@ -245,6 +246,7 @@ const aliases = {
   'circuit-rc': '燈泡 電容充放電',
   photoelectric: '光電管 光電子 光電流',
   'millikan-oil-drop': '油滴 基本電荷 電荷量子化',
+  'xray-bragg': 'X光 倫琴射線 晶體繞射 布拉格',
 };
 
 const experimentPrerequisites = {
@@ -337,6 +339,12 @@ const learningActivities = {
     '電壓設為 0，記下下落速度；再調整電壓到油滴幾乎不動，用 qV/d = mg 算電荷。',
     '下落速度給出半徑與質量，懸浮時電力等於重力，算出的電荷是基本電荷的整數倍。',
     '開啟電荷分布圖，由各峰間距估計基本電荷。'
+  ],
+  'xray-bragg': [
+    '提高 X 光管電壓，光譜的短波端會怎麼變？',
+    '改變電壓，讀光譜的截止波長，再固定 Kα 轉動掠射角找各階反射。',
+    'λmin = hc/eV；掠射角滿足 2d sinθ = nλ 時才有強反射。',
+    '改變晶面間距，預測最高階數並用角度掃描驗證。'
   ],
   'radioactive-decay': [
     '過一個半衰期，每次都剛好剩一半嗎？',
