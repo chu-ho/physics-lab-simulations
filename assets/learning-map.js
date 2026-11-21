@@ -141,7 +141,8 @@ const learningBranches = [
         [
           ['磁通量與楞次定律', 'magnetic-induction'],
           ['渦電流與磁阻尼', 'eddy-current'],
-          ['發電與變壓', 'generator-transformer']
+          ['發電與變壓', 'generator-transformer'],
+          ['電磁波的傳播', 'em-wave']
         ]
       ],
       [
@@ -161,13 +162,22 @@ const learningBranches = [
     [
       ['4.1', '黑體輻射', '', [['溫度與熱輻射光譜', 'blackbody-radiation']]],
       ['4.2', '光電效應', '近代物理', [['光子、逸出功與遏止電壓', 'photoelectric']]],
-      ['4.3', '物質波', '', [['德布羅意波與電子繞射', 'matter-wave']]],
+      [
+        '4.3',
+        '物質波',
+        '',
+        [
+          ['德布羅意波與電子繞射', 'matter-wave'],
+          ['X 射線與晶體繞射', 'xray-bragg']
+        ]
+      ],
       [
         '4.4',
         '原子模型的發展和波爾氫原子模型與能階',
         '',
         [
           ['散射與原子模型', 'rutherford-scattering'],
+          ['電荷量子化', 'millikan-oil-drop'],
           ['氫原子能階與譜線', 'hydrogen-spectrum']
         ]
       ],
@@ -235,7 +245,10 @@ const aliases = {
   'pv-path': '打氣筒 PV圖',
   'magnetic-induction': '磁鐵穿過線圈 手搖發電',
   'circuit-rc': '燈泡 電容充放電',
-  photoelectric: '光電管 光電子 光電流'
+  photoelectric: '光電管 光電子 光電流',
+  'millikan-oil-drop': '油滴 基本電荷 電荷量子化',
+  'xray-bragg': 'X光 倫琴射線 晶體繞射 布拉格',
+  'em-wave': '電磁波 光 無線電波 偏振 馬克士威'
 };
 
 const experimentPrerequisites = {
@@ -322,6 +335,24 @@ const learningActivities = {
     '固定兩個能階，切換吸收及發射。比較躍遷方向和波長。',
     '方向相反，能量差的絕對值與波長相同。',
     '換更大的能階差，預測對應波長會變長或變短。'
+  ],
+  'millikan-oil-drop': [
+    '怎樣由油滴的運動找出它帶的電荷？',
+    '電壓設為 0，記下下落速度；再調整電壓到油滴幾乎不動，用 qV/d = mg 算電荷。',
+    '下落速度給出半徑與質量，懸浮時電力等於重力，算出的電荷是基本電荷的整數倍。',
+    '開啟電荷分布圖，由各峰間距估計基本電荷。'
+  ],
+  'xray-bragg': [
+    '提高 X 光管電壓，光譜的短波端會怎麼變？',
+    '改變電壓，讀光譜的截止波長，再固定 Kα 轉動掠射角找各階反射。',
+    'λmin = hc/eV；掠射角滿足 2d sinθ = nλ 時才有強反射。',
+    '改變晶面間距，預測最高階數並用角度掃描驗證。'
+  ],
+  'em-wave': [
+    '電磁波的電場、磁場與傳播方向有什麼關係？',
+    '保留線偏振，觀察 E、B 和傳播軸；轉動偏振方向，比較 E 與 B 的方向。',
+    'E、B 互相垂直，也垂直於傳播方向；E×B 指向前進方向，且 E/B 等於光速。',
+    '頻率加倍，預測波長與 E/B 的變化，再改成圓偏振比較。'
   ],
   'radioactive-decay': [
     '過一個半衰期，每次都剛好剩一半嗎？',
