@@ -1,12 +1,54 @@
 :root {
   color-scheme: dark;
+  /* 表面層次 */
   --bg: #101c25;
+  --header: #14212a;
   --panel: #172630;
+  --panel-2: #1e303b;
+  --control: #22353f;
+  --control-hover: #304953;
   --line: #2c3d47;
+  --line-strong: #39505a;
+  /* 文字（--muted 對 --panel 6.9:1，--faint 對 --panel 5.4:1，皆 ≥ 4.5:1） */
   --ink: #ecf2f4;
   --muted: #9ab0bb;
+  --faint: #829ca8;
+  /* 操作色 */
   --mint: #8ee0c0;
+  --mint-ink: #15392f;
   --orange: #ffb36b;
+  --focus: var(--orange);
+  /* 物理量固定色：搭配形狀／線型作第二識別 */
+  --q-velocity: #3fc8e4;
+  --q-acceleration: #ff9b45;
+  --q-force: #ff6b6b;
+  --q-kinetic: #5fd38d;
+  --q-potential: #b18cff;
+  --q-heat: #f2b134;
+  --q-electric: #f5d547;
+  --q-magnetic: #5b8dff;
+  /* 四條主線 */
+  --branch-mechanics: #8ee0c0;
+  --branch-waves: #9acaff;
+  --branch-em: #ffc183;
+  --branch-modern: #d4b9ff;
+  /* 字型與字級（標籤不小於 12px） */
+  --font-sans: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', system-ui, sans-serif;
+  --fs-label: 12px;
+  --fs-small: clamp(12px, 0.7rem + 0.15vw, 13px);
+  --fs-body: clamp(14px, 0.8rem + 0.2vw, 15px);
+  --fs-title: clamp(16px, 0.85rem + 0.5vw, 20px);
+  /* 4px 間距、圓角 */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --r-card: 12px;
+  --r-control: 8px;
+  --r-pill: 999px;
+  --tap: 44px;
 }
 * {
   box-sizing: border-box;
@@ -18,10 +60,8 @@ body {
   overflow: hidden;
 }
 body {
-  font:
-    14px/1.5 system-ui,
-    'Microsoft JhengHei',
-    sans-serif;
+  font: var(--fs-body) / 1.5 var(--font-sans);
+  font-variant-numeric: tabular-nums;
   background: var(--bg);
   color: var(--ink);
 }
@@ -33,20 +73,27 @@ input {
 button,
 select {
   color: var(--ink);
-  background: #22353f;
-  border: 1px solid #39505a;
-  border-radius: 8px;
-  padding: 8px 12px;
+  background: var(--control);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-control);
+  padding: var(--sp-2) var(--sp-3);
   cursor: pointer;
+  touch-action: manipulation;
 }
 button:hover {
-  background: #304953;
+  background: var(--control-hover);
 }
 button:focus-visible,
 select:focus-visible,
-input:focus-visible {
-  outline: 3px solid var(--orange);
+input:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
+}
+canvas:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
 }
 button:disabled {
   opacity: 0.4;
@@ -65,7 +112,7 @@ header {
   gap: 16px;
   border-bottom: 1px solid var(--line);
   padding: 0 24px;
-  background: #14212a;
+  background: var(--header);
 }
 header h1 {
   font-size: 20px;
@@ -73,7 +120,10 @@ header h1 {
   margin: 0;
 }
 header .overline {
-  font-size: 10px;
+  font-size: var(--fs-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--mint);
   letter-spacing: 2px;
 }
@@ -125,7 +175,7 @@ canvas.dragging {
 }
 .view-title small {
   display: block;
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 400;
   letter-spacing: 0;
   margin-top: 3px;
@@ -150,7 +200,7 @@ canvas.dragging {
   max-width: calc(100% - 36px);
 }
 .camera-buttons button {
-  font-size: 11px;
+  font-size: var(--fs-label);
   padding: 6px 10px;
   background: #eff7f0db;
   color: #29444c;
@@ -188,7 +238,7 @@ canvas.dragging {
 }
 .metric small {
   display: block;
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: #b8c8cc;
 }
 .metric strong {
@@ -196,26 +246,41 @@ canvas.dragging {
   font-variant-numeric: tabular-nums;
 }
 .metric span {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: #bdcbd1;
   margin-left: 4px;
 }
-.transport {
+.playbar {
   pointer-events: auto;
+  display: grid;
+  gap: var(--sp-2);
+  max-width: 690px;
+  padding: var(--sp-2) var(--sp-3);
+  background: #152a34eb;
+  border: 1px solid #ffffff20;
+  border-radius: var(--r-card);
+  backdrop-filter: blur(10px);
+}
+.transport {
   display: flex;
   align-items: center;
   gap: 7px;
   flex-wrap: wrap;
 }
+.key-hint {
+  margin-left: auto;
+  font-size: var(--fs-label);
+  color: var(--muted);
+}
 .transport button {
-  background: #203844ed;
+  background: var(--control);
   padding: 9px 14px;
-  font-size: 12px;
+  font-size: var(--fs-small);
   border-color: #57717b;
 }
 .transport .primary {
   background: var(--mint);
-  color: #15392f;
+  color: var(--mint-ink);
   font-weight: 800;
   border-color: var(--mint);
   min-width: 108px;
@@ -224,13 +289,12 @@ canvas.dragging {
   background: #b8f0d9;
 }
 .transport select {
-  font-size: 12px;
+  font-size: var(--fs-small);
   padding: 9px 7px;
-  background: #203844ed;
+  background: var(--control);
 }
 .time-slider {
   width: 100%;
-  max-width: 690px;
   pointer-events: auto;
   accent-color: var(--mint);
   margin: 0;
@@ -246,8 +310,55 @@ canvas.dragging {
   scrollbar-width: thin;
   scrollbar-color: #4a616b transparent;
 }
+.panel-group {
+  border-top: 1px solid var(--line);
+}
+.panel-group:last-of-type {
+  border-bottom: 1px solid var(--line);
+}
+.panel-group > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--tap);
+  font-size: var(--fs-small);
+  font-weight: 650;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+.panel-group > summary::-webkit-details-marker {
+  display: none;
+}
+.panel-group > summary::after {
+  content: '＋';
+  color: var(--mint);
+}
+.panel-group > summary:hover {
+  color: var(--mint);
+}
+.panel-group[open] > summary::after {
+  content: '－';
+}
+.group-body {
+  padding: var(--sp-1) 0 var(--sp-4);
+}
+.share-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-top: var(--sp-3);
+}
+.share-row button {
+  font-size: var(--fs-label);
+}
+.share-status {
+  font-size: var(--fs-label);
+  color: var(--mint);
+}
 .section {
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: var(--mint);
   letter-spacing: 2px;
 }
@@ -263,7 +374,8 @@ canvas.dragging {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  gap: var(--sp-2);
+  font-size: var(--fs-small);
 }
 .control output {
   font-variant-numeric: tabular-nums;
@@ -280,8 +392,8 @@ canvas.dragging {
 .limits {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
-  color: #829ca8;
+  font-size: var(--fs-label);
+  color: var(--faint);
 }
 .control select {
   width: 100%;
@@ -290,12 +402,15 @@ canvas.dragging {
   margin-top: 7px;
 }
 .checks {
-  padding: 14px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
   display: grid;
-  gap: 8px;
-  font-size: 12px;
+  gap: var(--sp-1);
+  font-size: var(--fs-small);
+}
+.checks label {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  cursor: pointer;
 }
 .checks input {
   accent-color: var(--mint);
@@ -315,7 +430,7 @@ canvas.dragging {
   font-weight: 600;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--fs-label);
   line-height: 1.7;
   color: var(--muted);
   margin: 12px 0;
@@ -328,7 +443,7 @@ canvas.dragging {
 .legend {
   display: flex;
   gap: 12px;
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: var(--muted);
   margin-top: 12px;
 }
@@ -336,7 +451,7 @@ canvas.dragging {
   font-weight: 500;
 }
 .legend b:first-child {
-  color: #8ee0c0;
+  color: var(--mint);
 }
 .legend b:last-child {
   color: #d1b4ff;
@@ -372,7 +487,7 @@ dialog code {
 }
 dialog details {
   margin: 14px 0;
-  border-top: 1px solid #39505a;
+  border-top: 1px solid var(--line-strong);
   padding-top: 12px;
 }
 dialog summary {
@@ -408,7 +523,7 @@ dialog summary {
   }
   .note {
     margin: 8px 0;
-    font-size: 10px;
+    font-size: var(--fs-label);
   }
   .export {
     padding: 6px;
@@ -460,7 +575,7 @@ dialog summary {
     font-size: 17px;
   }
   .metric span {
-    font-size: 9px;
+    font-size: var(--fs-label);
   }
   .transport button {
     padding: 8px 9px;
@@ -475,25 +590,51 @@ dialog summary {
     padding: 8px 0;
   }
   .status {
-    font-size: 10px;
+    font-size: var(--fs-label);
     padding: 4px 8px;
   }
 }
 @media (max-width: 580px) {
   .workspace {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 1fr) 224px;
+    grid-template-rows: minmax(0, 1fr) 260px;
   }
   .sidebar {
     border-left: 0;
     border-top: 1px solid var(--line);
-    padding: 12px 16px;
+    padding: 4px 16px 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  /* 手機：參數緊接在場景下方，切換實驗與課本章節排在後面 */
+  .sidebar .intro {
+    order: 1;
+    padding-top: 12px;
+  }
+  .key-hint {
+    display: none;
+  }
+  .camera-buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .camera-buttons button {
+    flex: none;
+  }
+  .playbar {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  .group-body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 20px;
     align-content: start;
   }
-  .sidebar .intro {
+  .annotation-panel,
+  #referencePanel,
+  #soundStatus {
     grid-column: 1/-1;
   }
   .sidebar h2 {
@@ -506,7 +647,7 @@ dialog summary {
     margin-bottom: 10px;
   }
   .control .label {
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .checks,
   .prediction,
@@ -518,7 +659,7 @@ dialog summary {
   .checks {
     grid-template-columns: 1fr 1fr;
     gap: 6px;
-    font-size: 11px;
+    font-size: var(--fs-label);
     padding: 8px 0;
   }
   .prediction {
@@ -533,13 +674,13 @@ dialog summary {
   }
   .camera-buttons button {
     padding: 4px 7px;
-    font-size: 10px;
+    font-size: var(--fs-label);
   }
   .scene-top {
     top: 10px;
   }
   .view-title {
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .bottom {
     gap: 5px;
@@ -553,27 +694,27 @@ dialog summary {
     font-size: 17px;
   }
   .metric small {
-    font-size: 9px;
+    font-size: var(--fs-label);
   }
   .transport {
     gap: 5px;
   }
   .transport button {
     padding: 7px 8px;
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .transport .primary {
     min-width: 88px;
   }
   .transport select {
-    font-size: 11px;
+    font-size: var(--fs-label);
     padding: 7px 4px;
   }
   .fullscreen .workspace {
     grid-template-rows: 1fr;
   }
   .header-actions button {
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .header-actions {
     gap: 5px;
@@ -598,5 +739,38 @@ dialog summary {
   .bottom {
     gap: 5px;
     bottom: 8px;
+  }
+}
+/* 觸控裝置：互動目標至少 44px */
+@media (pointer: coarse) {
+  button,
+  select,
+  .checks label,
+  .panel-group > summary {
+    min-height: var(--tap);
+  }
+  .control input[type='range'],
+  .time-slider {
+    height: 32px;
+  }
+  .camera-buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .camera-buttons button {
+    flex: none;
+  }
+  .key-hint {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
   }
 }

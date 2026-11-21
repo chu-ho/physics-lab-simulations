@@ -27,10 +27,36 @@ $('play').onclick = () => {
   updateUI();
 };
 $('reset').onclick = reset;
-$('step').onclick = () => {
+$('restoreDefaults').onclick = restoreDefaults;
+function stepBy(direction) {
   running = false;
   last = null;
-  advance(0.05 * (simulation.playbackScale || 1));
+  if (direction > 0) advance(0.05 * (simulation.playbackScale || 1));
+  else {
+    t = Math.max(0, t - 0.05 * (simulation.playbackScale || 1));
+    updateUI();
+  }
+}
+$('step').onclick = () => stepBy(1);
+// 快捷鍵：空白鍵播放／暫停、← → 單步；焦點在表單元件或場景（方向鍵旋轉視角）時交給元件本身。
+document.addEventListener('keydown', e => {
+  if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || $('helpDialog').open) return;
+  if (['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'SUMMARY', 'A'].includes(e.target.tagName)) return;
+  if (e.key === ' ' && !$('play').disabled) $('play').onclick();
+  else if (e.key === 'ArrowRight' && !$('step').disabled) stepBy(1);
+  else if (e.key === 'ArrowLeft') stepBy(-1);
+  else return;
+  e.preventDefault();
+});
+$('share').onclick = () => {
+  syncURL();
+  const done = ok => ($('shareStatus').textContent = ok ? '已複製目前參數的連結' : '請從網址列複製目前的連結');
+  if (navigator.clipboard)
+    navigator.clipboard.writeText(location.href).then(
+      () => done(true),
+      () => done(false)
+    );
+  else done(false);
 };
 $('timeline').oninput = () => {
   running = false;
@@ -194,10 +220,13 @@ $('export').onclick = () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 setPlotVisible(false);
-selectExperiment(
-  new URLSearchParams((location.hash || '').slice(1)).get('experiment') ||
-    new URLSearchParams(location.search).get('experiment'),
-  false
-);
+const route = routeFromURL();
+selectExperiment(route.id, false, route.overrides);
+// 同分頁改網址 hash（貼連結、書籤）時切換實驗與參數；replaceState 不會觸發此事件。
+window.addEventListener('hashchange', () => {
+  if (!def || location.hash === shareURL()) return;
+  const next = routeFromURL();
+  selectExperiment(next.id, false, next.overrides);
+});
 new ResizeObserver(resize).observe(canvas.parentElement);
 requestAnimationFrame(frame);
