@@ -332,6 +332,7 @@ node tools/context.cjs --task chart
 - [球形高斯面](gauss-surface.html)：調整高斯面半徑與點電荷偏移，對照局部電場、數值積分與淨通量。
 - [串並聯電路與 RC 充放電](circuit-rc.html)：串聯、並聯、充電、放電四種模式與開關。
 - [串聯 RLC 共振](rlc-resonance.html)：驅動頻率、相位與共振峰。
+- [電動勢、歐姆定律與電功率](emf-power.html)：電動勢、內電阻、單燈／串聯／並聯燈泡，端電壓、功率分配與 R = r 最大功率。
 - [通電導線的磁場](wire-magnetic-field.html)：電流方向、探針距離與背景磁場合成，觀察磁針偏轉。
 - [帶電粒子在均勻磁場中](charged-particle.html)：電荷符號、質量、速度夾角與圓周／螺旋運動。
 - [磁鐵穿線圈](magnetic-induction.html)：速度、磁極方向與匝數決定磁通變化及感應電壓。

@@ -424,7 +424,8 @@
     "celestial-sphere": "celestial-sphere.html",
     "moon-earth": "moon-earth.html",
     "sun-earth": "sun-earth.html",
-    "sun-earth-moon": "sun-earth-moon.html"
+    "sun-earth-moon": "sun-earth-moon.html",
+    "emf-power": "emf-power.html"
   },
   "excludeByDefault": [
     "artifacts/",
@@ -546,7 +547,8 @@
     "celestial-sphere": "assets/scenes-celestial-sphere.js",
     "moon-earth": "assets/scenes-moon-earth.js",
     "sun-earth": "assets/scenes-sun-earth.js",
-    "sun-earth-moon": "assets/scenes-sun-earth-moon.js"
+    "sun-earth-moon": "assets/scenes-sun-earth-moon.js",
+    "emf-power": "assets/scenes-emf-power.js"
   },
   "modelVerifiers": {
     "optical-polarizers": "verify-optical-polarizers.cjs",
@@ -666,7 +668,8 @@
     "celestial-sphere": "verify-celestial-sphere.cjs",
     "moon-earth": "verify-moon-earth.cjs",
     "sun-earth": "verify-sun-earth.cjs",
-    "sun-earth-moon": "verify-sun-earth-moon.cjs"
+    "sun-earth-moon": "verify-sun-earth-moon.cjs",
+    "emf-power": "verify-emf-power.cjs"
   },
   "modelDependencies": {
     "basic-waves": [

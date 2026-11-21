@@ -270,6 +270,7 @@
     'generator-transformer': ['IV3-4', 'B4-3'],
     'circuit-rc': ['V1-3', 'V1-4', 'X-uni'],
     'rlc-resonance': ['IV3-4', 'X-uni'],
+    'emf-power': ['V1-1', 'V1-2', 'V1-5'],
     // 近代物理
     photoelectric: ['V2-5', 'B6-1'],
     'blackbody-radiation': ['V2-4'],

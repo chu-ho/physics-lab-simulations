@@ -338,6 +338,9 @@ function apparatus(s) {
     case 'pn-junction':
       drawPnJunction(s);
       break;
+    case 'emf-power':
+      drawEmfPower(s);
+      break;
     case 'rlc-resonance':
       drawRlcResonance(s);
       break;
