@@ -146,14 +146,21 @@
   color: var(--muted);
 }
 .atlas-select {
-  background: #172630;
-  border: 1px solid #39505a;
-  color: #ecf2f4;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
   border-radius: 9px;
   padding: 0.62rem 0.7rem;
   font: inherit;
   font-size: 0.85rem;
   max-width: min(320px, 70vw);
+}
+.atlas-filter-toggle {
+  display: none;
+}
+.atlas-filter-toggle[aria-expanded='true'] {
+  border-color: var(--mint);
+  color: var(--mint);
 }
 .atlas-clear {
   font-size: 0.8rem;
@@ -197,7 +204,7 @@
   white-space: nowrap;
 }
 .route-level[data-tone='intro'] {
-  color: #8ee0c0;
+  color: var(--mint);
 }
 .route-level[data-tone='deep'] {
   color: #9acaff;
@@ -212,7 +219,7 @@
   align-items: start;
 }
 .route-col {
-  border: 1px solid #2c3d47;
+  border: 1px solid var(--line);
   border-top: 3px solid var(--branch);
   border-radius: 14px;
   background: #121e27;
@@ -228,7 +235,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0 0.2rem 0.75rem;
-  border-bottom: 1px solid #2c3d47;
+  border-bottom: 1px solid var(--line);
   margin-bottom: 0.6rem;
 }
 .route-col-head h3 {
@@ -280,11 +287,11 @@
 }
 .route-stop-head:hover {
   background: #18272f;
-  border-color: #2c3d47;
+  border-color: var(--line);
 }
 .route-stop[data-open='true'] .route-stop-head {
   background: #18272f;
-  border-color: color-mix(in srgb, var(--branch) 45%, #2c3d47);
+  border-color: color-mix(in srgb, var(--branch) 45%, var(--line));
 }
 .route-marker {
   position: relative;
@@ -761,7 +768,7 @@
 }
 .star-panel {
   border-left: 1px solid var(--line);
-  background: #101c25;
+  background: var(--bg);
   padding: 18px 18px 22px;
   overflow: auto;
   height: min(72vh, 720px);
@@ -977,17 +984,25 @@
   .route-columns {
     grid-template-columns: 1fr;
   }
-  .atlas-fields {
-    flex-direction: column;
-    align-items: stretch;
-  }
   .atlas-search {
-    flex: none;
-    width: 100%;
-    box-sizing: border-box;
+    flex: 1 1 0;
+    min-height: 44px;
+  }
+  .atlas-filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .atlas-filters:not(.filters-open) .atlas-trunks,
+  .atlas-filters:not(.filters-open) .atlas-select-label {
+    display: none;
   }
   .atlas-select-label {
+    flex-basis: 100%;
     justify-content: space-between;
+  }
+  .atlas-clear {
+    min-height: 44px;
   }
   .atlas-select {
     max-width: none;

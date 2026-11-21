@@ -56,13 +56,32 @@ function format(v) {
       ? v.toExponential(2)
       : v.toFixed(2);
 }
-function selectExperiment(id, updateURL = true) {
+// 網址 #experiment=id&參數=值：可分享目前參數；只記錄與預設不同的參數。
+function shareURL() {
+  const query = new URLSearchParams({ experiment: def.id }),
+    base = Mechanics.defaults(def);
+  for (const p of def.params) if (params[p.id] !== base[p.id]) query.set(p.id, params[p.id]);
+  return '#' + query.toString();
+}
+function syncURL() {
+  history.replaceState(null, '', shareURL());
+}
+function routeFromURL() {
+  const hash = Object.fromEntries(new URLSearchParams((location.hash || '').slice(1)));
+  return { id: hash.experiment || new URLSearchParams(location.search).get('experiment'), overrides: hash };
+}
+function showParam(p) {
+  const text = formatParameter(params[p.id], p.step) + ' ' + p.unit;
+  $(p.id + 'Out').textContent = text;
+  $('param-' + p.id).setAttribute('aria-valuetext', text.trim());
+}
+function selectExperiment(id, updateURL = true, overrides = {}) {
   if (typeof ExperimentLoader !== 'undefined' && id && ExperimentLoader.has(id) && !ExperimentLoader.isReady(id)) {
     $('experiment').disabled = true;
     ExperimentLoader.load(id).then(
       () => {
         $('experiment').disabled = false;
-        selectExperiment(id, updateURL);
+        selectExperiment(id, updateURL, overrides);
       },
       error => {
         $('experiment').disabled = false;
@@ -74,6 +93,10 @@ function selectExperiment(id, updateURL = true) {
   }
   def = Mechanics.defs.find(d => d.id === id) || Mechanics.defs[0];
   params = Mechanics.defaults(def);
+  for (const p of def.params) {
+    const value = overrides[p.id] === '' ? NaN : +overrides[p.id];
+    if (Number.isFinite(value)) params[p.id] = Math.min(p.max, Math.max(p.min, value));
+  }
   if (def.initialView) Object.assign(camera, def.initialView);
   if (typeof annotationSelect === 'function') annotationSelect();
   document.title = def.title + ' · 3D 互動實驗室';
@@ -103,7 +126,14 @@ function selectExperiment(id, updateURL = true) {
     output.id = p.id + 'Out';
     head.append(output);
     const input = document.createElement('input');
-    Object.assign(input, { type: 'range', id: 'param-' + p.id, min: p.min, max: p.max, step: p.step, value: p.value });
+    Object.assign(input, {
+      type: 'range',
+      id: 'param-' + p.id,
+      min: p.min,
+      max: p.max,
+      step: p.step,
+      value: params[p.id]
+    });
     input.setAttribute('aria-label', p.label);
     input.addEventListener('input', () => {
       params[p.id] = +input.value;
@@ -114,7 +144,7 @@ function selectExperiment(id, updateURL = true) {
         $('param-' + key).value = value;
       }
       if (p.visual || (def.kind === 'safe-parabola' && ['envelope', 'circle', 'ellipse'].includes(p.id))) {
-        $(p.id + 'Out').textContent = params[p.id] + ' ' + p.unit;
+        showParam(p);
         dirty = true;
         if (p.refit) fitCamera();
       } else if (p.preservePlayback) {
@@ -125,6 +155,7 @@ function selectExperiment(id, updateURL = true) {
         running = wasRunning && t < simulation.duration;
         updateUI();
       } else setup(!!p.refit);
+      syncURL();
     });
     const limits = document.createElement('span');
     limits.className = 'limits';
@@ -161,7 +192,7 @@ function selectExperiment(id, updateURL = true) {
     li.textContent = q;
     $('questions').append(li);
   }
-  if (updateURL) history.replaceState(null, '', '#experiment=' + encodeURIComponent(def.id));
+  if (updateURL) syncURL();
   setup(true);
   if (def.kind === 'bicycle') {
     following = true;
@@ -177,7 +208,7 @@ function selectExperiment(id, updateURL = true) {
 function setup(fit, preserveAudio = false) {
   simulation = def.build(params);
   experimentAudio.setExperiment(simulation, params, { preserveEnabled: preserveAudio });
-  for (const p of def.params) $(p.id + 'Out').textContent = formatParameter(params[p.id], p.step) + ' ' + p.unit;
+  for (const p of def.params) showParam(p);
   collectPlotSamples();
   const selectedMode = $('plotMode').value,
     modes = [['time', '時間圖']];
@@ -357,6 +388,12 @@ function fitCamera() {
   $('follow').setAttribute('aria-pressed', 'false');
   dirty = true;
 }
+function restoreDefaults() {
+  params = Mechanics.defaults(def);
+  for (const p of def.params) $('param-' + p.id).value = params[p.id];
+  setup(false);
+  syncURL();
+}
 function reset() {
   t = 0;
   running = false;
@@ -370,6 +407,7 @@ function updateUI() {
   def.metrics.forEach((m, i) => ($('m' + i).textContent = format(s[m.key])));
   $('timeline').value = simulation.duration ? (t / simulation.duration) * 1000 : 0;
   $('timeline').disabled = simulation.duration === 0;
+  $('timeline').setAttribute('aria-valuetext', format(t) + ' 秒，共 ' + format(simulation.duration) + ' 秒');
   $('step').disabled = ended;
   $('play').disabled = simulation.duration === 0;
   $('play').textContent = running ? 'Ⅱ 暫停' : ended ? '↻ 再次播放' : t > 0 ? '▶ 繼續' : '▶ 播放';
