@@ -280,7 +280,8 @@
     'hydrogen-orbitals': ['V3-2', 'X-uni'],
     'pn-junction': ['X-uni'],
     'rutherford-scattering': ['V3-1'],
-    'nuclear-binding': ['V3-4', 'B5-4']
+    'nuclear-binding': ['V3-4', 'B5-4'],
+    'millikan-oil-drop': ['V2-2'],
   };
 
   const sections = new Map();

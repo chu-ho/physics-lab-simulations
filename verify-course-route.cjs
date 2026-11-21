@@ -37,10 +37,10 @@ assert.equal(ids['learning-map'].attrs['data-view'], 'route');
 assert.equal(ids['route-view'].hidden, false);
 assert.equal(ids['star-view'].hidden, true);
 assert.equal(ids['atlas-filters'].hidden, false);
-assert.equal(ids['atlas-status'].textContent, '4 條主線 · 19 章 · 149 個實驗');
+assert.equal(ids['atlas-status'].textContent, '4 條主線 · 19 章 · 150 個實驗');
 assert.equal(route.columns.length, 4);
 assert.equal(route.stops.length, 19);
-assert.equal(route.stops.reduce((sum, stop) => sum + stop.total, 0), 149, 'every experiment appears once');
+assert.equal(route.stops.reduce((sum, stop) => sum + stop.total, 0), 150, 'every experiment appears once');
 assert.ok(route.stops.every(stop => stop.body.hidden && stop.item.attrs['data-open'] === 'false'), 'stops start collapsed');
 
 // 展開與收合
@@ -62,7 +62,7 @@ assert.equal(ids['atlas-status'].textContent, '找到 ' + lensHits.length + ' �
 assert.equal(ids['atlas-clear'].hidden, false);
 ids['atlas-clear'].listeners.click({});
 assert.equal(filters.search.value, '');
-assert.equal(visibleLabs(route).length, 149);
+assert.equal(visibleLabs(route).length, 150);
 assert.equal(ids['atlas-clear'].hidden, true);
 
 // 別名與課本節名都能搜尋
@@ -83,7 +83,7 @@ const trunks = ids['atlas-trunks'].children;
 assert.equal(trunks.length, 5);
 trunks.find(item => item.textContent === '近代物理').listeners.click({});
 assert.deepEqual(Array.from(route.columns.filter(column => !column.column.hidden).map(column => column.name)), ['近代物理']);
-assert.equal(ids['atlas-status'].textContent, '近代物理 · 7 章 · 10 個實驗');
+assert.equal(ids['atlas-status'].textContent, '近代物理 · 7 章 · 11 個實驗');
 // 先備跳轉會切回目標主線並展開
 const quantum = route.stops.find(stop => stop.chapter.id === '4.5');
 quantum.toggle.listeners.click({});
@@ -118,4 +118,4 @@ assert.equal(magnet.rows.find(row => row.lab.id === 'charged-particle').li.attrs
 assert.equal(linked.star.state.focus, '3.2');
 assert.equal(linked.star.state.lab, 'charged-particle');
 
-console.log('PASS course route: atlas shell, shared filters (search/aliases/textbook/trunk), 19 stops with 149 experiments, prerequisite jumps, activities, view switch memory and deep links in both views.');
+console.log('PASS course route: atlas shell, shared filters (search/aliases/textbook/trunk), 19 stops with 150 experiments, prerequisite jumps, activities, view switch memory and deep links in both views.');
