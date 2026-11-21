@@ -353,6 +353,9 @@ function apparatus(s) {
     case 'wire-magnetic-field':
       drawWireMagneticField(s);
       break;
+    case 'cathode-ray':
+      drawCathodeRay(s);
+      break;
     case 'current-balance':
       drawCurrentBalance(s);
       break;

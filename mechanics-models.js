@@ -1710,5 +1710,6 @@
     require('./models/hydrostatic-buoyancy.js');
     require('./models/emf-power.js');
     require('./models/current-balance.js');
+    require('./models/cathode-ray.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);

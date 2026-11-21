@@ -426,7 +426,8 @@
     "sun-earth": "sun-earth.html",
     "sun-earth-moon": "sun-earth-moon.html",
     "emf-power": "emf-power.html",
-    "current-balance": "current-balance.html"
+    "current-balance": "current-balance.html",
+    "cathode-ray": "cathode-ray.html"
   },
   "excludeByDefault": [
     "artifacts/",
@@ -550,7 +551,8 @@
     "sun-earth": "assets/scenes-sun-earth.js",
     "sun-earth-moon": "assets/scenes-sun-earth-moon.js",
     "emf-power": "assets/scenes-emf-power.js",
-    "current-balance": "assets/scenes-current-balance.js"
+    "current-balance": "assets/scenes-current-balance.js",
+    "cathode-ray": "assets/scenes-cathode-ray.js"
   },
   "modelVerifiers": {
     "optical-polarizers": "verify-optical-polarizers.cjs",
@@ -672,7 +674,8 @@
     "sun-earth": "verify-sun-earth.cjs",
     "sun-earth-moon": "verify-sun-earth-moon.cjs",
     "emf-power": "verify-emf-power.cjs",
-    "current-balance": "verify-current-balance.cjs"
+    "current-balance": "verify-current-balance.cjs",
+    "cathode-ray": "verify-cathode-ray.cjs"
   },
   "modelDependencies": {
     "basic-waves": [
