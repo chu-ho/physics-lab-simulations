@@ -345,6 +345,7 @@ node tools/context.cjs --task chart
 
 - [薄膜干涉](thin-film.html)：膜厚、折射率、入射角與偏振的反射光譜及鍍膜。
 - [偏振片與馬呂斯定律](optical-polarizers.html)：交叉偏振、插入中間偏振片與角度掃描。
+- [電磁波的傳播](em-wave.html)：3D 行進平面電磁波，E、B 與傳播方向互相垂直，c = fλ、E/B = c，可調偏振。
 
 **近代物理**
 
@@ -353,6 +354,8 @@ node tools/context.cjs --task chart
 - [氫原子能階與光譜](hydrogen-spectrum.html)：能階躍遷的發射與吸收。
 - [放射性衰變](radioactive-decay.html)：初始核數、半衰期與固定種子的隨機抽樣。
 - [電子雙縫與物質波](matter-wave.html)：加速電壓、縫距與路徑資訊，落點可同種子重播。
+- [密立坎油滴實驗](millikan-oil-drop.html)：Stokes 終端速度、懸浮電壓與兩速度法量電荷，固定種子的 24 顆油滴電荷分布集中在基本電荷整數倍。
+- [X 射線與布拉格繞射](xray-bragg.html)：X 光管連續譜截止波長、特徵線，以及 2d sinθ = nλ 的各階反射。
 - [量子方井](quantum-well.html)：定態與兩能階疊加。
 - [氫原子軌域](hydrogen-orbitals.html)：1s、2s、2p_z 的 3D 位置取樣。
 - [矽 PN 接面](pn-junction.html)：摻雜濃度、偏壓掃描、耗盡區與能帶圖。

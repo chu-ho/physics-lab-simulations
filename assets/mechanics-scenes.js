@@ -392,6 +392,15 @@ function apparatus(s) {
     case 'photoelectric':
       drawPhotoelectric(s);
       break;
+    case 'millikan-oil-drop':
+      drawMillikanOilDrop(s);
+      break;
+    case 'xray-bragg':
+      drawXrayBragg(s);
+      break;
+    case 'em-wave':
+      drawEmWave(s);
+      break;
     case 'electroscope':
       drawElectroscope(s);
       break;

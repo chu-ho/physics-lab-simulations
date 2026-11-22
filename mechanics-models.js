@@ -1691,6 +1691,9 @@
     require('./models/blackbody-radiation.js');
     require('./models/hydrogen-spectrum.js');
     require('./models/radioactive-decay.js');
+    require('./models/millikan-oil-drop.js');
+    require('./models/xray-bragg.js');
+    require('./models/em-wave.js');
     require('./models/thin-film.js');
     require('./models/matter-wave.js');
     require('./models/parallel-capacitor.js');
