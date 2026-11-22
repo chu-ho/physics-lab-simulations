@@ -1712,5 +1712,8 @@
     require('./models/gravitation-g.js');
     require('./models/measurement-uncertainty.js');
     require('./models/dimensional-analysis.js');
+    require('./models/emf-power.js');
+    require('./models/current-balance.js');
+    require('./models/cathode-ray.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);

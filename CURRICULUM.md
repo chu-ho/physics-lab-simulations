@@ -214,8 +214,8 @@
 24 題依[學習地圖計畫](docs/plans/2026-11-05-physics-learning-map.md)補齊十九分支，每題附預測、操作、核對觀察及換情境題。
 
 - 熱學：`pv-path`（兩路徑的功、熱與內能，可閉合循環）、`carnot-engine`（理想氣體可逆循環與效率上限）。
-- 靜電與電路：`parallel-capacitor`（固定電壓／固定電荷）、`gauss-surface`（點電荷通量與數值積分）、`circuit-rc`（串並聯與 RC 指數充放電）、`rlc-resonance`（串聯受迫穩態、相位與共振）。
-- 磁與電磁感應：`wire-magnetic-field`（長直導線磁場與背景場合成）、`charged-particle`（均勻磁場圓周／螺旋）、`magnetic-induction`（磁通變化與感應電壓）、`eddy-current`（等效環電阻的磁阻尼與能量收支）、`generator-transformer`（交流發電與理想變壓器）。
+- 靜電與電路：`parallel-capacitor`（固定電壓／固定電荷）、`gauss-surface`（點電荷通量與數值積分）、`cathode-ray`（電子加速、平行板偏轉、交叉場速度選擇與湯姆森荷質比）、`circuit-rc`（串並聯與 RC 指數充放電）、`rlc-resonance`（串聯受迫穩態、相位與共振）、`emf-power`（電動勢與內電阻、端電壓、功率分配與最大功率傳輸）。
+- 磁與電磁感應：`wire-magnetic-field`（長直導線磁場與背景場合成）、`charged-particle`（均勻磁場圓周／螺旋）、`current-balance`（載流導線受力 F = IL × B 與電流天平）、`magnetic-induction`（磁通變化與感應電壓）、`eddy-current`（等效環電阻的磁阻尼與能量收支）、`generator-transformer`（交流發電與理想變壓器）。
 - 光學：`thin-film`（單層膜雙光束干涉、s／p 偏振）、`optical-polarizers`（馬呂斯定律與三片偏振）。
 - 近代物理：`photoelectric`、`blackbody-radiation`、`hydrogen-spectrum`、`radioactive-decay`（固定種子抽樣）、`matter-wave`（電子雙縫與路徑資訊）、`quantum-well`（無限方井定態與疊加）、`hydrogen-orbitals`（1s／2s／2p_z 機率取樣）、`pn-junction`（耗盡近似、偏壓與能帶）、`rutherford-scattering`（點核與擴散正電球）、`nuclear-binding`（NIST 質量資料計算的融合與分裂能量）。
 - 靜力學：`hydrostatic-buoyancy`（靜水壓差與浮力平衡）。

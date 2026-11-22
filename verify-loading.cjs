@@ -48,4 +48,4 @@ for (const entry of MechanicsCatalog) {
 }
 const original = 240;
 const largest = MechanicsStaticScripts.length + worst.count;
-console.log('PASS on-demand loading: 146 experiments each run with only their own files; page loads ' + MechanicsStaticScripts.length + '–' + largest + ' scripts (was ' + original + '), library ' + library.length + ' (was 124).');
+console.log('PASS on-demand loading: 149 experiments each run with only their own files; page loads ' + MechanicsStaticScripts.length + '–' + largest + ' scripts (was ' + original + '), library ' + library.length + ' (was 124).');
