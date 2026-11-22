@@ -1,6 +1,6 @@
 # 物理互動實驗室 / 3D
 
-沿用深色控制面板、薄荷綠操作色與淺色 3D 場景，涵蓋高中與大一普通物理：149 個共用實驗加 3 個獨立拋體頁，共 152 個入口，範圍包括力學、熱學、波動與光學、電與磁、近代物理及天文。無外部網路依賴，直接以瀏覽器開啟即可使用。
+沿用深色控制面板、薄荷綠操作色與淺色 3D 場景，涵蓋高中與大一普通物理：156 個共用實驗加 3 個獨立拋體頁，共 159 個入口，範圍包括力學、熱學、波動與光學、電與磁、近代物理及天文。無外部網路依賴，直接以瀏覽器開啟即可使用。
 
 ## 開始使用
 
@@ -91,9 +91,9 @@
 
 ## 驗證
 
-執行 `node verify-all.cjs`，不需安裝第三方套件，全套約 2 分鐘（2026-11-21：152 項全部通過）：
+執行 `node verify-all.cjs`，不需安裝第三方套件，全套約 2 分鐘（2026-11-22：159 項全部通過）：
 
-- 149 個共用模型共 3639 組參數組合，包括每個拉桿端點、同時極值與固定種子的混合設定。
+- 156 個共用模型共 3806 組參數組合，包括每個拉桿端點、同時極值與固定種子的混合設定。
 - 每個模型另有 `verify-<id>.cjs` 獨立物理驗證，由 verify-all 一併執行。
 - 解析參考值、動量與能量守恆、摩擦臨界條件、F = ma、軌道能量與角動量、阻尼耗散、受迫振動功率及 RK4 收斂。
 - 新實驗的繪圖與播放、暫停、回放、參數更新、視角、追蹤、重設、說明與 CSV 操作流程；總覽搜尋、分類與本機連結。
@@ -104,7 +104,7 @@
 ## 檔案結構
 
 - library.html、assets/library.js：入口頁與可搜尋的實驗總覽；assets/atlas.*、course-route.js、star-map.js、learning-map.js：學習地圖（見架構文件）。
-- mechanics.html：149 個共用實驗的共用操作頁面，以 experiment 查詢參數切換。
+- mechanics.html：156 個共用實驗的共用操作頁面，以 experiment 查詢參數切換。
 - 根目錄的 `<id>.html`：轉址到 `mechanics.html?experiment=<id>` 的短入口，方便本機直接開啟。
 - mechanics-models.js：核心力學模型與 `Mechanics.register` 登錄機制；其餘模型在 `models/<id>.js`，共用核心為 `models/*-core.js`。
 - assets/scenes-<id>.js：各題的 3D 裝置繪圖；`verify-<id>.cjs`：各題獨立物理驗證。
@@ -345,6 +345,7 @@ node tools/context.cjs --task chart
 
 - [薄膜干涉](thin-film.html)：膜厚、折射率、入射角與偏振的反射光譜及鍍膜。
 - [偏振片與馬呂斯定律](optical-polarizers.html)：交叉偏振、插入中間偏振片與角度掃描。
+- [電磁波的傳播](em-wave.html)：3D 行進平面電磁波，E、B 與傳播方向互相垂直，c = fλ、E/B = c，可調偏振。
 
 **近代物理**
 
@@ -353,6 +354,8 @@ node tools/context.cjs --task chart
 - [氫原子能階與光譜](hydrogen-spectrum.html)：能階躍遷的發射與吸收。
 - [放射性衰變](radioactive-decay.html)：初始核數、半衰期與固定種子的隨機抽樣。
 - [電子雙縫與物質波](matter-wave.html)：加速電壓、縫距與路徑資訊，落點可同種子重播。
+- [密立坎油滴實驗](millikan-oil-drop.html)：Stokes 終端速度、懸浮電壓與兩速度法量電荷，固定種子的 24 顆油滴電荷分布集中在基本電荷整數倍。
+- [X 射線與布拉格繞射](xray-bragg.html)：X 光管連續譜截止波長、特徵線，以及 2d sinθ = nλ 的各階反射。
 - [量子方井](quantum-well.html)：定態與兩能階疊加。
 - [氫原子軌域](hydrogen-orbitals.html)：1s、2s、2p_z 的 3D 位置取樣。
 - [矽 PN 接面](pn-junction.html)：摻雜濃度、偏壓掃描、耗盡區與能帶圖。

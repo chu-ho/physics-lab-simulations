@@ -1715,5 +1715,8 @@
     require('./models/emf-power.js');
     require('./models/current-balance.js');
     require('./models/cathode-ray.js');
+    require('./models/millikan-oil-drop.js');
+    require('./models/xray-bragg.js');
+    require('./models/em-wave.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
