@@ -37,10 +37,10 @@ assert.equal(ids['learning-map'].attrs['data-view'], 'route');
 assert.equal(ids['route-view'].hidden, false);
 assert.equal(ids['star-view'].hidden, true);
 assert.equal(ids['atlas-filters'].hidden, false);
-assert.equal(ids['atlas-status'].textContent, '4 條主線 · 19 章 · 153 個實驗');
+assert.equal(ids['atlas-status'].textContent, '4 條主線 · 19 章 · 156 個實驗');
 assert.equal(route.columns.length, 4);
 assert.equal(route.stops.length, 19);
-assert.equal(route.stops.reduce((sum, stop) => sum + stop.total, 0), 153, 'every experiment appears once');
+assert.equal(route.stops.reduce((sum, stop) => sum + stop.total, 0), 156, 'every experiment appears once');
 assert.ok(route.stops.every(stop => stop.body.hidden && stop.item.attrs['data-open'] === 'false'), 'stops start collapsed');
 
 // 展開與收合
@@ -62,7 +62,7 @@ assert.equal(ids['atlas-status'].textContent, '找到 ' + lensHits.length + ' �
 assert.equal(ids['atlas-clear'].hidden, false);
 ids['atlas-clear'].listeners.click({});
 assert.equal(filters.search.value, '');
-assert.equal(visibleLabs(route).length, 153);
+assert.equal(visibleLabs(route).length, 156);
 assert.equal(ids['atlas-clear'].hidden, true);
 
 // 別名與課本節名都能搜尋
@@ -75,7 +75,7 @@ filters.set({query: ''});
 // 課本章節篩選
 filters.select.value = 'IV2';
 filters.select.listeners.change({});
-assert.deepEqual(visibleLabs(route).sort(), ['charged-particle', 'wire-magnetic-field']);
+assert.deepEqual(visibleLabs(route).sort(), ['charged-particle', 'current-balance', 'wire-magnetic-field']);
 filters.set({textbook: ''});
 
 // 主線篩選
@@ -118,4 +118,4 @@ assert.equal(magnet.rows.find(row => row.lab.id === 'charged-particle').li.attrs
 assert.equal(linked.star.state.focus, '3.2');
 assert.equal(linked.star.state.lab, 'charged-particle');
 
-console.log('PASS course route: atlas shell, shared filters (search/aliases/textbook/trunk), 19 stops with 153 experiments, prerequisite jumps, activities, view switch memory and deep links in both views.');
+console.log('PASS course route: atlas shell, shared filters (search/aliases/textbook/trunk), 19 stops with 156 experiments, prerequisite jumps, activities, view switch memory and deep links in both views.');
