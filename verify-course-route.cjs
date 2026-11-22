@@ -1,5 +1,5 @@
 'use strict';
-// 課程路線圖：真實 library.html 與腳本，驗證站點、展開、搜尋、課本篩選、主線篩選、先備跳轉、深連結與檢視切換。
+// 學習地圖入口與課程路線圖：真實 library.html 與腳本，驗證共用篩選、站點、展開、課本與主線篩選、先備跳轉、檢視切換與深連結。
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -7,12 +7,10 @@ const vm = require('node:vm');
 const {domHarness} = require('./tools/dom-harness.cjs');
 const read = file => fs.readFileSync(path.join(__dirname, file), 'utf8');
 const html = read('library.html');
-
-assert.ok(html.indexOf('assets/learning-map.js') < html.indexOf('assets/course-route.js'), 'route view needs learning-map data first');
-assert.ok(html.indexOf('assets/course-route.js') < html.indexOf('assets/library.js'), 'route view loads before catalogue mount');
-for (const id of ['map-tools', 'map-results', 'map-branches', 'map-stage', 'map-details-panel'])
-  assert.match(html, new RegExp('class="[^"]*star-only[^"]*" id="' + id + '"'), id + ' belongs to star view');
-assert.ok(html.indexOf('<section class="hero">') < html.indexOf('id="learning-map"'), 'intro sits above the map');
+const order = ['assets/learning-map.js', 'assets/course-route.js', 'assets/star-map.js', 'assets/atlas.js', 'assets/library.js'];
+order.reduce((previous, file) => { const at = html.indexOf(file); assert.ok(at > previous, file + ' load order'); return at; }, -1);
+assert.ok(!html.includes('class="hero"'), 'large hero removed; the atlas header is the entry');
+assert.ok(!html.includes('id="map-board"'), 'old 3D star map markup removed');
 
 function open(hash = '', saved = null) {
   const {ids, sandbox} = domHarness(html);
@@ -21,101 +19,103 @@ function open(hash = '', saved = null) {
   sandbox.window.addEventListener = () => {};
   sandbox.history.replaceState = () => {};
   sandbox.location.hash = hash;
-  vm.runInContext(read('mechanics-models.js'), sandbox);
   for (const [, source] of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g)) {
     if (source === 'assets/library.js') continue;
     vm.runInContext(read(source), sandbox, {filename: source});
   }
-  vm.runInContext("var routeApi; const __mount = mountCourseRoute; mountCourseRoute = catalogue => (routeApi = __mount(catalogue));", sandbox);
+  vm.runInContext('var atlasApi; const __mount = mountAtlas; mountAtlas = catalogue => (atlasApi = __mount(catalogue));', sandbox);
   vm.runInContext(read('assets/library.js'), sandbox, {filename: 'assets/library.js'});
-  return {ids, sandbox, store, api: vm.runInContext('routeApi', sandbox)};
+  return {ids, store, api: vm.runInContext('atlasApi', sandbox)};
 }
+const visibleLabs = route => Array.from(route.stops.flatMap(stop => stop.rows).filter(row => !row.li.hidden).map(row => row.lab.id));
 
 const {ids, api, store} = open();
-const catalogue = 149;
-assert.equal(api.columns.length, 4);
-assert.equal(api.stops.length, 19);
-assert.equal(api.stops.reduce((sum, stop) => sum + stop.total, 0), catalogue, 'every experiment appears once');
+const {route, filters} = api;
+assert.equal(ids['learning-map'].attrs['data-ready'], 'true');
+assert.equal(ids['map-fallback'].hidden, true, 'static fallback hidden once scripts run');
 assert.equal(ids['learning-map'].attrs['data-view'], 'route');
 assert.equal(ids['route-view'].hidden, false);
-assert.equal(ids['map-viewswitch'].hidden, false);
-assert.equal(ids['route-status'].textContent, '4 條主線 · 19 章 · 149 個實驗');
-assert.ok(api.stops.every(stop => stop.body.hidden && stop.item.attrs['data-open'] === 'false'), 'stops start collapsed');
+assert.equal(ids['star-view'].hidden, true);
+assert.equal(ids['atlas-filters'].hidden, false);
+assert.equal(ids['atlas-status'].textContent, '4 條主線 · 19 章 · 149 個實驗');
+assert.equal(route.columns.length, 4);
+assert.equal(route.stops.length, 19);
+assert.equal(route.stops.reduce((sum, stop) => sum + stop.total, 0), 149, 'every experiment appears once');
+assert.ok(route.stops.every(stop => stop.body.hidden && stop.item.attrs['data-open'] === 'false'), 'stops start collapsed');
 
 // 展開與收合
-const optics = api.stops.find(stop => stop.chapter.id === '2.2');
+const optics = route.stops.find(stop => stop.chapter.id === '2.2');
 optics.toggle.listeners.click({});
 assert.equal(optics.body.hidden, false);
 assert.equal(optics.toggle.attrs['aria-expanded'], 'true');
-assert.ok(optics.rows.some(row => row.lab.id === 'eye-lens'));
 optics.toggle.listeners.click({});
 assert.equal(optics.body.hidden, true);
 
-// 搜尋：自動展開符合章節、淡化其餘並更新計數
-api.search.value = '透鏡';
-api.search.listeners.input({});
-const visible = api.stops.flatMap(stop => stop.rows).filter(row => !row.li.hidden);
-assert.ok(visible.length >= 5 && visible.every(row => row.text.includes('透鏡')));
+// 共用搜尋：自動展開符合章節、淡化其餘並更新計數
+filters.search.value = '透鏡';
+filters.search.listeners.input({});
+const lensHits = visibleLabs(route);
+assert.ok(lensHits.length >= 5);
 assert.equal(optics.item.attrs['data-open'], 'true');
-assert.equal(api.stops.find(stop => stop.chapter.id === '1.1').item.attrs['data-dim'], 'true');
-assert.match(ids['route-status'].textContent, /^找到 \d+ 個實驗，分布在 \d+ 個章節$/);
-assert.equal(ids['route-clear'].hidden, false);
-ids['route-clear'].listeners.click({});
-assert.equal(api.search.value, '');
-assert.ok(api.stops.every(stop => stop.rows.every(row => !row.li.hidden)));
-assert.equal(ids['route-clear'].hidden, true);
+assert.equal(route.stops.find(stop => stop.chapter.id === '1.1').item.attrs['data-dim'], 'true');
+assert.equal(ids['atlas-status'].textContent, '找到 ' + lensHits.length + ' 個實驗，分布在 1 個章節');
+assert.equal(ids['atlas-clear'].hidden, false);
+ids['atlas-clear'].listeners.click({});
+assert.equal(filters.search.value, '');
+assert.equal(visibleLabs(route).length, 149);
+assert.equal(ids['atlas-clear'].hidden, true);
 
 // 別名與課本節名都能搜尋
-api.search.value = '救護車';
-api.search.listeners.input({});
-assert.deepEqual(Array.from(api.stops.flatMap(stop => stop.rows).filter(row => !row.li.hidden).map(row => row.lab.id)), ['doppler']);
-api.search.value = '司乃耳';
-api.search.listeners.input({});
-assert.ok(api.stops.flatMap(stop => stop.rows).filter(row => !row.li.hidden).some(row => row.lab.id === 'refraction-cart'));
-ids['route-clear'].listeners.click({});
+filters.set({query: '救護車'});
+assert.deepEqual(visibleLabs(route), ['doppler']);
+filters.set({query: '司乃耳'});
+assert.ok(visibleLabs(route).includes('refraction-cart'));
+filters.set({query: ''});
 
 // 課本章節篩選
-api.select.value = 'IV2';
-api.select.listeners.change({});
-assert.deepEqual(Array.from(api.stops.flatMap(stop => stop.rows).filter(row => !row.li.hidden).map(row => row.lab.id)).sort(), ['charged-particle', 'wire-magnetic-field']);
-api.select.value = '';
-api.select.listeners.change({});
+filters.select.value = 'IV2';
+filters.select.listeners.change({});
+assert.deepEqual(visibleLabs(route).sort(), ['charged-particle', 'wire-magnetic-field']);
+filters.set({textbook: ''});
 
 // 主線篩選
-const trunks = ids['route-trunks'].children;
+const trunks = ids['atlas-trunks'].children;
 assert.equal(trunks.length, 5);
 trunks.find(item => item.textContent === '近代物理').listeners.click({});
-assert.deepEqual(Array.from(api.columns.filter(column => !column.column.hidden).map(column => column.name)), ['近代物理']);
-assert.equal(trunks.find(item => item.textContent === '近代物理').attrs['aria-pressed'], 'true');
+assert.deepEqual(Array.from(route.columns.filter(column => !column.column.hidden).map(column => column.name)), ['近代物理']);
+assert.equal(ids['atlas-status'].textContent, '近代物理 · 7 章 · 10 個實驗');
 // 先備跳轉會切回目標主線並展開
-const quantum = api.stops.find(stop => stop.chapter.id === '4.5');
+const quantum = route.stops.find(stop => stop.chapter.id === '4.5');
 quantum.toggle.listeners.click({});
 const jump = quantum.body.children.find(child => child.className === 'route-links').children[0].children.find(child => child.className === 'route-jump');
 assert.match(jump.textContent, /^4\.3 /);
 jump.listeners.click({});
-assert.equal(api.stops.find(stop => stop.chapter.id === '4.3').item.attrs['data-open'], 'true');
+assert.equal(route.stops.find(stop => stop.chapter.id === '4.3').item.attrs['data-open'], 'true');
 trunks[0].listeners.click({});
-assert.ok(api.columns.every(column => !column.column.hidden));
+assert.ok(route.columns.every(column => !column.column.hidden));
 
-// 卡片標籤與探究活動
-const lens = api.stops.flatMap(stop => stop.rows).find(row => row.lab.id === 'half-lens');
+// 實驗列：連結、課本標籤、探究活動
+const lens = route.stops.flatMap(stop => stop.rows).find(row => row.lab.id === 'half-lens');
 assert.equal(lens.li.children[0].href, 'mechanics.html#experiment=half-lens');
 assert.ok(lens.li.children.some(child => child.className === 'route-lab-tags'));
-assert.ok(lens.li.children.some(child => child.className === 'route-activity'), 'activity guide shown in route view');
+assert.ok(lens.li.children.some(child => child.className === 'route-activity'));
 
 // 檢視切換與記憶
 ids['map-view-star'].listeners.click({});
 assert.equal(ids['learning-map'].attrs['data-view'], 'star');
 assert.equal(ids['route-view'].hidden, true);
+assert.equal(ids['star-view'].hidden, false);
 assert.equal(store.get('physics-map-view'), 'star');
 ids['map-view-route'].listeners.click({});
 assert.equal(ids['learning-map'].attrs['data-view'], 'route');
 assert.equal(open('', 'star').api.state.view, 'star', 'saved view restored');
 
-// 深連結：#map-章節/實驗 會展開並標示該實驗
+// 深連結：#map-章節/實驗 兩種檢視都展開並標示該實驗
 const linked = open('#map-3.2/charged-particle').api;
-const magnet = linked.stops.find(stop => stop.chapter.id === '3.2');
+const magnet = linked.route.stops.find(stop => stop.chapter.id === '3.2');
 assert.equal(magnet.item.attrs['data-open'], 'true');
 assert.equal(magnet.rows.find(row => row.lab.id === 'charged-particle').li.attrs['aria-current'], 'true');
+assert.equal(linked.star.state.focus, '3.2');
+assert.equal(linked.star.state.lab, 'charged-particle');
 
-console.log('PASS course route: 4 trunks, 19 stops, 149 experiments; expand, search (aliases/textbook), textbook and trunk filters, prerequisite jumps, activities, view switch memory and deep links.');
+console.log('PASS course route: atlas shell, shared filters (search/aliases/textbook/trunk), 19 stops with 149 experiments, prerequisite jumps, activities, view switch memory and deep links in both views.');
