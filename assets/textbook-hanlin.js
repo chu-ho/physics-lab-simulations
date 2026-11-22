@@ -148,6 +148,10 @@
     noninertial: ['I4-5', 'I2-6', 'X-uni'],
     // 功、能量、動量
     work: ['II3-2', 'II3-3'],
+    'power-hoist': ['II3-4', 'II3-1', 'B5-3'],
+    'gravitation-g': ['I5-1', 'I5-2'],
+    'measurement-uncertainty': ['I1-1', 'I1-2'],
+    'dimensional-analysis': ['I1-3'],
     'energy-track': ['II4-4', 'II4-1', 'B5-3'],
     collision: ['II4-5', 'II1-3'],
     'ballistic-pendulum': ['II1-3', 'II4-5', 'II4-4'],
