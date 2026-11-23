@@ -236,6 +236,18 @@ function apparatus(s) {
     k = def.kind,
     r = Math.min(1.1, Math.max(0.3, scale * 0.014));
   switch (k) {
+    case 'power-hoist':
+      drawPowerHoist(s);
+      break;
+    case 'gravitation-g':
+      drawGravitationG(s);
+      break;
+    case 'measurement-uncertainty':
+      drawMeasurementUncertainty(s);
+      break;
+    case 'dimensional-analysis':
+      drawDimensionalAnalysis(s);
+      break;
     case 'sun-earth-moon':
       drawSunEarthMoon(s);
       break;
@@ -338,6 +350,9 @@ function apparatus(s) {
     case 'pn-junction':
       drawPnJunction(s);
       break;
+    case 'emf-power':
+      drawEmfPower(s);
+      break;
     case 'rlc-resonance':
       drawRlcResonance(s);
       break;
@@ -349,6 +364,12 @@ function apparatus(s) {
       break;
     case 'wire-magnetic-field':
       drawWireMagneticField(s);
+      break;
+    case 'cathode-ray':
+      drawCathodeRay(s);
+      break;
+    case 'current-balance':
+      drawCurrentBalance(s);
       break;
     case 'charged-particle':
       drawChargedParticle(s);
@@ -370,6 +391,15 @@ function apparatus(s) {
       break;
     case 'photoelectric':
       drawPhotoelectric(s);
+      break;
+    case 'millikan-oil-drop':
+      drawMillikanOilDrop(s);
+      break;
+    case 'xray-bragg':
+      drawXrayBragg(s);
+      break;
+    case 'em-wave':
+      drawEmWave(s);
       break;
     case 'electroscope':
       drawElectroscope(s);

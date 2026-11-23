@@ -328,6 +328,9 @@
     "magnetic-induction": "magnetic-induction.html",
     "circuit-rc": "circuit-rc.html",
     "photoelectric": "photoelectric.html",
+    "millikan-oil-drop": "millikan-oil-drop.html",
+    "xray-bragg": "xray-bragg.html",
+    "em-wave": "em-wave.html",
     "bungee": "bungee.html",
     "massive-spring": "massive-spring.html",
     "double-slit": "double-slit.html",
@@ -347,6 +350,10 @@
     "self-pull": "self-pull.html",
     "moving-atwood": "moving-atwood.html",
     "conveyor-friction": "conveyor-friction.html",
+    "power-hoist": "power-hoist.html",
+    "gravitation-g": "gravitation-g.html",
+    "measurement-uncertainty": "measurement-uncertainty.html",
+    "dimensional-analysis": "dimensional-analysis.html",
     "bike-turn": "bike-turn.html",
     "projectile-explosion": "projectile-explosion.html",
     "recoiling-wedge": "recoiling-wedge.html",
@@ -424,7 +431,10 @@
     "celestial-sphere": "celestial-sphere.html",
     "moon-earth": "moon-earth.html",
     "sun-earth": "sun-earth.html",
-    "sun-earth-moon": "sun-earth-moon.html"
+    "sun-earth-moon": "sun-earth-moon.html",
+    "emf-power": "emf-power.html",
+    "current-balance": "current-balance.html",
+    "cathode-ray": "cathode-ray.html"
   },
   "excludeByDefault": [
     "artifacts/",
@@ -458,6 +468,9 @@
     "magnetic-induction": "assets/scenes-magnetic-induction.js",
     "circuit-rc": "assets/scenes-circuit-rc.js",
     "photoelectric": "assets/scenes-photoelectric.js",
+    "millikan-oil-drop": "assets/scenes-millikan-oil-drop.js",
+    "xray-bragg": "assets/scenes-xray-bragg.js",
+    "em-wave": "assets/scenes-em-wave.js",
     "airplane-drop": "assets/scenes-airplane-drop.js",
     "safe-parabola": "assets/scenes-safe-parabola.js",
     "relative-motion": "assets/scenes-relative-motion.js",
@@ -472,6 +485,10 @@
     "self-pull": "assets/scenes-self-pull.js",
     "moving-atwood": "assets/scenes-moving-atwood.js",
     "conveyor-friction": "assets/scenes-conveyor-friction.js",
+    "power-hoist": "assets/scenes-power-hoist.js",
+    "gravitation-g": "assets/scenes-gravitation-g.js",
+    "measurement-uncertainty": "assets/scenes-measurement-uncertainty.js",
+    "dimensional-analysis": "assets/scenes-dimensional-analysis.js",
     "bike-turn": "assets/scenes-bike-turn.js",
     "projectile-explosion": "assets/scenes-projectile-explosion.js",
     "recoiling-wedge": "assets/scenes-recoiling-wedge.js",
@@ -546,7 +563,10 @@
     "celestial-sphere": "assets/scenes-celestial-sphere.js",
     "moon-earth": "assets/scenes-moon-earth.js",
     "sun-earth": "assets/scenes-sun-earth.js",
-    "sun-earth-moon": "assets/scenes-sun-earth-moon.js"
+    "sun-earth-moon": "assets/scenes-sun-earth-moon.js",
+    "emf-power": "assets/scenes-emf-power.js",
+    "current-balance": "assets/scenes-current-balance.js",
+    "cathode-ray": "assets/scenes-cathode-ray.js"
   },
   "modelVerifiers": {
     "optical-polarizers": "verify-optical-polarizers.cjs",
@@ -573,6 +593,9 @@
     "magnetic-induction": "verify-magnetic-induction.cjs",
     "circuit-rc": "verify-circuit-rc.cjs",
     "photoelectric": "verify-photoelectric.cjs",
+    "millikan-oil-drop": "verify-millikan-oil-drop.cjs",
+    "xray-bragg": "verify-xray-bragg.cjs",
+    "em-wave": "verify-em-wave.cjs",
     "airplane-drop": "verify-airplane-drop.cjs",
     "safe-parabola": "verify-safe-parabola.cjs",
     "relative-motion": "verify-relative-motion.cjs",
@@ -588,6 +611,10 @@
     "self-pull": "verify-self-pull.cjs",
     "moving-atwood": "verify-moving-atwood.cjs",
     "conveyor-friction": "verify-conveyor-friction.cjs",
+    "power-hoist": "verify-power-hoist.cjs",
+    "gravitation-g": "verify-gravitation-g.cjs",
+    "measurement-uncertainty": "verify-measurement-uncertainty.cjs",
+    "dimensional-analysis": "verify-dimensional-analysis.cjs",
     "bike-turn": "verify-bike-turn.cjs",
     "projectile-explosion": "verify-projectile-explosion.cjs",
     "recoiling-wedge": "verify-recoiling-wedge.cjs",
@@ -666,7 +693,10 @@
     "celestial-sphere": "verify-celestial-sphere.cjs",
     "moon-earth": "verify-moon-earth.cjs",
     "sun-earth": "verify-sun-earth.cjs",
-    "sun-earth-moon": "verify-sun-earth-moon.cjs"
+    "sun-earth-moon": "verify-sun-earth-moon.cjs",
+    "emf-power": "verify-emf-power.cjs",
+    "current-balance": "verify-current-balance.cjs",
+    "cathode-ray": "verify-cathode-ray.cjs"
   },
   "modelDependencies": {
     "basic-waves": [

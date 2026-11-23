@@ -148,6 +148,10 @@
     noninertial: ['I4-5', 'I2-6', 'X-uni'],
     // 功、能量、動量
     work: ['II3-2', 'II3-3'],
+    'power-hoist': ['II3-4', 'II3-1', 'B5-3'],
+    'gravitation-g': ['I5-1', 'I5-2'],
+    'measurement-uncertainty': ['I1-1', 'I1-2'],
+    'dimensional-analysis': ['I1-3'],
     'energy-track': ['II4-4', 'II4-1', 'B5-3'],
     collision: ['II4-5', 'II1-3'],
     'ballistic-pendulum': ['II1-3', 'II4-5', 'II4-4'],
@@ -265,11 +269,14 @@
     'parallel-capacitor': ['IV1-4', 'X-uni'],
     'wire-magnetic-field': ['IV2-2', 'IV2-1', 'B4-2'],
     'charged-particle': ['IV2-4'],
+    'cathode-ray': ['IV1-3', 'V2-1'],
+    'current-balance': ['IV2-3', 'B4-2'],
     'magnetic-induction': ['IV3-3', 'IV3-2', 'B4-3'],
     'eddy-current': ['IV3-2', 'IV3-4'],
     'generator-transformer': ['IV3-4', 'B4-3'],
     'circuit-rc': ['V1-3', 'V1-4', 'X-uni'],
     'rlc-resonance': ['IV3-4', 'X-uni'],
+    'emf-power': ['V1-1', 'V1-2', 'V1-5'],
     // 近代物理
     photoelectric: ['V2-5', 'B6-1'],
     'blackbody-radiation': ['V2-4'],
@@ -280,7 +287,10 @@
     'hydrogen-orbitals': ['V3-2', 'X-uni'],
     'pn-junction': ['X-uni'],
     'rutherford-scattering': ['V3-1'],
-    'nuclear-binding': ['V3-4', 'B5-4']
+    'nuclear-binding': ['V3-4', 'B5-4'],
+    'millikan-oil-drop': ['V2-2'],
+    'xray-bragg': ['V2-3'],
+    'em-wave': ['B4-4', 'IV3-5']
   };
 
   const sections = new Map();

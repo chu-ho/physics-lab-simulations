@@ -1708,5 +1708,15 @@
     require('./models/nuclear-binding.js');
     require('./models/optical-polarizers.js');
     require('./models/hydrostatic-buoyancy.js');
+    require('./models/power-hoist.js');
+    require('./models/gravitation-g.js');
+    require('./models/measurement-uncertainty.js');
+    require('./models/dimensional-analysis.js');
+    require('./models/emf-power.js');
+    require('./models/current-balance.js');
+    require('./models/cathode-ray.js');
+    require('./models/millikan-oil-drop.js');
+    require('./models/xray-bragg.js');
+    require('./models/em-wave.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
