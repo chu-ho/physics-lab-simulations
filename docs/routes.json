@@ -71,7 +71,8 @@
         "assets/lab.css",
         "assets/mechanics-controls.js",
         "assets/mechanics-annotations.js",
-        "assets/mechanics-measure.js"
+        "assets/mechanics-measure.js",
+        "assets/param-levels.js"
       ],
       "symbols": [
         ".workspace",
