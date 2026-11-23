@@ -67,6 +67,19 @@ $('timeline').oninput = () => {
 for (const id of ['trail', 'vectors', 'forces', 'grid', 'plotMetric'])
   $(id).addEventListener('change', () => (dirty = true));
 for (const level of [1, 2, 3]) $('level-' + level).addEventListener('click', () => selectParamLevel(level));
+$('derivationPanel').addEventListener('toggle', renderDerivation);
+$('derivationNext').onclick = () => {
+  derivationShown++;
+  renderDerivation();
+};
+$('derivationAll').onclick = () => {
+  derivationShown = 99;
+  renderDerivation();
+};
+$('derivationReset').onclick = () => {
+  derivationShown = 1;
+  renderDerivation();
+};
 $('energyToggle').addEventListener('change', () => {
   updateEnergy(stateAt(t));
   dirty = true;

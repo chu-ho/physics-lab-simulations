@@ -65,6 +65,64 @@ function updateEnergy(s) {
   $('energyText').textContent = parts.join('　');
   $('energyTrack').setAttribute('aria-label', '能量條：' + parts.join('，'));
 }
+// 推導分頁：只對 Derivations 有的實驗出現；收合時不計算。步驟逐步揭露，改參數時數字即時更新、
+// 已揭露的步數保留；全部揭露後才列出「推導 vs 模擬」。
+let derivationShown = 1;
+function derivationAvailable() {
+  return typeof Derivations !== 'undefined' && !!def && !!Derivations[def.id];
+}
+function renderDerivation() {
+  const panel = $('derivationPanel');
+  if (!panel) return;
+  panel.hidden = !derivationAvailable();
+  if (panel.hidden || !panel.open) return;
+  const { steps, checks } = Derivations[def.id](params, simulation),
+    shown = Math.min(derivationShown, steps.length);
+  $('derivationSteps').replaceChildren(
+    ...steps.slice(0, shown).map(step => {
+      const item = document.createElement('li'),
+        title = document.createElement('strong'),
+        text = document.createElement('p'),
+        math = document.createElement('code');
+      title.textContent = step.title;
+      text.textContent = step.text;
+      math.textContent = step.math;
+      item.append(title, text, math);
+      return item;
+    })
+  );
+  $('derivationProgress').textContent = '第 ' + shown + ' / ' + steps.length + ' 步';
+  $('derivationNext').disabled = shown >= steps.length;
+  $('derivationAll').disabled = shown >= steps.length;
+  const done = shown >= steps.length;
+  $('derivationChecks').hidden = !done;
+  $('derivationChecks').replaceChildren(
+    ...(done ? checks : []).map(check => {
+      const row = document.createElement('p'),
+        diff = derivationDiff(check),
+        relative = (check.simulated - check.derived) / Math.abs(check.derived || 1),
+        verdict = check.approx
+          ? '近似，模擬比推導' + (relative >= 0 ? '大 ' : '小 ') + Math.abs(relative * 100).toFixed(1) + '%'
+          : diff <= check.tolerance
+            ? '✓ 一致'
+            : '✗ 差 ' + (diff * 100).toFixed(2) + '%';
+      row.className = 'derivation-check' + (check.approx ? ' approx' : '');
+      row.textContent =
+        check.label +
+        '：推導 ' +
+        formatDerivationNumber(check.derived, 4) +
+        ' ' +
+        check.unit +
+        '　模擬 ' +
+        formatDerivationNumber(check.simulated, 4) +
+        ' ' +
+        check.unit +
+        '　' +
+        verdict;
+      return row;
+    })
+  );
+}
 function plotMetrics() {
   return [...new Map([...def.metrics, ...(def.plotMetrics || [])].map(m => [m.key, m])).values()];
 }
@@ -192,6 +250,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   if (def.initialView) Object.assign(camera, def.initialView);
   if (typeof annotationSelect === 'function') annotationSelect();
   if (typeof measureReset === 'function') measureReset();
+  derivationShown = 1;
   document.title = def.title + ' · 3D 互動實驗室';
   $('title').textContent = def.title + ' / 3D';
   $('title').setAttribute('title', def.title);
@@ -324,6 +383,7 @@ function setup(fit, preserveAudio = false) {
   $('plotModeChoice').hidden = modes.length === 1;
   updatePlotMode();
   if (fit) fitCamera();
+  renderDerivation();
   $('duration').textContent = format(simulation.duration) + ' s';
   $('extraInfo').textContent = '';
   if ('mus' in params) $('extraInfo').textContent = '有效靜摩擦係數 μₛ = ' + Math.max(params.mus, params.mu).toFixed(2);
