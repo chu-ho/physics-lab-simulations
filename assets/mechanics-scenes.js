@@ -1158,6 +1158,7 @@ function render() {
     );
   primitives.sort((a, b) => b.depth - a.depth);
   for (const item of primitives) item.paint();
+  if (typeof drawMeasure === 'function') drawMeasure();
   const base = [W - 42, Math.min(H - 210, W <= 580 ? 120 : 95)], // 手機：避開上方鏡頭列與狀態
     r = 19;
   ctx.fillStyle = '#f1f6efbd';

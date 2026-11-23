@@ -111,7 +111,7 @@ function snapshot() {
       : null;
 }
 canvas.addEventListener('pointerdown', e => {
-  if (annotationDown(e)) return;
+  if (annotationDown(e) || measureDown(e)) return;
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   canvas.setPointerCapture(e.pointerId);
   gesture = snapshot();
@@ -119,7 +119,7 @@ canvas.addEventListener('pointerdown', e => {
   canvas.focus({ preventScroll: true });
 });
 canvas.addEventListener('pointermove', e => {
-  if (annotationMove(e)) return;
+  if (annotationMove(e) || measureMove(e)) return;
   if (!pointers.has(e.pointerId)) return;
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   const next = snapshot();
@@ -135,7 +135,7 @@ canvas.addEventListener('pointermove', e => {
   gesture = next;
 });
 function release(e) {
-  if (annotationRelease(e)) return;
+  if (annotationRelease(e) || measureRelease(e)) return;
   dirty = true;
   pointers.delete(e.pointerId);
   gesture = snapshot();
