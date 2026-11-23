@@ -229,6 +229,22 @@ canvas.dragging {
   border-radius: 12px;
   padding: 9px 0;
 }
+/* 只給螢幕閱讀器的文字 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* 手機底部抽屜把手：桌機不顯示 */
+.drawer-handle {
+  display: none;
+}
 /* 量測讀數：只在開啟工具時出現，位於 3D 視窗下方面板最上列 */
 .measure-readout {
   max-width: 860px;
@@ -676,7 +692,35 @@ dialog summary {
 @media (max-width: 580px) {
   .workspace {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 1fr) 224px;
+    grid-template-rows: minmax(0, 1fr) var(--drawer-h, 224px);
+  }
+  /* 底部抽屜：把手固定在設定面板頂端，點一下展開／收回，可上下拖曳；未操作前高度與原本相同 */
+  .drawer-handle {
+    position: sticky;
+    top: -8px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: calc(100% + 32px);
+    min-height: 44px;
+    margin: -8px -16px 4px;
+    padding: 6px 16px 4px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--panel);
+    color: var(--muted);
+    font-size: var(--fs-label);
+    touch-action: none;
+    cursor: ns-resize;
+  }
+  .drawer-grip {
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: #9ab0bb99;
   }
   .sidebar {
     border-left: 0;
@@ -973,7 +1017,7 @@ dialog summary {
     grid-template-rows: 50px minmax(0, 1fr);
   }
   .workspace {
-    grid-template-rows: minmax(0, 1fr) 210px;
+    grid-template-rows: minmax(0, 1fr) var(--drawer-h, 210px);
   }
   .timeline-row select {
     min-height: 0;

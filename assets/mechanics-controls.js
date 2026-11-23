@@ -248,3 +248,63 @@ window.addEventListener('hashchange', () => {
 });
 new ResizeObserver(resize).observe(canvas.parentElement);
 requestAnimationFrame(frame);
+
+// 手機底部抽屜：三段高度（只剩把手／原本的預設高度／約 55% 畫面），點一下在預設與展開間切換，
+// 拖曳可自由調整並在放開時吸附最近的一段；↑↓ 鍵切換。只改版面，不動時間與播放。
+const drawer = { start: null, moved: false, base: null };
+function drawerStops() {
+  const app = $('workspace').getBoundingClientRect().height || innerHeight;
+  // 中間一段取 CSS 原本給的高度（第一次操作前量到的值），手機與觸控寬度不同時也一致。
+  if (drawer.base === null) drawer.base = drawerHeight();
+  return [52, drawer.base, Math.max(drawer.base + 40, Math.round(app * 0.55))];
+}
+function drawerHeight() {
+  return $('sidebar').getBoundingClientRect().height || 224;
+}
+function setDrawer(height) {
+  const stops = drawerStops(),
+    h = Math.max(stops[0], Math.min(stops[2], height));
+  $('workspace').style.setProperty('--drawer-h', Math.round(h) + 'px');
+  const expanded = h > stops[1] + 1;
+  $('drawerToggle').setAttribute('aria-expanded', String(expanded));
+  $('drawerLabel').textContent = h <= stops[0] + 1 ? '展開設定' : expanded ? '收回設定' : '展開設定';
+  resize();
+}
+function snapDrawer(height) {
+  const stops = drawerStops();
+  setDrawer(stops.reduce((best, s) => (Math.abs(s - height) < Math.abs(best - height) ? s : best), stops[1]));
+}
+$('drawerToggle').addEventListener('pointerdown', e => {
+  drawer.start = { y: e.clientY, h: drawerHeight(), id: e.pointerId };
+  drawer.moved = false;
+  $('drawerToggle').setPointerCapture?.(e.pointerId);
+});
+$('drawerToggle').addEventListener('pointermove', e => {
+  if (!drawer.start || e.pointerId !== drawer.start.id) return;
+  const dy = e.clientY - drawer.start.y;
+  if (Math.abs(dy) > 6) drawer.moved = true;
+  if (drawer.moved) setDrawer(drawer.start.h - dy);
+});
+function drawerRelease(e) {
+  if (!drawer.start || e.pointerId !== drawer.start.id) return;
+  if (drawer.moved) snapDrawer(drawerHeight());
+  drawer.start = null;
+}
+$('drawerToggle').addEventListener('pointerup', drawerRelease);
+$('drawerToggle').addEventListener('pointercancel', drawerRelease);
+$('drawerToggle').addEventListener('click', () => {
+  if (drawer.moved) {
+    drawer.moved = false;
+    return;
+  }
+  const stops = drawerStops();
+  setDrawer(drawerHeight() > stops[1] + 1 ? stops[1] : stops[2]);
+});
+$('drawerToggle').addEventListener('keydown', e => {
+  if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+  e.preventDefault();
+  const stops = drawerStops(),
+    h = drawerHeight(),
+    next = e.key === 'ArrowUp' ? stops.find(s => s > h + 1) : [...stops].reverse().find(s => s < h - 1);
+  if (next) setDrawer(next);
+});
