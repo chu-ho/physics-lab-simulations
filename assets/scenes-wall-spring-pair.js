@@ -9,5 +9,5 @@ function drawWallSpringPair(s) {
   label([0, 2.6, 0], s.phase ? '已離牆：總動量固定' : '貼牆：牆施外力', '#96743a', 11);
   if ($('forces').checked && s.wallForce > 1e-9)
     arrow(point(s), [s.x + s.wallForce * forceScale, 0.5, 0], '#bd7b3e', 'N牆');
-  if ($('vectors').checked) arrow([s.x2, 0.5, 0], [s.x2 + s.v2 * velocityScale, 0.5, 0], '#478b8e', 'v₂');
+  if ($('vectors').checked) arrow([s.x2, 0.5, 0], [s.x2 + s.v2 * velocityScale, 0.5, 0], quantityColors.velocity, 'v₂');
 }

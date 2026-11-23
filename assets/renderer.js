@@ -151,8 +151,10 @@ function sphere(center, radius, color = '#ffa04c') {
       polygon([a, b, c, d], `rgb(${Math.round(rgb[0] * k)},${Math.round(rgb[1] * k)},${Math.round(rgb[2] * k)})`);
     }
 }
+// 全站物理量固定色（場景是淺色背景，比 lab.css 的 --q-* 深一階）；合力另用較粗箭桿，不只靠顏色辨識。
+const quantityColors = { velocity: '#06647b', acceleration: '#9a4a06', force: '#a8291f' };
 function arrow(a, b, color, text) {
-  segment(a, b, color, 3);
+  segment(a, b, color, color === quantityColors.force ? 4.5 : 3);
   const A = project(a),
     B = project(b);
   if (!A || !B || Math.hypot(A.x - B.x, A.y - B.y) < 3) return;

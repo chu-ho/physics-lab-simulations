@@ -12,5 +12,5 @@ function drawHoleTable(s) {
   box([0, s.y2, 0], [0.55, 0.65, 0.55]);
   label([s.x, 8.6, s.z], '桌面球 ' + params.m + ' kg', '#a85d39', 11);
   label([0, s.y2 - 0.6, 0], '懸掛 ' + params.M + ' kg', '#5e6f79', 11);
-  if ($('forces').checked) arrow([0, s.y2, 0], [0, s.y2 + s.fy2 * forceScale, 0], '#9266b6', '懸掛合力');
+  if ($('forces').checked) arrow([0, s.y2, 0], [0, s.y2 + s.fy2 * forceScale, 0], quantityColors.force, '懸掛合力');
 }

@@ -36,7 +36,7 @@ function drawShmProjection(s) {
   const vs = 0.45 / s.omega,
     as = 0.35 / (s.omega * s.omega);
   if (p.showV) {
-    arrow(c, [c[0] + s.circleVx * vs, c[1] + s.circleVy * vs, 0], '#357dba', 'v圓');
+    arrow(c, [c[0] + s.circleVx * vs, c[1] + s.circleVy * vs, 0], quantityColors.velocity, 'v圓');
     if (p.showX) arrow(px, [px[0] + s.vx * vs, px[1], 0], '#168579', 'vₓ');
     if (p.showY) arrow(py, [0, py[1] + s.vyProjection * vs, 0], '#8b5ac4', 'vᵧ');
   }

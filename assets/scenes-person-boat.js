@@ -24,6 +24,6 @@ function drawPersonBoat(s) {
     segment([s.com, 0.05, 0], [s.com, s.comY, 0], '#8b5ac4', 1, true);
     label([s.com, s.comY + 0.4, 0], '合質心 ' + s.com.toFixed(2) + ' m', '#8b5ac4', 11);
   }
-  if ($('vectors').checked) arrow([xb, 0.8, -1], [xb + s.vx2 * velocityScale, 0.8, -1], '#437d9c', 'v船');
+  if ($('vectors').checked) arrow([xb, 0.8, -1], [xb + s.vx2 * velocityScale, 0.8, -1], quantityColors.velocity, 'v船');
   if ($('forces').checked) arrow([xb, 0.65, -1], [xb + s.fx2 * forceScale, 0.65, -1], '#8b5ac4', '船受內力');
 }

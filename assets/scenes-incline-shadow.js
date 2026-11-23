@@ -57,7 +57,7 @@ function drawInclineShadow(s) {
     arrow(
       q,
       q.map((x, i) => x + [s.shadowVx, s.shadowVy, s.shadowVz][i] * velocityScale),
-      '#704891',
+      quantityColors.velocity,
       'v影'
     );
   if ($('forces').checked && s.shadowAcceleration > 1e-8) {

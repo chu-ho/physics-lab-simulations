@@ -33,7 +33,7 @@ function drawShootMonkey(s) {
     }
   }
   if ($('vectors').checked && !s.monkeyGrounded && !s.collided)
-    arrow(target, [mx + s.vx2 * velocityScale, s.y2 + s.vy2 * velocityScale, 0], '#cf7632', 'v猴');
+    arrow(target, [mx + s.vx2 * velocityScale, s.y2 + s.vy2 * velocityScale, 0], quantityColors.velocity, 'v猴');
   if ($('forces').checked && !s.monkeyGrounded && !s.collided)
     arrow(target, [mx, s.y2 + s.fy2 * forceScale, 0], '#8b5ac4', '重力猴');
   if (s.collided && s.impactAge < 0.4) {

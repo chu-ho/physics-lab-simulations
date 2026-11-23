@@ -10,6 +10,6 @@ function drawCoupledOscillators(s) {
   sphere([s.x2, 0.5, 0], 0.28, '#4da68a');
   label([s.x, 1.3, 0], '左 E=' + s.energy1.toFixed(2) + ' J', '#458993', 11);
   label([s.x2, 1.3, 0], '右 E=' + s.energy2.toFixed(2) + ' J', '#4b937d', 11);
-  if ($('vectors').checked) arrow([s.x2, 0.5, 0], [s.x2 + s.v2 * velocityScale, 0.5, 0], '#4a9b8d', 'v₂');
+  if ($('vectors').checked) arrow([s.x2, 0.5, 0], [s.x2 + s.v2 * velocityScale, 0.5, 0], quantityColors.velocity, 'v₂');
   if ($('forces').checked) arrow([s.x2, 0.5, 0], [s.x2 + s.fx2 * forceScale, 0.5, 0], '#986aaf', 'F₂');
 }

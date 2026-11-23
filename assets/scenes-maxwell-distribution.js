@@ -19,7 +19,7 @@ function drawMaxwellDistribution(s) {
       q = point(a);
     if ($('vectors').checked) {
       const k = 0.3 / s.rmsSpeed;
-      arrow(q, [q[0] + a.vx * k, q[1] + a.vy * k, q[2] + a.vz * k], '#538f86', 'v₀');
+      arrow(q, [q[0] + a.vx * k, q[1] + a.vy * k, q[2] + a.vz * k], quantityColors.velocity, 'v₀');
     }
   }
 }

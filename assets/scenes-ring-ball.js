@@ -33,5 +33,6 @@ function drawRingBall(s) {
     sphere(contact, 0.08 + 0.08 * s.flash, '#ffbc49');
     label([contact[0], 1.3, contact[2]], '碰撞 ' + s.hits + ' · ' + s.impulse.toFixed(2) + ' N·s', '#a46425', 11);
   }
-  if ($('vectors').checked) arrow(c, [s.x2 + s.vx2 * velocityScale, r, s.z2 + s.vz2 * velocityScale], '#37869d', 'v環');
+  if ($('vectors').checked)
+    arrow(c, [s.x2 + s.vx2 * velocityScale, r, s.z2 + s.vz2 * velocityScale], quantityColors.velocity, 'v環');
 }
