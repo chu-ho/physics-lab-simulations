@@ -62,8 +62,9 @@
             hidePrimary: true,
             hideFloor: true,
             schematic: true,
+            hideGrid: () => true,
             endLabel: '三個扭擺週期；平衡偏轉角即讀數',
-            bounds: { min: [-2.2, 0, -2.2], max: [2.2, 3, 2.2] }
+            bounds: { min: [-2.2, -1.4, -2.2], max: [2.2, 3, 2.2] }
           }
         );
       }
@@ -107,6 +108,7 @@
           hidePrimary: true,
           hideFloor: true,
           schematic: true,
+          hideGrid: () => true,
           endLabel: '探測器到達設定高度',
           bounds: { min: [-e, -e, -e], max: [e, e, e] }
         }

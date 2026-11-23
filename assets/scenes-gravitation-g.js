@@ -18,19 +18,11 @@ function drawGravitationG(s) {
       sphere([k * L, y, k * d], rM, '#7d8a90');
       segment([k * L * c, y, k * L * n], [k * L, y, k * d], '#cf7632', 1, true);
     }
-    label([0, 2.9, 0], '扭秤俯視示意（偏轉角放大，平衡畫成 12°）', '#426566', 12);
-    label(
-      [0, 0.55, 0],
-      'θ ' + s.thetaMrad.toExponential(2) + ' mrad　讀數 G ' + s.Gmeas.toFixed(3) + '×10⁻¹¹',
-      '#426566',
-      12
-    );
-    label(
-      [0, 0.2, 0],
-      '每對引力 ' + s.force.toExponential(2) + ' N　總力矩 ' + s.torque.toExponential(2) + ' N·m',
-      '#426566',
-      11
-    );
+    label([0, 2.95, 0], '扭秤示意（偏轉角放大）', '#426566', 12);
+    label([L, y + rM + 0.25, d], '大球 M', '#5d6b70', 11);
+    label([-L * c - 0.75, y, -L * n], '小球 m', '#3f7ea6', 11);
+    label([0, -0.5, 0], '每對引力 ' + s.force.toExponential(2) + ' N', '#426566', 11);
+    label([0, -1.2, 0], '總力矩 ' + s.torque.toExponential(2) + ' N·m', '#426566', 11);
     return;
   }
   const k = 3 / 6371,
@@ -42,14 +34,9 @@ function drawGravitationG(s) {
   segment([0, -3.8, 0], [0, 3.8, 0], '#8f9fa6', 1, true);
   if (params.h > 20000) ring([0, 0, 0], 3 * (42164 / 6371), 'xz', '#b7c7c4', 1);
   sphere(pos, 0.12 + 0.05 * (rr / 3), '#cf7632');
+  label([0, 4, 0], '探測器 高 ' + s.hKm.toFixed(0) + ' km　g有效 ' + s.gEff.toFixed(3) + ' m/s²', '#426566', 12);
   label(
-    [pos[0], pos[1] + 0.5, 0],
-    '高 ' + s.hKm.toFixed(0) + ' km　g有效 ' + s.gEff.toFixed(3) + ' m/s²',
-    '#426566',
-    12
-  );
-  label(
-    [0, -4.4, 0],
+    [0, -5, 0],
     'GM/r² ' +
       s.gTrue.toFixed(3) +
       '　離心 ' +
