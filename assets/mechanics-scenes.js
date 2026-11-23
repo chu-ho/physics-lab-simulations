@@ -1095,8 +1095,10 @@ function render() {
   const showGrid = $('grid').checked && !(simulation.hideGrid && simulation.hideGrid(params));
   const gridStep = nice(scale / 12),
     N = 9,
-    cx = Math.round(camera.target[0] / gridStep) * gridStep,
-    cz = Math.round(camera.target[2] / gridStep) * gridStep,
+    gx = Math.round(camera.target[0] / gridStep),
+    gz = Math.round(camera.target[2] / gridStep),
+    cx = gx * gridStep,
+    cz = gz * gridStep,
     ground = stateAt(t).groundY ?? Math.min(0, ...plotSamples.map(s => point(s)[1])) - scale * 0.02;
   const hideFloor = typeof simulation.hideFloor === 'function' ? simulation.hideFloor(params) : !!simulation.hideFloor;
   if (!hideFloor)
@@ -1111,7 +1113,8 @@ function render() {
             [x + gridStep, ground, z + gridStep],
             [x, ground, z + gridStep]
           ],
-          (i + j) % 2 ? '#a7b8ae' : '#c5cfc0',
+          // 深淺依格子在世界中的位置決定；跟隨物體時地板範圍移動，顏色也不會翻轉。
+          (((gx + i + gz + j) % 2) + 2) % 2 ? '#a7b8ae' : '#c5cfc0',
           showGrid ? '#7f9c9550' : null
         );
       }
