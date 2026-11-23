@@ -91,7 +91,7 @@
   font-size: var(--fs-label);
 }
 .scene-top .view-title small {
-  max-width: 350px;
+  max-width: 520px;
 }
 .sidebar #controls {
   display: contents;

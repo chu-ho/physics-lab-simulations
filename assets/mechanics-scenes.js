@@ -1115,7 +1115,7 @@ function render() {
   if (showGrid) {
     for (let i = -4; i <= 4; i++) {
       const x = cx + i * gridStep;
-      label([x, ground, cz], format(x) + ' ' + (simulation.displayLengthUnit || 'm'), '#45636a', 10);
+      label([x, ground, cz], format(x) + ' ' + (simulation.displayLengthUnit || 'm'), '#45636a', 10, true);
     }
     const len = Math.min(4, scale * 0.1);
     arrow([0, ground, 0], [len, ground, 0], '#b66555', 'x');
@@ -1152,7 +1152,7 @@ function render() {
     );
   primitives.sort((a, b) => b.depth - a.depth);
   for (const item of primitives) item.paint();
-  const base = [W - 42, Math.min(H - 210, 95)],
+  const base = [W - 42, Math.min(H - 210, W <= 580 ? 120 : 95)], // 手機：避開上方鏡頭列與狀態
     r = 19;
   ctx.fillStyle = '#f1f6efbd';
   ctx.beginPath();

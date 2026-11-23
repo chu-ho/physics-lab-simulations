@@ -216,18 +216,18 @@ canvas.dragging {
   left: 20px;
   right: 20px;
   display: grid;
-  gap: 10px;
+  gap: 8px;
   pointer-events: none;
 }
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  max-width: 690px;
+  max-width: 860px;
   background: #152a34eb;
   border: 1px solid #ffffff20;
   backdrop-filter: blur(10px);
   border-radius: 12px;
-  padding: 11px 0;
+  padding: 9px 0;
 }
 .metric {
   padding: 0 15px;
@@ -237,11 +237,15 @@ canvas.dragging {
   border: 0;
 }
 .metric small {
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   font-size: var(--fs-label);
   color: #b8c8cc;
 }
 .metric strong {
+  white-space: nowrap;
   font-size: 21px;
   font-variant-numeric: tabular-nums;
 }
@@ -250,31 +254,36 @@ canvas.dragging {
   color: #bdcbd1;
   margin-left: 4px;
 }
+/* 寬螢幕：時間軸一列、所有按鈕（含倍率）一列，與原版同高；手機見檔尾 */
 .playbar {
   pointer-events: auto;
-  display: grid;
-  gap: var(--sp-2);
-  max-width: 690px;
-  padding: var(--sp-2) var(--sp-3);
-  background: #152a34eb;
-  border: 1px solid #ffffff20;
-  border-radius: var(--r-card);
-  backdrop-filter: blur(10px);
-}
-.transport {
   display: flex;
-  align-items: center;
-  gap: 7px;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 7px;
+  max-width: 690px;
 }
-.key-hint {
-  margin-left: auto;
-  font-size: var(--fs-label);
-  color: var(--muted);
+.timeline-row,
+.transport {
+  display: contents;
 }
+.playbar .time-slider {
+  flex: 1 1 100%;
+  order: -1;
+}
+.playbar #rate {
+  order: 1;
+}
+.playbar #toggleSound {
+  order: 2;
+}
+.playbar #togglePlot {
+  order: 3;
+}
+
 .transport button {
   background: var(--control);
-  padding: 9px 14px;
+  padding: 8px 14px;
   font-size: var(--fs-small);
   border-color: #57717b;
 }
@@ -288,7 +297,7 @@ canvas.dragging {
 .transport .primary:hover {
   background: #b8f0d9;
 }
-.transport select {
+.playbar select {
   font-size: var(--fs-small);
   padding: 9px 7px;
   background: var(--control);
@@ -583,7 +592,7 @@ dialog summary {
   .transport .primary {
     min-width: 88px;
   }
-  .transport select {
+  .playbar select {
     padding: 8px 4px;
   }
   .metrics {
@@ -597,34 +606,12 @@ dialog summary {
 @media (max-width: 580px) {
   .workspace {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 1fr) 260px;
+    grid-template-rows: minmax(0, 1fr) 224px;
   }
   .sidebar {
     border-left: 0;
     border-top: 1px solid var(--line);
-    padding: 4px 16px 12px;
-    display: flex;
-    flex-direction: column;
-  }
-  /* 手機：參數緊接在場景下方，切換實驗與課本章節排在後面 */
-  .sidebar .intro {
-    order: 1;
-    padding-top: 12px;
-  }
-  .key-hint {
-    display: none;
-  }
-  .camera-buttons {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .camera-buttons button {
-    flex: none;
-  }
-  .playbar {
-    padding: 6px 8px;
-    gap: 6px;
+    padding: 8px 16px 12px;
   }
   .group-body {
     display: grid;
@@ -706,7 +693,7 @@ dialog summary {
   .transport .primary {
     min-width: 88px;
   }
-  .transport select {
+  .playbar select {
     font-size: var(--fs-label);
     padding: 7px 4px;
   }
@@ -761,9 +748,6 @@ dialog summary {
   .camera-buttons button {
     flex: none;
   }
-  .key-hint {
-    display: none;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -772,5 +756,159 @@ dialog summary {
     transition: none !important;
     animation: none !important;
     scroll-behavior: auto !important;
+  }
+}
+/* 手機（≤ 580px）：3D 可視高度優先。鏡頭列與播放列各壓成一列，按鈕保留 44px 高，
+   長標籤以 ::before 顯示短字（原文字仍是無障礙名稱）。 */
+@media (max-width: 580px) {
+  .scene-top {
+    top: 60px;
+    left: auto;
+    right: 12px;
+  }
+  .scene-top .status {
+    max-width: 220px;
+    white-space: nowrap;
+  }
+  .scene-top .view-title,
+  .sidebar .section {
+    display: none;
+  }
+  .camera-buttons {
+    top: 8px;
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  .camera-buttons button,
+  .transport button {
+    flex: none;
+    min-width: var(--tap);
+    min-height: var(--tap);
+    padding: 0 8px;
+    font-size: var(--fs-label);
+  }
+  /* ＋／− 疊在左側，讓一列放得下六個視角鈕 */
+  .camera-buttons #zoomIn,
+  .camera-buttons #zoomOut {
+    position: absolute;
+    left: 0;
+    top: 52px;
+  }
+  .camera-buttons #zoomOut {
+    top: 100px;
+  }
+  #perspective,
+  #fit,
+  #follow,
+  #reset,
+  #restoreDefaults,
+  #toggleSound,
+  #togglePlot {
+    font-size: 0;
+  }
+  #perspective::before,
+  #fit::before,
+  #follow::before,
+  #reset::before,
+  #restoreDefaults::before,
+  #toggleSound::before,
+  #togglePlot::before {
+    font-size: var(--fs-label);
+  }
+  #perspective::before {
+    content: '立體';
+    content: '立體' / '';
+  }
+  #fit::before {
+    content: '取景';
+    content: '取景' / '';
+  }
+  #follow::before {
+    content: '跟隨';
+    content: '跟隨' / '';
+  }
+  #reset::before {
+    content: '歸零';
+    content: '歸零' / '';
+  }
+  #restoreDefaults::before {
+    content: '預設';
+    content: '預設' / '';
+  }
+  #toggleSound::before {
+    content: '聲音';
+    content: '聲音' / '';
+  }
+  #togglePlot::before {
+    content: '圖表';
+    content: '圖表' / '';
+  }
+  .bottom {
+    gap: 4px;
+    bottom: 8px;
+  }
+  .playbar {
+    gap: 4px;
+  }
+  .timeline-row,
+  .transport {
+    display: flex;
+    flex: 1 1 100%;
+    align-items: center;
+    gap: 4px;
+  }
+  .playbar .time-slider {
+    flex: 1;
+    min-width: 0;
+  }
+  .transport .primary {
+    min-width: 64px;
+  }
+  /* 讀值標籤不換行（省略號收尾），避免讀值列變高遮住場景；數值與單位照常顯示 */
+  .metrics .metric {
+    min-width: 0;
+  }
+  .metrics .metric small {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .metrics .metric small {
+    font-size: 11px;
+  }
+  .app {
+    grid-template-rows: 50px minmax(0, 1fr);
+  }
+  .workspace {
+    grid-template-rows: minmax(0, 1fr) 210px;
+  }
+  .timeline-row select {
+    min-height: 0;
+    height: 30px;
+    padding: 0 4px;
+  }
+  .time-slider {
+    height: 24px;
+  }
+  .metric span {
+    font-size: 11px;
+  }
+  .sidebar .intro {
+    margin-bottom: 4px;
+  }
+  .share-row {
+    margin-top: 6px;
+  }
+  .textbook-tags {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-top: 6px;
+  }
+  .textbook-chip {
+    white-space: nowrap;
   }
 }
