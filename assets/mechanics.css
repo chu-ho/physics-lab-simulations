@@ -276,6 +276,37 @@ header h1 {
   background: #d7e9e6;
   color: #215852;
 }
+/* 參數分層：入門／探究／進階分段控制 */
+.level-switch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.level-switch[hidden],
+.control[hidden] {
+  display: none;
+}
+.level-switch button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.level-switch button + button {
+  border-left: 1px solid var(--line);
+}
+.level-switch button[aria-pressed='true'] {
+  background: var(--mint);
+  color: #0d2a26;
+  font-weight: 700;
+}
+.level-note {
+  margin: -6px 0 12px;
+  color: var(--orange);
+}
 /* 量測工具：四個切換鈕一列，按下時用主要操作色 */
 .measure-tools {
   display: grid;

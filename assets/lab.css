@@ -692,6 +692,8 @@ dialog summary {
   .annotation-panel,
   #referencePanel,
   #soundStatus,
+  .level-switch,
+  .level-note,
   .measure-tools,
   .measure-replace,
   .measure-replace + .note {

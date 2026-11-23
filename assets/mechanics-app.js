@@ -102,6 +102,61 @@ function shareURL() {
 }
 function syncURL() {
   history.replaceState(null, '', shareURL());
+  applyParamLevel();
+}
+// 參數分層（入門／探究／進階）：只對 ParamLevels 列出的實驗出現；隱藏的拉桿保留目前值，
+// 切換不動時間與播放狀態。選擇的層次存在瀏覽器（僅為方便，讀寫失敗也照常運作）。
+let paramLevel = 2;
+try {
+  paramLevel = Math.min(3, Math.max(1, +localStorage.getItem('physicsLab.paramLevel') || 2));
+} catch {}
+function paramLevelAvailable() {
+  return typeof ParamLevels !== 'undefined' && !!def && !!ParamLevels[def.id];
+}
+// 某層次下「隱藏參數應有的值」：預設值，再套上該層可見拉桿的連動設定（如教學預設模式）。
+function paramBaseline(level) {
+  const baseline = Mechanics.defaults(def);
+  for (const p of def.params)
+    if (p.setOnInput && paramLevelOf(def.id, p.id) <= level)
+      Object.assign(
+        baseline,
+        typeof p.setOnInput === 'function' ? p.setOnInput(params[p.id], { ...params }) : p.setOnInput
+      );
+  return baseline;
+}
+function hiddenChangedAt(level) {
+  const baseline = paramBaseline(level);
+  return def.params.filter(p => paramLevelOf(def.id, p.id) > level && params[p.id] !== baseline[p.id]);
+}
+function setupParamLevel() {
+  // 分享網址或先前調整過的隱藏參數與該層應有值不同時，自動升到能看到它的層次（不記住）。
+  if (paramLevelAvailable()) while (paramLevel < 3 && hiddenChangedAt(paramLevel).length) paramLevel++;
+  applyParamLevel();
+}
+function applyParamLevel() {
+  if (!def || !$('levelSwitch')) return;
+  const available = paramLevelAvailable(),
+    hiddenChanged = available ? hiddenChangedAt(paramLevel).length : 0;
+  for (const p of def.params)
+    if ($('control-' + p.id)) $('control-' + p.id).hidden = available && paramLevelOf(def.id, p.id) > paramLevel;
+  $('levelSwitch').hidden = !available;
+  for (const level of [1, 2, 3]) {
+    const button = $('level-' + level),
+      count = available ? def.params.filter(p => paramLevelOf(def.id, p.id) <= level).length : 0;
+    button.setAttribute('aria-pressed', String(level === paramLevel));
+    button.title = PARAM_LEVEL_NAMES[level - 1] + '：顯示 ' + count + ' 個參數';
+  }
+  $('levelNote').hidden = !available || !hiddenChanged;
+  $('levelNote').textContent = hiddenChanged
+    ? '有 ' + hiddenChanged + ' 個隱藏參數不是預設值；按「參數還原」或切到「進階」查看。'
+    : '';
+}
+function selectParamLevel(level) {
+  paramLevel = level;
+  try {
+    localStorage.setItem('physicsLab.paramLevel', String(level));
+  } catch {}
+  applyParamLevel();
 }
 function routeFromURL() {
   const hash = Object.fromEntries(new URLSearchParams((location.hash || '').slice(1)));
@@ -157,6 +212,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   for (const p of def.params) {
     const label = document.createElement('label');
     label.className = 'control';
+    label.id = 'control-' + p.id;
     const head = document.createElement('span');
     head.className = 'label';
     head.append(document.createTextNode(p.label));
@@ -205,6 +261,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
     label.append(head, input, limits);
     $('controls').append(label);
   }
+  setupParamLevel();
   if (typeof configureViolinImport === 'function') configureViolinImport();
   $('plotMode').value = def.defaultPlotMode || 'time';
   $('plotMetric').replaceChildren();

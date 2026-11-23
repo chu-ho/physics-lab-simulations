@@ -66,6 +66,7 @@ $('timeline').oninput = () => {
 };
 for (const id of ['trail', 'vectors', 'forces', 'grid', 'plotMetric'])
   $(id).addEventListener('change', () => (dirty = true));
+for (const level of [1, 2, 3]) $('level-' + level).addEventListener('click', () => selectParamLevel(level));
 $('energyToggle').addEventListener('change', () => {
   updateEnergy(stateAt(t));
   dirty = true;
