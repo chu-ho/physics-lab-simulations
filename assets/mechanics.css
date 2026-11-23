@@ -12,7 +12,7 @@
   margin-bottom: 16px;
 }
 .experiment-picker {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
 }
 .experiment-picker select {
@@ -52,7 +52,7 @@
   display: none;
 }
 .plot-heading {
-  font-size: 11px;
+  font-size: var(--fs-label);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -69,7 +69,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--muted);
 }
 .plot-choice select {
@@ -88,10 +88,10 @@
   white-space: normal;
 }
 .metric span {
-  font-size: 10px;
+  font-size: var(--fs-label);
 }
 .scene-top .view-title small {
-  max-width: 350px;
+  max-width: 520px;
 }
 .sidebar #controls {
   display: contents;
@@ -127,7 +127,7 @@
     letter-spacing: 0;
   }
   .library-link {
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .header-actions {
     gap: 5px;
@@ -139,7 +139,7 @@
     max-width: 100%;
   }
   .metric span {
-    font-size: 9px;
+    font-size: var(--fs-label);
   }
 }
 @media (max-width: 580px) {
@@ -154,7 +154,7 @@
   }
   .plot-choice select {
     max-width: 175px;
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .sidebar .intro {
     margin-bottom: 10px;
@@ -185,29 +185,29 @@
   }
   .status {
     max-width: 35%;
-    font-size: 9px;
+    font-size: var(--fs-label);
   }
   .metric strong {
     font-size: 14px;
   }
   .metric small {
-    font-size: 8px;
+    font-size: var(--fs-label);
   }
   .metric span {
     margin-left: 2px;
-    font-size: 8px;
+    font-size: var(--fs-label);
   }
   .header-actions button {
     padding: 5px 6px;
   }
   .library-link {
-    font-size: 10px;
+    font-size: var(--fs-label);
   }
   header h1 {
     font-size: 13px;
   }
   .overline {
-    font-size: 8px !important;
+    font-size: var(--fs-label) !important;
   }
 }
 @media (max-height: 600px) {
@@ -238,8 +238,8 @@ header h1 {
   flex-shrink: 0;
 }
 .camera-buttons button[aria-pressed='true'] {
-  background: #8ee0c0;
-  color: #15392f;
+  background: var(--mint);
+  color: var(--mint-ink);
   border-color: #168579;
 }
 
@@ -288,13 +288,13 @@ header h1 {
   display: none;
 }
 .textbook-heading {
-  font-size: 10px;
+  font-size: var(--fs-label);
   letter-spacing: 1px;
   color: var(--muted);
   margin-right: 2px;
 }
 .textbook-chip {
-  font-size: 11px;
+  font-size: var(--fs-label);
   line-height: 1.45;
   padding: 2px 8px;
   border-radius: 999px;

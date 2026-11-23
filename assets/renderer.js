@@ -25,7 +25,22 @@ function updateCamera() {
   right = norm(cross(forward, [0, 1, 0]));
   up = cross(right, forward);
   focal = Math.min(W * 0.85, Math.max(130, H - 110) * 1.2);
+  keyLabels = [];
+  minorLabels = [];
 }
+// 手機寬度（< 600px）：標籤縮小；次要標籤（格線刻度）若與其他標籤重疊就略過，實驗標籤一律保留。桌機不變。
+let keyLabels = [],
+  minorLabels = [];
+function labelSize(size) {
+  return W >= 600 ? size : Math.max(9, Math.round(size * Math.max(0.78, W / 600)));
+}
+function labelBox(text, x, y, font, size, align) {
+  ctx.font = font;
+  const w = ctx.measureText(text)?.width ?? text.length * size;
+  return { l: align === 'center' ? x - w / 2 : x, r: align === 'center' ? x + w / 2 : x + w, t: y - size, b: y + 2 };
+}
+const overlaps = (box, list) =>
+  list.some(o => box.l < o.r + 2 && box.r > o.l - 2 && box.t < o.b + 1 && box.b > o.t - 1);
 function project(a) {
   const d = vector(a, eye),
     depth = dot(d, forward);
@@ -81,13 +96,21 @@ function segment(a, b, color, width = 1, dashed = false) {
     }
   });
 }
-function label(pos, text, color = '#355461', size = 11) {
+function label(pos, text, color = '#355461', size = 11, minor = false) {
   const a = project(pos);
   if (!a) return;
+  const px = labelSize(size),
+    font = `600 ${px}px system-ui`,
+    box = W < 600 ? labelBox(text, a.x, a.y - 6, font, px, 'center') : null;
+  if (box && !minor) keyLabels.push(box);
   primitives.push({
     depth: a.d - 0.001 * scale,
     paint: () => {
-      ctx.font = `600 ${size}px system-ui`;
+      if (box && minor) {
+        if (overlaps(box, keyLabels) || overlaps(box, minorLabels)) return;
+        minorLabels.push(box);
+      }
+      ctx.font = font;
       ctx.textAlign = 'center';
       ctx.fillStyle = color;
       ctx.strokeStyle = '#e5f1efcc';
@@ -133,6 +156,9 @@ function arrow(a, b, color, text) {
   const A = project(a),
     B = project(b);
   if (!A || !B || Math.hypot(A.x - B.x, A.y - B.y) < 3) return;
+  const px = labelSize(12),
+    font = `bold ${px}px system-ui`;
+  if (W < 600) keyLabels.push(labelBox(text, B.x + 7, B.y - 7, font, px, 'left'));
   primitives.push({
     depth: B.d - 0.002 * scale,
     paint: () => {
@@ -143,7 +169,7 @@ function arrow(a, b, color, text) {
       ctx.lineTo(B.x - 11 * Math.cos(ang - 0.4), B.y - 11 * Math.sin(ang - 0.4));
       ctx.lineTo(B.x - 11 * Math.cos(ang + 0.4), B.y - 11 * Math.sin(ang + 0.4));
       ctx.fill();
-      ctx.font = 'bold 12px system-ui';
+      ctx.font = font;
       ctx.textAlign = 'left';
       ctx.fillStyle = '#19333f';
       ctx.fillText(text, B.x + 7, B.y - 7);

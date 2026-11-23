@@ -110,6 +110,10 @@ mobile.sandbox.location.hash='#experiment=half-lens';
 for(const m of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),mobile.sandbox);
 assert.equal(vm.runInContext('def.id',mobile.sandbox),'half-lens');
 vm.runInContext(`for(const d of Mechanics.defs){selectExperiment(d.id,false);if(following)fitCamera();render();const bounds=sceneBounds();for(const s of plotSamples){const q=project(point(s));if(!q||q.x<bounds.left||q.x>bounds.right||q.y<bounds.top||q.y>bounds.bottom)throw Error('mobile fit clips '+d.id)}}`,mobile.sandbox);
+// 分享網址：hash 參數套用並夾在範圍內、只寫出非預設值；參數還原、← 後退一步。
+const shared=domHarness(html);shared.sandbox.location.hash='#experiment=incline&angle=40&mu=0.3&mus=9&bogus=1';
+for(const m of html.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(m[1],'utf8'),shared.sandbox);
+vm.runInContext(`if(def.id!=='incline'||params.angle!==40||params.mu!==0.3||params.mus!==1||$('param-angle').value!==40)throw Error('hash params');if(shareURL()!=='#experiment=incline&angle=40&mu=0.3&mus=1')throw Error('share url '+shareURL());if($('param-angle').attrs['aria-valuetext']!=='40 °')throw Error('valuetext');$('restoreDefaults').onclick();if(params.angle!==Mechanics.defaults(def).angle||shareURL()!=='#experiment=incline')throw Error('restore');t=1;stepBy(-1);if(Math.abs(t-.95)>1e-9||running)throw Error('step back');`,shared.sandbox);
 const libraryHtml=fs.readFileSync('library.html','utf8'),library=domHarness(libraryHtml);
 for(const match of libraryHtml.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(match[1],'utf8'),library.sandbox);
 assert.equal(library.ids['atlas-trunks'].children.length,5);

@@ -1,12 +1,54 @@
 :root {
   color-scheme: dark;
+  /* 表面層次 */
   --bg: #101c25;
+  --header: #14212a;
   --panel: #172630;
+  --panel-2: #1e303b;
+  --control: #22353f;
+  --control-hover: #304953;
   --line: #2c3d47;
+  --line-strong: #39505a;
+  /* 文字（--muted 對 --panel 6.9:1，--faint 對 --panel 5.4:1，皆 ≥ 4.5:1） */
   --ink: #ecf2f4;
   --muted: #9ab0bb;
+  --faint: #829ca8;
+  /* 操作色 */
   --mint: #8ee0c0;
+  --mint-ink: #15392f;
   --orange: #ffb36b;
+  --focus: var(--orange);
+  /* 物理量固定色：搭配形狀／線型作第二識別 */
+  --q-velocity: #3fc8e4;
+  --q-acceleration: #ff9b45;
+  --q-force: #ff6b6b;
+  --q-kinetic: #5fd38d;
+  --q-potential: #b18cff;
+  --q-heat: #f2b134;
+  --q-electric: #f5d547;
+  --q-magnetic: #5b8dff;
+  /* 四條主線 */
+  --branch-mechanics: #8ee0c0;
+  --branch-waves: #9acaff;
+  --branch-em: #ffc183;
+  --branch-modern: #d4b9ff;
+  /* 字型與字級（標籤不小於 12px） */
+  --font-sans: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', system-ui, sans-serif;
+  --fs-label: 12px;
+  --fs-small: clamp(12px, 0.7rem + 0.15vw, 13px);
+  --fs-body: clamp(14px, 0.8rem + 0.2vw, 15px);
+  --fs-title: clamp(16px, 0.85rem + 0.5vw, 20px);
+  /* 4px 間距、圓角 */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --r-card: 12px;
+  --r-control: 8px;
+  --r-pill: 999px;
+  --tap: 44px;
 }
 * {
   box-sizing: border-box;
@@ -18,10 +60,8 @@ body {
   overflow: hidden;
 }
 body {
-  font:
-    14px/1.5 system-ui,
-    'Microsoft JhengHei',
-    sans-serif;
+  font: var(--fs-body) / 1.5 var(--font-sans);
+  font-variant-numeric: tabular-nums;
   background: var(--bg);
   color: var(--ink);
 }
@@ -33,20 +73,27 @@ input {
 button,
 select {
   color: var(--ink);
-  background: #22353f;
-  border: 1px solid #39505a;
-  border-radius: 8px;
-  padding: 8px 12px;
+  background: var(--control);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-control);
+  padding: var(--sp-2) var(--sp-3);
   cursor: pointer;
+  touch-action: manipulation;
 }
 button:hover {
-  background: #304953;
+  background: var(--control-hover);
 }
 button:focus-visible,
 select:focus-visible,
-input:focus-visible {
-  outline: 3px solid var(--orange);
+input:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
+}
+canvas:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
 }
 button:disabled {
   opacity: 0.4;
@@ -65,7 +112,7 @@ header {
   gap: 16px;
   border-bottom: 1px solid var(--line);
   padding: 0 24px;
-  background: #14212a;
+  background: var(--header);
 }
 header h1 {
   font-size: 20px;
@@ -73,7 +120,10 @@ header h1 {
   margin: 0;
 }
 header .overline {
-  font-size: 10px;
+  font-size: var(--fs-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--mint);
   letter-spacing: 2px;
 }
@@ -125,7 +175,7 @@ canvas.dragging {
 }
 .view-title small {
   display: block;
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 400;
   letter-spacing: 0;
   margin-top: 3px;
@@ -150,7 +200,7 @@ canvas.dragging {
   max-width: calc(100% - 36px);
 }
 .camera-buttons button {
-  font-size: 11px;
+  font-size: var(--fs-label);
   padding: 6px 10px;
   background: #eff7f0db;
   color: #29444c;
@@ -166,18 +216,18 @@ canvas.dragging {
   left: 20px;
   right: 20px;
   display: grid;
-  gap: 10px;
+  gap: 8px;
   pointer-events: none;
 }
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  max-width: 690px;
+  max-width: 860px;
   background: #152a34eb;
   border: 1px solid #ffffff20;
   backdrop-filter: blur(10px);
   border-radius: 12px;
-  padding: 11px 0;
+  padding: 9px 0;
 }
 .metric {
   padding: 0 15px;
@@ -187,35 +237,59 @@ canvas.dragging {
   border: 0;
 }
 .metric small {
-  display: block;
-  font-size: 10px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: var(--fs-label);
   color: #b8c8cc;
 }
 .metric strong {
+  white-space: nowrap;
   font-size: 21px;
   font-variant-numeric: tabular-nums;
 }
 .metric span {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: #bdcbd1;
   margin-left: 4px;
 }
-.transport {
+/* 寬螢幕：時間軸一列、所有按鈕（含倍率）一列，與原版同高；手機見檔尾 */
+.playbar {
   pointer-events: auto;
   display: flex;
-  align-items: center;
-  gap: 7px;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 7px;
+  max-width: 690px;
 }
+.timeline-row,
+.transport {
+  display: contents;
+}
+.playbar .time-slider {
+  flex: 1 1 100%;
+  order: -1;
+}
+.playbar #rate {
+  order: 1;
+}
+.playbar #toggleSound {
+  order: 2;
+}
+.playbar #togglePlot {
+  order: 3;
+}
+
 .transport button {
-  background: #203844ed;
-  padding: 9px 14px;
-  font-size: 12px;
+  background: var(--control);
+  padding: 8px 14px;
+  font-size: var(--fs-small);
   border-color: #57717b;
 }
 .transport .primary {
   background: var(--mint);
-  color: #15392f;
+  color: var(--mint-ink);
   font-weight: 800;
   border-color: var(--mint);
   min-width: 108px;
@@ -223,14 +297,13 @@ canvas.dragging {
 .transport .primary:hover {
   background: #b8f0d9;
 }
-.transport select {
-  font-size: 12px;
+.playbar select {
+  font-size: var(--fs-small);
   padding: 9px 7px;
-  background: #203844ed;
+  background: var(--control);
 }
 .time-slider {
   width: 100%;
-  max-width: 690px;
   pointer-events: auto;
   accent-color: var(--mint);
   margin: 0;
@@ -246,8 +319,55 @@ canvas.dragging {
   scrollbar-width: thin;
   scrollbar-color: #4a616b transparent;
 }
+.panel-group {
+  border-top: 1px solid var(--line);
+}
+.panel-group:last-of-type {
+  border-bottom: 1px solid var(--line);
+}
+.panel-group > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--tap);
+  font-size: var(--fs-small);
+  font-weight: 650;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+.panel-group > summary::-webkit-details-marker {
+  display: none;
+}
+.panel-group > summary::after {
+  content: '＋';
+  color: var(--mint);
+}
+.panel-group > summary:hover {
+  color: var(--mint);
+}
+.panel-group[open] > summary::after {
+  content: '－';
+}
+.group-body {
+  padding: var(--sp-1) 0 var(--sp-4);
+}
+.share-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-top: var(--sp-3);
+}
+.share-row button {
+  font-size: var(--fs-label);
+}
+.share-status {
+  font-size: var(--fs-label);
+  color: var(--mint);
+}
 .section {
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: var(--mint);
   letter-spacing: 2px;
 }
@@ -263,7 +383,8 @@ canvas.dragging {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  gap: var(--sp-2);
+  font-size: var(--fs-small);
 }
 .control output {
   font-variant-numeric: tabular-nums;
@@ -280,8 +401,8 @@ canvas.dragging {
 .limits {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
-  color: #829ca8;
+  font-size: var(--fs-label);
+  color: var(--faint);
 }
 .control select {
   width: 100%;
@@ -290,12 +411,15 @@ canvas.dragging {
   margin-top: 7px;
 }
 .checks {
-  padding: 14px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
   display: grid;
-  gap: 8px;
-  font-size: 12px;
+  gap: var(--sp-1);
+  font-size: var(--fs-small);
+}
+.checks label {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  cursor: pointer;
 }
 .checks input {
   accent-color: var(--mint);
@@ -315,7 +439,7 @@ canvas.dragging {
   font-weight: 600;
 }
 .note {
-  font-size: 11px;
+  font-size: var(--fs-label);
   line-height: 1.7;
   color: var(--muted);
   margin: 12px 0;
@@ -328,7 +452,7 @@ canvas.dragging {
 .legend {
   display: flex;
   gap: 12px;
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: var(--muted);
   margin-top: 12px;
 }
@@ -336,7 +460,7 @@ canvas.dragging {
   font-weight: 500;
 }
 .legend b:first-child {
-  color: #8ee0c0;
+  color: var(--mint);
 }
 .legend b:last-child {
   color: #d1b4ff;
@@ -372,7 +496,7 @@ dialog code {
 }
 dialog details {
   margin: 14px 0;
-  border-top: 1px solid #39505a;
+  border-top: 1px solid var(--line-strong);
   padding-top: 12px;
 }
 dialog summary {
@@ -408,7 +532,7 @@ dialog summary {
   }
   .note {
     margin: 8px 0;
-    font-size: 10px;
+    font-size: var(--fs-label);
   }
   .export {
     padding: 6px;
@@ -460,7 +584,7 @@ dialog summary {
     font-size: 17px;
   }
   .metric span {
-    font-size: 9px;
+    font-size: var(--fs-label);
   }
   .transport button {
     padding: 8px 9px;
@@ -468,14 +592,14 @@ dialog summary {
   .transport .primary {
     min-width: 88px;
   }
-  .transport select {
+  .playbar select {
     padding: 8px 4px;
   }
   .metrics {
     padding: 8px 0;
   }
   .status {
-    font-size: 10px;
+    font-size: var(--fs-label);
     padding: 4px 8px;
   }
 }
@@ -487,13 +611,17 @@ dialog summary {
   .sidebar {
     border-left: 0;
     border-top: 1px solid var(--line);
-    padding: 12px 16px;
+    padding: 8px 16px 12px;
+  }
+  .group-body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 20px;
     align-content: start;
   }
-  .sidebar .intro {
+  .annotation-panel,
+  #referencePanel,
+  #soundStatus {
     grid-column: 1/-1;
   }
   .sidebar h2 {
@@ -506,7 +634,7 @@ dialog summary {
     margin-bottom: 10px;
   }
   .control .label {
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .checks,
   .prediction,
@@ -518,7 +646,7 @@ dialog summary {
   .checks {
     grid-template-columns: 1fr 1fr;
     gap: 6px;
-    font-size: 11px;
+    font-size: var(--fs-label);
     padding: 8px 0;
   }
   .prediction {
@@ -533,13 +661,13 @@ dialog summary {
   }
   .camera-buttons button {
     padding: 4px 7px;
-    font-size: 10px;
+    font-size: var(--fs-label);
   }
   .scene-top {
     top: 10px;
   }
   .view-title {
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .bottom {
     gap: 5px;
@@ -553,27 +681,27 @@ dialog summary {
     font-size: 17px;
   }
   .metric small {
-    font-size: 9px;
+    font-size: var(--fs-label);
   }
   .transport {
     gap: 5px;
   }
   .transport button {
     padding: 7px 8px;
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .transport .primary {
     min-width: 88px;
   }
-  .transport select {
-    font-size: 11px;
+  .playbar select {
+    font-size: var(--fs-label);
     padding: 7px 4px;
   }
   .fullscreen .workspace {
     grid-template-rows: 1fr;
   }
   .header-actions button {
-    font-size: 11px;
+    font-size: var(--fs-label);
   }
   .header-actions {
     gap: 5px;
@@ -598,5 +726,189 @@ dialog summary {
   .bottom {
     gap: 5px;
     bottom: 8px;
+  }
+}
+/* 觸控裝置：互動目標至少 44px */
+@media (pointer: coarse) {
+  button,
+  select,
+  .checks label,
+  .panel-group > summary {
+    min-height: var(--tap);
+  }
+  .control input[type='range'],
+  .time-slider {
+    height: 32px;
+  }
+  .camera-buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .camera-buttons button {
+    flex: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* 手機（≤ 580px）：3D 可視高度優先。鏡頭列與播放列各壓成一列，按鈕保留 44px 高，
+   長標籤以 ::before 顯示短字（原文字仍是無障礙名稱）。 */
+@media (max-width: 580px) {
+  .scene-top {
+    top: 60px;
+    left: auto;
+    right: 12px;
+  }
+  .scene-top .status {
+    max-width: 220px;
+    white-space: nowrap;
+  }
+  .scene-top .view-title,
+  .sidebar .section {
+    display: none;
+  }
+  .camera-buttons {
+    top: 8px;
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  .camera-buttons button,
+  .transport button {
+    flex: none;
+    min-width: var(--tap);
+    min-height: var(--tap);
+    padding: 0 8px;
+    font-size: var(--fs-label);
+  }
+  /* ＋／− 疊在左側，讓一列放得下六個視角鈕 */
+  .camera-buttons #zoomIn,
+  .camera-buttons #zoomOut {
+    position: absolute;
+    left: 0;
+    top: 52px;
+  }
+  .camera-buttons #zoomOut {
+    top: 100px;
+  }
+  #perspective,
+  #fit,
+  #follow,
+  #reset,
+  #restoreDefaults,
+  #toggleSound,
+  #togglePlot {
+    font-size: 0;
+  }
+  #perspective::before,
+  #fit::before,
+  #follow::before,
+  #reset::before,
+  #restoreDefaults::before,
+  #toggleSound::before,
+  #togglePlot::before {
+    font-size: var(--fs-label);
+  }
+  #perspective::before {
+    content: '立體';
+    content: '立體' / '';
+  }
+  #fit::before {
+    content: '取景';
+    content: '取景' / '';
+  }
+  #follow::before {
+    content: '跟隨';
+    content: '跟隨' / '';
+  }
+  #reset::before {
+    content: '歸零';
+    content: '歸零' / '';
+  }
+  #restoreDefaults::before {
+    content: '預設';
+    content: '預設' / '';
+  }
+  #toggleSound::before {
+    content: '聲音';
+    content: '聲音' / '';
+  }
+  #togglePlot::before {
+    content: '圖表';
+    content: '圖表' / '';
+  }
+  .bottom {
+    gap: 4px;
+    bottom: 8px;
+  }
+  .playbar {
+    gap: 4px;
+  }
+  .timeline-row,
+  .transport {
+    display: flex;
+    flex: 1 1 100%;
+    align-items: center;
+    gap: 4px;
+  }
+  .playbar .time-slider {
+    flex: 1;
+    min-width: 0;
+  }
+  .transport .primary {
+    min-width: 64px;
+  }
+  /* 讀值標籤不換行（省略號收尾），避免讀值列變高遮住場景；數值與單位照常顯示 */
+  .metrics .metric {
+    min-width: 0;
+  }
+  .metrics .metric small {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .metrics .metric small {
+    font-size: 11px;
+  }
+  .app {
+    grid-template-rows: 50px minmax(0, 1fr);
+  }
+  .workspace {
+    grid-template-rows: minmax(0, 1fr) 210px;
+  }
+  .timeline-row select {
+    min-height: 0;
+    height: 30px;
+    padding: 0 4px;
+  }
+  .time-slider {
+    height: 24px;
+  }
+  .metric span {
+    font-size: 11px;
+  }
+  .sidebar .intro {
+    margin-bottom: 4px;
+  }
+  .share-row {
+    margin-top: 6px;
+  }
+  .textbook-tags {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-top: 6px;
+  }
+  .textbook-chip {
+    white-space: nowrap;
   }
 }
