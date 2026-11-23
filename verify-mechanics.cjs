@@ -128,6 +128,21 @@ for(const id of ['reset','restoreDefaults','export','closeHelp']){const tag=html
 const libraryHtml=fs.readFileSync('library.html','utf8'),library=domHarness(libraryHtml);
 for(const match of libraryHtml.matchAll(/<script src="([^"?]+)(?:\?[^"]*)?"/g))vm.runInContext(fs.readFileSync(match[1],'utf8'),library.sandbox);
 assert.equal(library.ids['atlas-trunks'].children.length,5);
+// 入口頁小橫列與縮圖：精選 id 都存在；每個共用實驗都有小型 WebP 縮圖；橫列預設「從這裡開始」並可切到「最近更新」。
+{const {LibraryHighlights}=require('./assets/highlights.js'),catalogIds=new Set(defs.map(d=>d.id));
+for(const item of [...LibraryHighlights.start,...LibraryHighlights.recent])assert.ok(catalogIds.has(item.id),'highlight for missing experiment '+item.id);
+assert.ok(LibraryHighlights.recent.every((item,i,all)=>/^\d{4}-\d{2}-\d{2}$/.test(item.date)&&(!i||all[i-1].date>=item.date)),'recent highlights need dates, newest first');
+for(const d of defs){const file='assets/thumbs/'+d.id+'.webp';assert.ok(fs.existsSync(file),'missing thumbnail '+file+'（執行 node tools/thumb-server.cjs 產生）');const buf=fs.readFileSync(file);assert.ok(buf.subarray(8,12).toString()==='WEBP'&&buf.length<60000,'bad thumbnail '+file);}
+const shelf=library.ids['shelf-list'],tabs=library.ids.shelves.children[0];
+assert.equal(library.ids.shelves.hidden,false);
+assert.equal(shelf.children.length,LibraryHighlights.start.length);
+assert.equal(tabs.children[0].attrs['aria-pressed'],'true');
+tabs.children[1].listeners.click();
+assert.equal(shelf.children.length,LibraryHighlights.recent.length);
+assert.equal(tabs.children[1].attrs['aria-pressed'],'true');
+const card=library.ids.cards.children.find(c=>c.href==='mechanics.html#experiment=incline');
+assert.ok(card&&card.className.includes('has-thumb')&&card.children[0].src==='assets/thumbs/incline.webp'&&card.children[0].loading==='lazy','catalogue card thumbnail');
+assert.ok(!library.ids.cards.children[0].className.includes('has-thumb'),'standalone page keeps its icon');}
 assert.equal(library.ids['star-svg'].children.find(node=>node.attrs.class==='star-clusters').children.length,19);
 const mapSearch=library.ids['atlas-search'];
 mapSearch.value='腳踏車煞車';mapSearch.listeners.input();

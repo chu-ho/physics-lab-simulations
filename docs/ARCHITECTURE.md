@@ -73,6 +73,8 @@ simulation.events / markers → 事件文字 / 高度標線
 
 `models/acoustic-core.js`提供無DOM的複數運算及阻尼一維受迫聲管解，需先於`models/resonance-column.js`載入，modelDependencies會列出。`models/vacuum-bell.js`是等溫定容質量平衡與示意聲耦合，並非PV等溫壓縮實驗。
 
+入口頁縮圖：`assets/thumbs/<實驗id>.webp`由`node tools/thumb-server.cjs`啟動本機伺服器後，在瀏覽器開啟它印出的`tools/capture-thumbs.html`按「開始產生」重新擷取（真實場景、預設參數）；新增實驗後須補縮圖，verify-mechanics會檢查。入口頁小橫列資料在`assets/highlights.js`（手動維護，library.js的mountShelves渲染）。
+
 `assets/derivations.js`在app前載入，無DOM：以實驗id取出的Derivations函式接收params與simulation，回傳steps（title／text／math，算式代入參數）與checks（derived／simulated／tolerance或approx）。app.renderDerivation在setup後且推導面板展開時才計算；verify-derivations.cjs以多組參數檢查推導＝模擬。新增題目只需在此檔加一個函式。
 
 `assets/param-levels.js`在app前載入，只放資料（ParamLevels：實驗id→參數id→最低層次1／2，未列為3）；app.selectExperiment建立拉桿時給每個label id `control-<參數>`，setupParamLevel／applyParamLevel依層次切換hidden，syncURL後重算提示。新增試做題只需在此檔加一筆，verify-mechanics會檢查id與參數存在。

@@ -60,6 +60,23 @@ for (const cat of categories) {
   };
   document.getElementById('filters').append(button);
 }
+// 實驗縮圖：tools/capture-thumbs.html 產生的 assets/thumbs/<id>.webp；懶載入，載入失敗就退回原本的圖示。
+function thumbnail(d, className) {
+  if (!d.href.startsWith('mechanics.html')) return null;
+  const img = document.createElement('img');
+  img.className = className;
+  img.src = 'assets/thumbs/' + encodeURIComponent(d.id) + '.webp';
+  img.alt = '';
+  img.width = 400;
+  img.height = 250;
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.addEventListener('error', () => {
+    img.closest('.has-thumb')?.classList.remove('has-thumb');
+    img.remove();
+  });
+  return img;
+}
 function renderCards() {
   const q = document.getElementById('search').value.trim().toLowerCase(),
     chapter = chapterSelect ? chapterSelect.value : '',
@@ -79,6 +96,8 @@ function renderCards() {
     const a = document.createElement('a');
     a.className = 'card';
     a.href = d.href;
+    const thumb = thumbnail(d, 'thumb');
+    if (thumb) a.className = 'card has-thumb';
     const number = document.createElement('div');
     number.className = 'number';
     number.textContent = String(experiments.indexOf(d) + 1).padStart(2, '0');
@@ -110,7 +129,7 @@ function renderCards() {
         chip.title = section.full;
         chips.append(chip);
       }
-    a.append(number, icon, h, p, ...(chips.children.length ? [chips] : []), open);
+    a.append(...(thumb ? [thumb] : []), number, icon, h, p, ...(chips.children.length ? [chips] : []), open);
     cards.append(a);
   }
   if (!filtered.length) {
@@ -139,3 +158,59 @@ document.getElementById('search').addEventListener('input', renderCards);
 renderCards();
 
 if (typeof mountAtlas === 'function') mountAtlas(experiments);
+
+// 入口頁小橫列：「從這裡開始」與「最近更新」共用一列，用兩個切換鈕換內容（手機也只占一列高度）。
+function mountShelves(root, highlights) {
+  if (!root || !highlights) return;
+  const byId = new Map(experiments.map(d => [d.id, d])),
+    shelves = [
+      { key: 'start', label: '從這裡開始', items: highlights.start },
+      { key: 'recent', label: '最近更新', items: highlights.recent }
+    ],
+    tabs = document.createElement('div'),
+    list = document.createElement('ul'),
+    buttons = [];
+  tabs.className = 'shelf-tabs';
+  tabs.setAttribute('role', 'group');
+  tabs.setAttribute('aria-label', '精選實驗');
+  list.className = 'shelf-list';
+  list.id = 'shelf-list';
+  function show(key) {
+    for (const [index, button] of buttons.entries())
+      button.setAttribute('aria-pressed', String(shelves[index].key === key));
+    const shelf = shelves.find(s => s.key === key);
+    list.setAttribute('aria-label', shelf.label);
+    list.replaceChildren(
+      ...shelf.items
+        .filter(item => byId.has(item.id))
+        .map(item => {
+          const d = byId.get(item.id),
+            li = document.createElement('li'),
+            a = document.createElement('a'),
+            title = document.createElement('strong'),
+            note = document.createElement('span'),
+            img = thumbnail(d, 'shelf-thumb');
+          a.className = 'shelf-card';
+          a.href = d.href;
+          title.textContent = d.title;
+          note.textContent = item.date ? item.date.slice(5).replace('-', '/') + ' ' + item.note : item.note;
+          a.append(...(img ? [img] : []), title, note);
+          li.append(a);
+          return li;
+        })
+    );
+    list.scrollLeft = 0;
+  }
+  for (const shelf of shelves) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = shelf.label;
+    button.addEventListener('click', () => show(shelf.key));
+    buttons.push(button);
+    tabs.append(button);
+  }
+  root.replaceChildren(tabs, list);
+  root.hidden = false;
+  show('start');
+}
+mountShelves(document.getElementById('shelves'), typeof LibraryHighlights !== 'undefined' ? LibraryHighlights : null);
