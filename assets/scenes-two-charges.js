@@ -110,7 +110,9 @@ function drawTwoCharges(s) {
     const observation = [p.probeX, p.probeY, 0];
     sphere(observation, 0.1, '#729c8d');
     label([observation[0], observation[1] + 0.35, 0], '觀察點 V=' + s.potential.toFixed(2) + ' V', '#4d7569', 11);
-    sphere([s.x, s.y, 0], 0.07, '#d2b26f');
+    // 播放時移動的是掃描點（圖表的取樣位置），觀察點固定；標籤放在點下方，避免和觀察點標籤重疊。
+    sphere([s.x, s.y, 0], 0.09, '#d2b26f');
+    label([s.x, s.y - 0.35, 0], '掃描點 V=' + s.scanPotential.toFixed(2) + ' V', '#9a7a33', 11);
   }
   label(
     [0, -6.6, 0],
