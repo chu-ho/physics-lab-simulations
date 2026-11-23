@@ -66,6 +66,10 @@ $('timeline').oninput = () => {
 };
 for (const id of ['trail', 'vectors', 'forces', 'grid', 'plotMetric'])
   $(id).addEventListener('change', () => (dirty = true));
+$('energyToggle').addEventListener('change', () => {
+  updateEnergy(stateAt(t));
+  dirty = true;
+});
 function setPlotVisible(visible) {
   $('plotPanel').hidden = !visible;
   $('togglePlot').textContent = visible ? '隱藏圖表' : '顯示圖表';

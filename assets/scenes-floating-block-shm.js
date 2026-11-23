@@ -35,7 +35,7 @@ function drawFloatingBlock(s) {
     const scale = 0.85 / Math.max(s.weight, s.buoyancy, Math.abs(s.fy), 1);
     arrow([-0.25, s.y, 0], [-0.25, s.y - s.weight * scale, 0], '#bb675c', 'mg');
     arrow([0.25, s.y, 0], [0.25, s.y + s.buoyancy * scale, 0], '#4788b2', 'B');
-    arrow([0.75, s.y, 0], [0.75, s.y + s.fy * scale, 0], '#ae8b45', '合力');
+    arrow([0.75, s.y, 0], [0.75, s.y + s.fy * scale, 0], quantityColors.force, '合力');
     if (Math.abs(s.drag) > 0.01) arrow([-0.7, s.y, 0], [-0.7, s.y + s.drag * scale, 0], '#8b6eb0', '阻尼');
   }
   const linear = s.regime === 1;

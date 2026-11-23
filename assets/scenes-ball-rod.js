@@ -12,5 +12,10 @@ function drawBallRod(s) {
   } else label([s.x2, 1.2, s.z2], '自由棒', '#5c8790', 11);
   label([s.x, 1, s.z], s.collided && params.stick ? '合體質點' : '入射質點', '#a67536', 10);
   if ($('vectors').checked)
-    arrow([s.x2, 0.6, s.z2], [s.x2 + s.vx2 * velocityScale, 0.6, s.z2 + s.vz2 * velocityScale], '#4e9790', 'v棒');
+    arrow(
+      [s.x2, 0.6, s.z2],
+      [s.x2 + s.vx2 * velocityScale, 0.6, s.z2 + s.vz2 * velocityScale],
+      quantityColors.velocity,
+      'v棒'
+    );
 }

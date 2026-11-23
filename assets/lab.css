@@ -229,6 +229,60 @@ canvas.dragging {
   border-radius: 12px;
   padding: 9px 0;
 }
+/* 迷你能量條：動能／位能／熱固定色，堆疊表示總能量 */
+.energy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 860px;
+  padding: 5px 12px;
+  background: #152a34eb;
+  border: 1px solid #ffffff20;
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  font-size: var(--fs-label);
+  color: #bdcbd1;
+}
+.energy[hidden] {
+  display: none;
+}
+.energy-name {
+  flex: none;
+  color: #b8c8cc;
+}
+.energy-track {
+  flex: 1 1 120px;
+  min-width: 80px;
+  height: 10px;
+  display: flex;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ffffff14;
+}
+.energy-track i {
+  display: block;
+  height: 100%;
+}
+.energy-k {
+  background: var(--q-kinetic);
+}
+/* 位能加斜紋、熱加點狀，色盲時仍可分辨 */
+.energy-u {
+  background: repeating-linear-gradient(135deg, var(--q-potential) 0 5px, #9677e0 5px 8px);
+}
+.energy-h {
+  background:
+    radial-gradient(circle, #ffffff55 1.2px, transparent 1.6px) 0 0 / 5px 5px,
+    var(--q-heat);
+}
+.energy-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
 .metric {
   padding: 0 15px;
   border-right: 1px solid #ffffff18;
@@ -761,6 +815,20 @@ dialog summary {
 /* 手機（≤ 580px）：3D 可視高度優先。鏡頭列與播放列各壓成一列，按鈕保留 44px 高，
    長標籤以 ::before 顯示短字（原文字仍是無障礙名稱）。 */
 @media (max-width: 580px) {
+  .energy {
+    gap: 6px;
+    padding: 1px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .energy-track {
+    height: 6px;
+  }
+  /* 能量條與讀值列貼齊，不多占 3D 視窗高度 */
+  .energy:not([hidden]) {
+    margin-bottom: -2px;
+  }
   .scene-top {
     top: 60px;
     left: auto;

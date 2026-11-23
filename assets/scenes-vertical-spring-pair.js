@@ -7,7 +7,7 @@ function drawVerticalSpringPair(s) {
   label([1, s.y2, 0], '下 M=' + params.M + ' kg', '#607a83', 11);
   label([0, simulation.bounds.max[1] - 0.3, 0], s.phase ? '已離地' : '下塊貼地', '#9a7a3f', 12);
   if ($('forces').checked) {
-    arrow([0, s.y2, 0], [0, s.y2 + s.fy2 * forceScale, 0], '#966bb0', '下塊合力');
+    arrow([0, s.y2, 0], [0, s.y2 + s.fy2 * forceScale, 0], quantityColors.force, '下塊合力');
     if (s.normal > 1e-8) arrow([-0.6, s.y2, 0], [-0.6, s.y2 + s.normal * forceScale, 0], '#b48d46', 'N');
   }
 }

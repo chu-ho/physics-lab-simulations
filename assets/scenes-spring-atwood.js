@@ -11,6 +11,7 @@ function drawSpringAtwood(s) {
   label([-1.3, s.y, 0], params.m1 + ' kg', '#67828a', 11);
   label([1.3, s.y2, 0], params.m2 + ' kg', '#67828a', 11);
   label([1.2, s.pulleyY, 0], '彈力=2T', '#a17c43', 11);
-  if ($('forces').checked) arrow([0.7, s.y2, 0], [0.7, s.y2 + s.fy2 * forceScale, 0], '#956bad', '合力₂');
-  if ($('vectors').checked) arrow([0.7, s.y2, 0], [0.7, s.y2 + s.vy2 * velocityScale, 0], '#4c938a', 'v₂');
+  if ($('forces').checked) arrow([0.7, s.y2, 0], [0.7, s.y2 + s.fy2 * forceScale, 0], quantityColors.force, '合力₂');
+  if ($('vectors').checked)
+    arrow([0.7, s.y2, 0], [0.7, s.y2 + s.vy2 * velocityScale, 0], quantityColors.velocity, 'v₂');
 }

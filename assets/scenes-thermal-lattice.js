@@ -20,7 +20,7 @@ function drawThermalLattice(s) {
     pos = point(a);
   if ($('vectors').checked && s.rmsSpeed > 0) {
     const v = 0.15 / s.rmsSpeed;
-    arrow(pos, [pos[0] + a.vx * v, pos[1] + a.vy * v, pos[2] + a.vz * v], '#4b9688', 'v₀');
+    arrow(pos, [pos[0] + a.vx * v, pos[1] + a.vy * v, pos[2] + a.vz * v], quantityColors.velocity, 'v₀');
   }
   if ($('forces').checked && params.T > 0) {
     const v = 0.15 / Math.sqrt(3 * params.k * 1.380649e-23 * params.T);

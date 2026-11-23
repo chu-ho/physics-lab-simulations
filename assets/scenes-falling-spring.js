@@ -13,5 +13,5 @@ function drawFallingSpring(s) {
   }
   segment([-3.5, L, 0], [3.5, L, 0], '#73a69370', 1, true);
   label([0, L + 0.35, 0], '彈簧自然長高度', '#6b9a83', 10);
-  if ($('forces').checked) arrow([2.5, s.y2, 0], [2.5, s.y2 + s.fy2 * forceScale, 0], '#9266ad', '合力₂');
+  if ($('forces').checked) arrow([2.5, s.y2, 0], [2.5, s.y2 + s.fy2 * forceScale, 0], quantityColors.force, '合力₂');
 }

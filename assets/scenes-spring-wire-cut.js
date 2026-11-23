@@ -19,11 +19,11 @@ function drawSpringWireCut(s) {
   label([-2.5, top + 1, 0], '彈簧連接', '#408b85', 12);
   label([2.5, top + 1, 0], '理想細線連接', '#a77f43', 12);
   if ($('forces').checked) {
-    arrow([-2.5, s.y2, 0], [-2.5, s.y2 + s.fy2 * forceScale, 0], '#9462ab', '下塊合力');
+    arrow([-2.5, s.y2, 0], [-2.5, s.y2 + s.fy2 * forceScale, 0], quantityColors.force, '下塊合力');
     arrow(
       [2.5, s.wireLower, 0],
       [2.5, s.wireLower + params.m2 * s.wireAcceleration * forceScale, 0],
-      '#9462ab',
+      quantityColors.force,
       '下塊合力'
     );
   }

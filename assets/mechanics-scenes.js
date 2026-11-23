@@ -904,7 +904,7 @@ function apparatus(s) {
       sphere([s.x2, 1, 0], 0.5);
       label([s.x, 1.9, 0], 'm₁ ' + p.m1 + ' kg');
       label([s.x2, 1.9, 0], 'm₂ ' + p.m2 + ' kg');
-      if ($('vectors').checked) arrow([s.x2, 1, 0], [s.x2 + s.v2 * velocityScale, 1, 0], colors.mint, 'v₂');
+      if ($('vectors').checked) arrow([s.x2, 1, 0], [s.x2 + s.v2 * velocityScale, 1, 0], quantityColors.velocity, 'v₂');
       break;
     case 'collision2d':
       sphere([s.x + 0.45 * Math.cos(s.theta1), 1.2, s.z - 0.45 * Math.sin(s.theta1)], 0.07, '#467bb3');
@@ -914,7 +914,12 @@ function apparatus(s) {
       label([s.x, 1.9, s.z], 'm₁ ' + p.m1 + ' kg');
       label([s.x2, 1.9, s.z2], 'm₂ ' + p.m2 + ' kg');
       if ($('vectors').checked)
-        arrow([s.x2, 1, s.z2], [s.x2 + s.vx2 * velocityScale, 1, s.z2 + s.vz2 * velocityScale], colors.mint, 'v₂');
+        arrow(
+          [s.x2, 1, s.z2],
+          [s.x2 + s.vx2 * velocityScale, 1, s.z2 + s.vz2 * velocityScale],
+          quantityColors.velocity,
+          'v₂'
+        );
       break;
     case 'pair-spring':
       box(point(s), [0.8, 1, 1]);
@@ -922,7 +927,8 @@ function apparatus(s) {
       coil([s.x + 0.4, 0.5, 0], [s.x2 - 0.4, 0.5, 0]);
       segment([s.com, 0, -1.4], [s.com, 0, 1.4], '#a64f20', 2);
       label([s.com, 0.1, 1.5], '質心');
-      if ($('vectors').checked) arrow([s.x2, 0.5, 0], [s.x2 + s.v2 * velocityScale, 0.5, 0], colors.mint, 'v₂');
+      if ($('vectors').checked)
+        arrow([s.x2, 0.5, 0], [s.x2 + s.v2 * velocityScale, 0.5, 0], quantityColors.velocity, 'v₂');
       if ($('forces').checked) arrow([s.x2, 0.5, 0], [s.x2 - s.fx * forceScale, 0.5, 0], colors.purple, '內力₂');
       break;
     case 'skater': {
@@ -939,8 +945,8 @@ function apparatus(s) {
       box([0, 0.7, 0], [0.5, 1.2, 0.5]);
       label([0, 2, 0], 'L = ' + format(s.angular));
       if ($('vectors').checked) {
-        arrow([x, 1, z], [x + vx * velocityScale, 1, z + vz * velocityScale], colors.mint, 'v₁');
-        arrow([-x, 1, -z], [-x - vx * velocityScale, 1, -z - vz * velocityScale], colors.mint, 'v₂');
+        arrow([x, 1, z], [x + vx * velocityScale, 1, z + vz * velocityScale], quantityColors.velocity, 'v₁');
+        arrow([-x, 1, -z], [-x - vx * velocityScale, 1, -z - vz * velocityScale], quantityColors.velocity, 'v₂');
       }
       break;
     }
@@ -1140,14 +1146,14 @@ function render() {
     arrow(
       pos,
       [pos[0] + s.vx * velocityScale, pos[1] + s.vy * velocityScale, pos[2] + s.vz * velocityScale],
-      colors.mint,
+      quantityColors.velocity,
       'v'
     );
   if ($('forces').checked && !hidePrimary && !['rotor', 'lever'].includes(def.kind))
     arrow(
       pos,
       [pos[0] + s.fx * forceScale, pos[1] + s.fy * forceScale, pos[2] + s.fz * forceScale],
-      colors.purple,
+      quantityColors.force,
       'ΣF'
     );
   primitives.sort((a, b) => b.depth - a.depth);

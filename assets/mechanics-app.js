@@ -28,6 +28,43 @@ function collectPlotSamples() {
     ...stateAt((i / 480) * simulation.duration)
   }));
 }
+// 迷你能量條：狀態同時有動能 K 與位能 U 的實驗才顯示。位能零點本可任選，這裡一律以本次運動的最低點為零
+// （同課本習慣），否則重力位能的大常數會讓動能與熱幾乎看不見；守恆時總長度固定。
+// 比例尺取整段運動的最大總能量，播放中不跳動。
+let energyInfo = null;
+function setupEnergy() {
+  const ok = s => Number.isFinite(s.K) && Number.isFinite(s.U);
+  energyInfo = null;
+  if (plotSamples.length && plotSamples.every(ok)) {
+    const shift = Math.min(...plotSamples.map(s => s.U)),
+      heat = plotSamples.every(s => Number.isFinite(s.heat)),
+      max = Math.max(...plotSamples.map(s => s.K + s.U - shift + (heat ? s.heat : 0)));
+    if (max > 0) energyInfo = { shift, heat, max };
+  }
+  $('energyOption').hidden = !energyInfo;
+  updateEnergy(stateAt(t));
+}
+function updateEnergy(s) {
+  const show = !!energyInfo && $('energyToggle').checked;
+  if (!$('energy').hidden !== show) {
+    $('energy').hidden = !show;
+    resize();
+  }
+  if (!show) return;
+  const { shift, heat, max } = energyInfo,
+    u = s.U - shift,
+    h = heat ? s.heat : 0,
+    pct = v => Math.max(0, Math.min(100, (v / max) * 100)) + '%',
+    uName = Math.abs(shift) > 1e-9 * max ? 'U（最低點為零）' : 'U';
+  $('energyK').style.width = pct(s.K);
+  $('energyU').style.width = pct(u);
+  $('energyH').style.width = pct(h);
+  const parts = ['K ' + format(s.K), uName + ' ' + format(u)];
+  if (heat) parts.push('熱 ' + format(h));
+  parts.push('總 ' + format(s.K + u + h) + ' J');
+  $('energyText').textContent = parts.join('　');
+  $('energyTrack').setAttribute('aria-label', '能量條：' + parts.join('，'));
+}
 function plotMetrics() {
   return [...new Map([...def.metrics, ...(def.plotMetrics || [])].map(m => [m.key, m])).values()];
 }
@@ -210,6 +247,7 @@ function setup(fit, preserveAudio = false) {
   experimentAudio.setExperiment(simulation, params, { preserveEnabled: preserveAudio });
   for (const p of def.params) showParam(p);
   collectPlotSamples();
+  setupEnergy();
   const selectedMode = $('plotMode').value,
     modes = [['time', '時間圖']];
   if (simulation.positionPlot)
@@ -405,6 +443,7 @@ function updateUI() {
     ended = t >= simulation.duration;
   $('time').textContent = format(t);
   def.metrics.forEach((m, i) => ($('m' + i).textContent = format(s[m.key])));
+  updateEnergy(s);
   $('timeline').value = simulation.duration ? (t / simulation.duration) * 1000 : 0;
   $('timeline').disabled = simulation.duration === 0;
   $('timeline').setAttribute('aria-valuetext', format(t) + ' 秒，共 ' + format(simulation.duration) + ' 秒');

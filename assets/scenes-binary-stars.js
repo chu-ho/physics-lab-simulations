@@ -20,7 +20,12 @@ function drawBinaryStars(s) {
     }
   }
   if ($('vectors').checked)
-    arrow([s.x2, 1, s.z2], [s.x2 + s.vx2 * velocityScale, 1, s.z2 + s.vz2 * velocityScale], '#478c9c', 'v₂');
+    arrow(
+      [s.x2, 1, s.z2],
+      [s.x2 + s.vx2 * velocityScale, 1, s.z2 + s.vz2 * velocityScale],
+      quantityColors.velocity,
+      'v₂'
+    );
   if ($('forces').checked)
     arrow([s.x2, 1, s.z2], [s.x2 + s.fx2 * forceScale, 1, s.z2 + s.fz2 * forceScale], '#9a6cad', 'F₂');
 }

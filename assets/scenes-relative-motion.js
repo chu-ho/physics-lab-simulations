@@ -17,5 +17,10 @@ function drawRelativeMotion(s) {
       segment([a.x2, a.y2, 0], [b.x2, b.y2, 0], '#427eaa', 2);
     }
   if ($('vectors').checked)
-    arrow([s.x2, s.y2, 0], [s.x2 + s.vx2 * velocityScale, s.y2 + s.vy2 * velocityScale, 0], '#427eaa', 'v藍′');
+    arrow(
+      [s.x2, s.y2, 0],
+      [s.x2 + s.vx2 * velocityScale, s.y2 + s.vy2 * velocityScale, 0],
+      quantityColors.velocity,
+      'v藍′'
+    );
 }
