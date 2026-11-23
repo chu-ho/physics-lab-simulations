@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>產生實驗縮圖</title>
+<style>
+body{margin:0;font:14px/1.5 system-ui,sans-serif;background:#101c25;color:#ecf2f4}
+main{padding:16px}
+iframe{width:1000px;height:900px;border:1px solid #2c3d47;background:#fff}
+#log{white-space:pre-wrap;max-height:240px;overflow:auto;background:#172630;padding:8px}
+</style>
+</head>
+<body>
+<main>
+<h1>產生實驗縮圖</h1>
+<p>由 <code>node tools/thumb-server.cjs</code> 開啟本頁。每題以預設參數、播放到 35% 時間、放大場景後擷取場景區域，縮成 400×250 WebP，寫到 <code>assets/thumbs/</code>。</p>
+<p><button id="run">開始產生</button> <span id="progress"></span></p>
+<iframe id="frame" src="../mechanics.html#experiment=incline" title="擷取用實驗頁"></iframe>
+<div id="log" role="log"></div>
+</main>
+<script src="../assets/catalog.js"></script>
+<script>
+'use strict';
+const TW = 400, TH = 250;
+const frame = document.getElementById('frame'), log = document.getElementById('log');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function capture(id) {
+  const w = frame.contentWindow, d = frame.contentDocument;
+  w.selectExperiment(id, false);
+  for (let i = 0; i < 200 && w.eval('def.id') !== id; i++) await sleep(25);
+  if (w.eval('def.id') !== id) throw Error('load timeout');
+  await sleep(60);
+  w.eval('fitCamera(); t = simulation.duration * 0.35; running = false; updateUI(); render();');
+  const scene = d.getElementById('scene'), b = w.eval('sceneBounds()'), W = w.eval('W'), ratio = scene.width / W;
+  // 只取場景可見範圍（扣掉鏡頭列與下方面板），再置中裁成 16:10。
+  let sx = 0, sy = b.top, sw = W, sh = b.bottom - b.top;
+  if (sw / sh > TW / TH) { const nw = sh * TW / TH; sx = (sw - nw) / 2; sw = nw; }
+  else { const nh = sw * TH / TW; sy += (sh - nh) / 2; sh = nh; }
+  const out = document.createElement('canvas');
+  out.width = TW; out.height = TH;
+  out.getContext('2d').drawImage(scene, sx * ratio, sy * ratio, sw * ratio, sh * ratio, 0, 0, TW, TH);
+  const blob = await new Promise(r => out.toBlob(r, 'image/webp', 0.72));
+  const res = await fetch('/save-thumb?id=' + encodeURIComponent(id), { method: 'POST', body: blob });
+  if (!res.ok) throw Error(await res.text());
+  return blob.size;
+}
+async function run(ids = MechanicsCatalog.map(d => d.id)) {
+  const w = frame.contentWindow;
+  if (!w.document.body.classList.contains('fullscreen')) w.document.getElementById('focus').click();
+  await sleep(200);
+  let total = 0, failed = [];
+  for (const [i, id] of ids.entries()) {
+    document.getElementById('progress').textContent = (i + 1) + ' / ' + ids.length + ' ' + id;
+    try { const size = await capture(id); total += size; log.textContent += id + ' ' + size + ' B\n'; }
+    catch (e) { failed.push(id); log.textContent += id + ' 失敗：' + e.message + '\n'; }
+  }
+  const summary = { count: ids.length - failed.length, failed, totalKB: Math.round(total / 1024) };
+  log.textContent += JSON.stringify(summary) + '\n';
+  return summary;
+}
+document.getElementById('run').onclick = () => run();
+</script>
+</body>
+</html>

@@ -1105,3 +1105,134 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* 入口頁小橫列：「從這裡開始／最近更新」兩個切換鈕共用一條可橫向捲動的縮圖列 */
+.shelves {
+  margin: 4px 0 22px;
+}
+.shelves[hidden] {
+  display: none;
+}
+.shelf-tabs {
+  display: inline-flex;
+  margin-bottom: 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.shelf-tabs button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 6px 16px;
+}
+.shelf-tabs button[aria-pressed='true'] {
+  background: var(--mint);
+  color: #0d2a26;
+  font-weight: 700;
+}
+.shelf-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 176px;
+  gap: 12px;
+  margin: 0;
+  padding: 0 0 8px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.shelf-list li {
+  scroll-snap-align: start;
+}
+.shelf-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  padding: 6px 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+}
+.shelf-card:hover,
+.shelf-card:focus-visible {
+  border-color: var(--mint);
+}
+.shelf-thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: #b7d0d9;
+  object-fit: cover;
+}
+.shelf-card strong {
+  padding: 0 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.shelf-card span {
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+/* 全部實驗卡片縮圖：有縮圖時圖示隱藏，縮圖貼齊卡片上緣 */
+.card .thumb {
+  display: block;
+  width: calc(100% + 44px);
+  height: auto;
+  aspect-ratio: 16 / 10;
+  margin: -22px -22px 14px;
+  border-radius: 13px 13px 0 0;
+  background: #b7d0d9;
+  object-fit: cover;
+}
+.card.has-thumb .icon {
+  display: none;
+}
+@media (max-width: 850px) {
+  .card .thumb {
+    width: calc(100% + 36px);
+    margin: -18px -18px 12px;
+  }
+}
+/* 手機：橫列改為純文字小卡，讓第一個章節仍在首屏內（縮圖只在下方「全部實驗」出現） */
+@media (max-width: 580px) {
+  .shelves {
+    margin-bottom: 12px;
+  }
+  .shelf-tabs {
+    margin-bottom: 8px;
+  }
+  .shelf-list {
+    grid-auto-columns: 150px;
+    padding-bottom: 6px;
+  }
+  .shelf-thumb {
+    display: none;
+  }
+  .shelf-card {
+    padding: 8px 6px;
+  }
+  .shelf-card strong {
+    font-size: 12px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+  }
+  .shelf-card span {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+  }
+}
