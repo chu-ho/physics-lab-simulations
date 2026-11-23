@@ -70,7 +70,8 @@
         "assets/mechanics.css",
         "assets/lab.css",
         "assets/mechanics-controls.js",
-        "assets/mechanics-annotations.js"
+        "assets/mechanics-annotations.js",
+        "assets/mechanics-measure.js"
       ],
       "symbols": [
         ".workspace",

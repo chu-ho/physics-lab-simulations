@@ -136,6 +136,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   }
   if (def.initialView) Object.assign(camera, def.initialView);
   if (typeof annotationSelect === 'function') annotationSelect();
+  if (typeof measureReset === 'function') measureReset();
   document.title = def.title + ' · 3D 互動實驗室';
   $('title').textContent = def.title + ' / 3D';
   $('title').setAttribute('title', def.title);
@@ -444,6 +445,7 @@ function updateUI() {
   $('time').textContent = format(t);
   def.metrics.forEach((m, i) => ($('m' + i).textContent = format(s[m.key])));
   updateEnergy(s);
+  if (typeof measureUpdate === 'function' && (measureTool || stopwatch.on)) measureUpdate();
   $('timeline').value = simulation.duration ? (t / simulation.duration) * 1000 : 0;
   $('timeline').disabled = simulation.duration === 0;
   $('timeline').setAttribute('aria-valuetext', format(t) + ' 秒，共 ' + format(simulation.duration) + ' 秒');

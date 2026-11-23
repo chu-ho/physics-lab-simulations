@@ -229,6 +229,22 @@ canvas.dragging {
   border-radius: 12px;
   padding: 9px 0;
 }
+/* 量測讀數：只在開啟工具時出現，位於 3D 視窗下方面板最上列 */
+.measure-readout {
+  max-width: 860px;
+  padding: 4px 12px;
+  background: #fbfdfcee;
+  color: #12323d;
+  border: 1px solid #12323d33;
+  border-radius: 12px;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.measure-readout[hidden] {
+  display: none;
+}
 /* 迷你能量條：動能／位能／熱固定色，堆疊表示總能量 */
 .energy {
   display: flex;
@@ -675,7 +691,10 @@ dialog summary {
   }
   .annotation-panel,
   #referencePanel,
-  #soundStatus {
+  #soundStatus,
+  .measure-tools,
+  .measure-replace,
+  .measure-replace + .note {
     grid-column: 1/-1;
   }
   .sidebar h2 {

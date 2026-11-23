@@ -73,6 +73,8 @@ simulation.events / markers → 事件文字 / 高度標線
 
 `models/acoustic-core.js`提供無DOM的複數運算及阻尼一維受迫聲管解，需先於`models/resonance-column.js`載入，modelDependencies會列出。`models/vacuum-bell.js`是等溫定容質量平衡與示意聲耦合，並非PV等溫壓縮實驗。
 
+`assets/mechanics-measure.js`在annotations後、controls前載入：尺／量角器／探針的點存為3D世界座標並放在開啟時最正對鏡頭的座標平面上，controls的pointer事件先交給annotation再交給measure（命中把手才攔截），mechanics-scenes的render在場景primitives之後呼叫drawMeasure()疊畫；碼錶讀模擬時間t。個別實驗探針寫在measureProbes（目前double-slit）。selectExperiment時measureReset()。
+
 `assets/mechanics-audio.js`在app前載入，只在明確啟用時建立音訊裝置；app.setup負責setExperiment，updateUI負責更新與靜音。音訊契約與故障處理在docs/PHYSICS.md；專用route為audio，mock驗證入口verify-audio.cjs。
 
 `models/acoustic-core.js`另提供乾空氣soundSpeed(°C)與有限pulseEnvelope，供sound-speed／echo重用；models/sound-speed.js是靜止源單程延遲，models/echo.js是一次平面反射，不可冒充移動源都卜勒。
