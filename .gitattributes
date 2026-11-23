@@ -1,0 +1,11 @@
+# Keep text files LF everywhere so the byte-exact generator checks pass on Windows too.
+* text=auto eol=lf
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.mp3 binary
+*.wav binary
