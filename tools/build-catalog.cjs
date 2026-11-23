@@ -15,7 +15,7 @@ const routes = JSON.parse(read('docs/routes.json'));
 const CORE = 'mechanics-models.js';
 // 不屬於單一實驗、由實驗頁固定載入的檔案
 const STATIC = ['mechanics-models.js', 'assets/catalog.js', 'assets/mechanics-audio.js', 'assets/textbook-hanlin.js',
-  'assets/param-levels.js', 'assets/mechanics-app.js', 'assets/mechanics-plots.js', 'assets/renderer.js', 'assets/mechanics-scenes.js', 'assets/mechanics-annotations.js', 'assets/mechanics-measure.js', 'assets/experiment-loader.js', 'assets/mechanics-controls.js'];
+  'assets/derivations.js', 'assets/param-levels.js', 'assets/mechanics-app.js', 'assets/mechanics-plots.js', 'assets/renderer.js', 'assets/mechanics-scenes.js', 'assets/mechanics-annotations.js', 'assets/mechanics-measure.js', 'assets/experiment-loader.js', 'assets/mechanics-controls.js'];
 // 只被特定實驗使用、但不是 scenes-*.js 的輔助檔
 const EXTRA = {'violin-fourier': ['assets/violin-import.js']};
 

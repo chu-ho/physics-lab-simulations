@@ -692,6 +692,7 @@ dialog summary {
   .annotation-panel,
   #referencePanel,
   #soundStatus,
+  .derivation > *,
   .level-switch,
   .level-note,
   .measure-tools,

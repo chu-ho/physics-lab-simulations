@@ -72,7 +72,8 @@
         "assets/mechanics-controls.js",
         "assets/mechanics-annotations.js",
         "assets/mechanics-measure.js",
-        "assets/param-levels.js"
+        "assets/param-levels.js",
+        "assets/derivations.js"
       ],
       "symbols": [
         ".workspace",
@@ -81,7 +82,8 @@
       ],
       "checks": [
         "node verify-mechanics.cjs",
-        "node verify-annotations.cjs"
+        "node verify-annotations.cjs",
+        "node verify-derivations.cjs"
       ]
     },
     "chart": {

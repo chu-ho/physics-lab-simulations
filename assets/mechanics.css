@@ -276,6 +276,64 @@ header h1 {
   background: #d7e9e6;
   color: #215852;
 }
+/* 推導分頁：步驟卡、代入數字的算式、推導 vs 模擬 */
+.derivation-steps {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.derivation-steps li {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2, #1e303b);
+}
+.derivation-steps strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.derivation-steps p {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: var(--fs-label);
+}
+.derivation-steps code {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+  color: var(--orange);
+}
+.derivation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.derivation-progress {
+  flex: 1 1 100%;
+  font-size: var(--fs-label);
+  color: var(--muted);
+}
+.derivation-checks {
+  margin-top: 10px;
+}
+.derivation-checks[hidden] {
+  display: none;
+}
+.derivation-check {
+  margin: 0 0 6px;
+  padding: 8px 10px;
+  border-left: 3px solid var(--mint);
+  background: #8ee0c014;
+  font-variant-numeric: tabular-nums;
+}
+.derivation-check.approx {
+  border-left-color: var(--orange);
+  background: #ffb36b14;
+}
 /* 參數分層：入門／探究／進階分段控制 */
 .level-switch {
   display: grid;
