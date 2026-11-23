@@ -569,6 +569,8 @@ function updateUI() {
   $('step').disabled = ended;
   $('play').disabled = simulation.duration === 0;
   $('play').textContent = running ? 'Ⅱ 暫停' : ended ? '↻ 再次播放' : t > 0 ? '▶ 繼續' : '▶ 播放';
+  // 符號只是裝飾；螢幕閱讀器讀不含符號的名稱。
+  $('play').setAttribute('aria-label', running ? '暫停' : ended ? '再次播放' : t > 0 ? '繼續' : '播放');
   $('status').textContent =
     def.kind === 'lever'
       ? Math.abs(s.net) < 1e-8
@@ -586,7 +588,35 @@ function updateUI() {
     .map(e => format(e.t) + ' s · ' + e.label)
     .join(' / ');
   experimentAudio.update(s, running && t < simulation.duration);
+  scheduleSceneSummary(ended);
   dirty = true;
+}
+// 場景文字摘要：暫停、單步、拖時間軸、改參數或播完時，停 0.6 秒後以 aria-live 禮貌更新一次；
+// 播放中不更新（狀態列已會報「實驗進行中」），避免螢幕閱讀器被數字洗版。
+let sceneSummaryTimer = null;
+function sceneSummaryText(s, ended) {
+  const parts = def.metrics.map(m => m.label + ' ' + format(s[m.key]) + (m.unit ? ' ' + m.unit : ''));
+  if (energyInfo && $('energyToggle').checked) parts.push($('energyText').textContent);
+  return (
+    def.title +
+    '，' +
+    (ended ? '觀察結束' : t > 0 ? '已暫停' : '準備實驗') +
+    '：時間 ' +
+    format(t) +
+    ' 秒；' +
+    parts.join('；') +
+    '。'
+  );
+}
+function writeSceneSummary() {
+  const text = sceneSummaryText(stateAt(t), t >= simulation.duration);
+  if ($('sceneSummary').textContent !== text) $('sceneSummary').textContent = text;
+}
+function scheduleSceneSummary(ended) {
+  if (running && !ended) return;
+  if (typeof setTimeout !== 'function' || typeof clearTimeout !== 'function') return writeSceneSummary();
+  clearTimeout(sceneSummaryTimer);
+  sceneSummaryTimer = setTimeout(writeSceneSummary, 600);
 }
 function advance(dt) {
   t = Math.min(simulation.duration, t + dt);
