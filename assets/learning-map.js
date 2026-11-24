@@ -105,7 +105,7 @@ const learningBranches = [
         '物理光學',
         '波動光學',
         [
-          ['干涉與繞射', 'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film'],
+          ['干涉與繞射', 'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film newton-rings'],
           ['偏振與色彩', 'fresnel rgb-lights optical-polarizers']
         ]
       ]
@@ -241,6 +241,7 @@ const learningFocus = {
   4.7: ['高中深化', '以多次放射性衰變取樣區分單次結果與統計期望。']
 };
 const aliases = {
+  'newton-rings': '牛頓環 等厚干涉 空氣楔 劈尖 半波損失',
   elevator: '電梯變重 視重',
   'bicycle-friction': '腳踏車煞車',
   'half-lens': '鏡頭遮一半',
@@ -259,6 +260,7 @@ const aliases = {
 };
 
 const experimentPrerequisites = {
+  'newton-rings': [['thin-film', '先理解平行薄膜兩道反射光的光程差，再看膜厚隨位置變化時的等厚條紋。']],
   'current-balance': [['wire-magnetic-field', '先確認電流會產生磁場，再看外加磁場對電流的作用力。']],
   'cathode-ray': [['two-charges', '先區分電場、電位和電位能，再看電子經電位差獲得的動能。']],
   'charged-particle': [['circular', '先讀向心加速度，再辨認磁力提供的向心分量。']],
@@ -273,6 +275,12 @@ const experimentPrerequisites = {
 };
 
 const learningActivities = {
+  'newton-rings': [
+    '牛頓環的中心是亮點還是暗點？為什麼？',
+    '在反射光下讀第 1、4、9 條暗環半徑，再切換到透射光比較中心。',
+    '接觸點膜厚為零，只剩半波損失的 π，所以反射中心是暗點；暗環半徑比為 1:2:3。',
+    '在空氣膜中注入水，預測環半徑縮小的比例，再改用楔形膜看條紋間距。'
+  ],
   'optical-polarizers': [
     '首末兩片互相垂直時，插入第三片會更暗嗎？',
     '固定非偏振入射與末片 90°，比較移除中間片及放入 45° 中間片時的輸出。',
