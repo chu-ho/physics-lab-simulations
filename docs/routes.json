@@ -132,7 +132,7 @@
       "purpose": "原始平面斜拋",
       "read": [],
       "sources": [
-        "index.html",
+        "projectile.html",
         "verify-projectile.cjs"
       ],
       "symbols": [
@@ -291,7 +291,7 @@
     {
       "id": "projectile",
       "title": "平面斜拋",
-      "entry": "index.html",
+      "entry": "projectile.html",
       "task": "legacy-projectile"
     },
     {
@@ -335,6 +335,7 @@
     "millikan-oil-drop": "millikan-oil-drop.html",
     "xray-bragg": "xray-bragg.html",
     "em-wave": "em-wave.html",
+    "waveplate": "waveplate.html",
     "bungee": "bungee.html",
     "massive-spring": "massive-spring.html",
     "double-slit": "double-slit.html",
@@ -477,6 +478,7 @@
     "millikan-oil-drop": "assets/scenes-millikan-oil-drop.js",
     "xray-bragg": "assets/scenes-xray-bragg.js",
     "em-wave": "assets/scenes-em-wave.js",
+    "waveplate": "assets/scenes-waveplate.js",
     "airplane-drop": "assets/scenes-airplane-drop.js",
     "safe-parabola": "assets/scenes-safe-parabola.js",
     "relative-motion": "assets/scenes-relative-motion.js",
@@ -604,6 +606,7 @@
     "millikan-oil-drop": "verify-millikan-oil-drop.cjs",
     "xray-bragg": "verify-xray-bragg.cjs",
     "em-wave": "verify-em-wave.cjs",
+    "waveplate": "verify-waveplate.cjs",
     "airplane-drop": "verify-airplane-drop.cjs",
     "safe-parabola": "verify-safe-parabola.cjs",
     "relative-motion": "verify-relative-motion.cjs",

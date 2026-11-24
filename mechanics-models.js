@@ -1720,5 +1720,6 @@
     require('./models/em-wave.js');
     require('./models/prism-dispersion.js');
     require('./models/optical-fiber.js');
+    require('./models/waveplate.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
