@@ -29,7 +29,7 @@
 
 ## 核心題目對應
 
-原有：平面斜拋 → index.html；階梯斜拋 → staircase-projectile.html；斜面斜拋 → inclined-projectile.html。
+原有：平面斜拋 → projectile.html；階梯斜拋 → staircase-projectile.html；斜面斜拋 → inclined-projectile.html。
 
 新增模型 ID：acceleration、vertical、river、pursuit、drag、friction、incline、atwood、table-pulley、elevator、work、energy-track、collision、ballistic-pendulum、rocket、circular、banked、conical、vertical-circle、torque、rolling、lever、spring、pendulum、damped、driven、orbit、collision-2d、center-of-mass、angular-momentum、massive-pulley、bungee。
 

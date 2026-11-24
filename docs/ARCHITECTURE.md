@@ -6,7 +6,8 @@
 
 ```text
 library.html + assets/library.js
-  ├─ index.html                        獨立平面斜拋
+  ├─ index.html                        首頁：轉到 library.html 總覽
+  ├─ projectile.html                   獨立平面斜拋
   ├─ staircase-projectile.html          獨立階梯斜拋
   ├─ inclined-projectile.html           獨立斜面斜拋
   ├─ bungee.html → mechanics.html?experiment=bungee

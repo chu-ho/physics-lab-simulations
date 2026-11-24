@@ -14,7 +14,7 @@ for(const r of audit){
 for(const item of plan.items){
  assert.ok(['planned','in-progress','implemented','complete'].includes(item.status));
  assert.ok(item.nextAction&&item.requirements.length,`Missing continuation ${item.id}`);
- for(const id of item.modelIds||[])assert.ok(models.has(id)||['index','staircase-projectile','inclined-projectile'].includes(id),`Unknown model ${id}`);
+ for(const id of item.modelIds||[])assert.ok(models.has(id)||['index','projectile','staircase-projectile','inclined-projectile'].includes(id),`Unknown model ${id}`);
  if(['implemented','complete'].includes(item.status))assert.ok(item.evidence.length&&item.modelIds.length,`Missing evidence ${item.id}`);
  if(plan.existingReview){
   const c=item.existingComparison;

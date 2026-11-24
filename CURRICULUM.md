@@ -15,7 +15,7 @@
 
 1. 等加速度直線運動
 2. 自由落體與鉛直上拋
-3. 平面斜拋（既有 index.html）
+3. 平面斜拋（projectile.html）
 4. 階梯斜拋與反彈（既有 staircase-projectile.html）
 5. 斜面上的斜拋（既有 inclined-projectile.html）
 6. 渡河與相對速度

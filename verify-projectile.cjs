@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const {domHarness}=require('./verify-mechanics.cjs'),html=fs.readFileSync('index.html','utf8'),{sandbox,ids}=domHarness(html);
+const {domHarness}=require('./verify-mechanics.cjs'),html=fs.readFileSync('projectile.html','utf8'),{sandbox,ids}=domHarness(html);
 ids.gravity.value='9.81';sandbox.window=sandbox;
 vm.runInContext(html.match(/<script>([\s\S]*)<\/script>/)[1],sandbox);
 vm.runInContext(`

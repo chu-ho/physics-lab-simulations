@@ -132,7 +132,7 @@
       "purpose": "原始平面斜拋",
       "read": [],
       "sources": [
-        "index.html",
+        "projectile.html",
         "verify-projectile.cjs"
       ],
       "symbols": [
@@ -291,7 +291,7 @@
     {
       "id": "projectile",
       "title": "平面斜拋",
-      "entry": "index.html",
+      "entry": "projectile.html",
       "task": "legacy-projectile"
     },
     {

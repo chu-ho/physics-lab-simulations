@@ -26,7 +26,7 @@
 
 | 實驗 | 內容 |
 |---|---|
-| [平面斜拋](index.html) | 初速、仰角、方位角、高度與重力 |
+| [平面斜拋](projectile.html) | 初速、仰角、方位角、高度與重力 |
 | [階梯斜拋與反彈](staircase-projectile.html) | 等寬等高階梯、恢復係數、反彈位置紀錄與 CSV |
 | [斜面上的斜拋](inclined-projectile.html) | 相對斜面發射、坡面落點與離面高度 |
 
