@@ -154,6 +154,6 @@ assert.equal(new Set(mapped).size,defs.length+3);
 assert.equal(library.ids.cards.children.length,defs.length+3);library.ids.search.value='不存在的實驗';library.ids.search.listeners.input();assert.equal(library.ids.cards.children.length,1);assert.ok(library.ids.cards.children[0].textContent.includes('找不到'));
 library.ids.search.value='';library.ids.filters.children.find(b=>b.textContent==='振動').onclick();assert.equal(library.ids.cards.children.length,defs.filter(d=>d.group==='振動').length);
 // All actual local assets and catalog paths resolve; existing pages remain independent.
-for(const file of ['library.html','mechanics.html','index.html','inclined-projectile.html','staircase-projectile.html']){const content=fs.readFileSync(file,'utf8');for(const m of content.matchAll(/(?:href|src)="([^"#]+)"/g)){if(/^(https?:|data:)/.test(m[1]))continue;assert.ok(fs.existsSync(m[1].split('?')[0]),file+' missing '+m[1])}}
+for(const file of ['library.html','mechanics.html','index.html','projectile.html','inclined-projectile.html','staircase-projectile.html']){const content=fs.readFileSync(file,'utf8');for(const m of content.matchAll(/(?:href|src)="([^"#]+)"/g)){if(/^(https?:|data:)/.test(m[1]))continue;assert.ok(fs.existsSync(m[1].split('?')[0]),file+' missing '+m[1])}}
 console.log(`PASS: ${defs.length} models, ${configurations} parameter configurations, physical references/conservation, ${defs.length} scenes and playback/control flows, catalog filters and local links.`);
 module.exports={domHarness};
