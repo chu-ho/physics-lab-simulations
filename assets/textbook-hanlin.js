@@ -248,6 +248,7 @@
     'sphere-lens': ['III3-2', 'III3-4'],
     rainbow: ['III3-3', 'III3-2'],
     'prism-dispersion': ['III3-3', 'III3-1'],
+    'optical-fiber': ['III3-2', 'III3-1'],
     'eye-lens': ['III3-4'],
     'dancing-image': ['III3-4'],
     'half-lens': ['III3-4'],

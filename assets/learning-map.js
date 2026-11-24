@@ -93,7 +93,7 @@ const learningBranches = [
         '幾何光學',
         [
           ['反射與面鏡', 'plane-mirror shared-mirror double-mirror conic-mirror'],
-          ['折射與色散', 'refraction-cart layered-refraction straw-cup apparent-depth sphere-lens rainbow prism-dispersion'],
+          ['折射與色散', 'refraction-cart layered-refraction straw-cup apparent-depth sphere-lens rainbow prism-dispersion optical-fiber'],
           [
             '成像與光學儀器',
             'image-drawing half-lens eye-lens dancing-image optical-parallax optical-instruments dolly-zoom'
@@ -244,6 +244,7 @@ const aliases = {
   elevator: '電梯變重 視重',
   'bicycle-friction': '腳踏車煞車',
   'half-lens': '鏡頭遮一半',
+  'optical-fiber': '光纖 光導管 全反射 臨界角 數值孔徑',
   'prism-dispersion': '三稜鏡 色散 偏向角 最小偏向 白光分光',
   'eye-lens': '眼鏡',
   doppler: '救護車',
@@ -369,6 +370,12 @@ const learningActivities = {
     '保留線偏振，觀察 E、B 和傳播軸；轉動偏振方向，比較 E 與 B 的方向。',
     'E、B 互相垂直，也垂直於傳播方向；E×B 指向前進方向，且 E/B 等於光速。',
     '頻率加倍，預測波長與 E/B 的變化，再改成圓偏振比較。'
+  ],
+  'optical-fiber': [
+    '光從光纖端面斜射進去，入射角多大時會從側面漏出來？',
+    '在直光纖中逐步加大入射角，記下開始逸出的角度，與 NA 算出的受光角比較。',
+    'sin θc = n₂/n₁，sin θa = √(n₁² − n₂²)；牆面入射角 φ ≥ θc 才全反射。',
+    '把光纖彎曲並縮小半徑，找出光開始逸出的半徑，觀察逸出發生在彎道哪一側。'
   ],
   'prism-dispersion': [
     '白光通過三稜鏡後，哪一色偏折最多？偏向角會隨入射角一直變大嗎？',

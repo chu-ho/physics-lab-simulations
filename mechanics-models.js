@@ -1719,5 +1719,6 @@
     require('./models/xray-bragg.js');
     require('./models/em-wave.js');
     require('./models/prism-dispersion.js');
+    require('./models/optical-fiber.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);

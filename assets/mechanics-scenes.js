@@ -404,6 +404,9 @@ function apparatus(s) {
     case 'prism-dispersion':
       drawPrismDispersion(s);
       break;
+    case 'optical-fiber':
+      drawOpticalFiber(s);
+      break;
     case 'electroscope':
       drawElectroscope(s);
       break;
