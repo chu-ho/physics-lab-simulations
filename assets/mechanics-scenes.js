@@ -401,6 +401,12 @@ function apparatus(s) {
     case 'em-wave':
       drawEmWave(s);
       break;
+    case 'prism-dispersion':
+      drawPrismDispersion(s);
+      break;
+    case 'optical-fiber':
+      drawOpticalFiber(s);
+      break;
     case 'waveplate':
       drawWaveplate(s);
       break;
