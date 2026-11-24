@@ -407,6 +407,15 @@ function apparatus(s) {
     case 'em-wave':
       drawEmWave(s);
       break;
+    case 'prism-dispersion':
+      drawPrismDispersion(s);
+      break;
+    case 'optical-fiber':
+      drawOpticalFiber(s);
+      break;
+    case 'waveplate':
+      drawWaveplate(s);
+      break;
     case 'electroscope':
       drawElectroscope(s);
       break;
@@ -806,38 +815,99 @@ function apparatus(s) {
       break;
     }
     case 'river': {
-      const end = plotSamples[plotSamples.length - 1],
-        left = Math.min(-4, end.x - 3),
-        right = Math.max(5, end.x + 3);
-      polygon(
-        [
-          [left, 0.01, 0],
-          [right, 0.01, 0],
-          [right, 0.01, p.width],
-          [left, 0.01, p.width]
-        ],
-        '#75b5c5bb',
-        '#4c94a4'
-      );
-      for (let x = left; x < right; x += Math.max(3, (right - left) / 8)) {
-        segment([x, 0.04, 2], [x + Math.sign(p.u) * 1.5, 0.04, 2], '#337e9690', 2);
-        segment([x, 0.04, p.width - 2], [x + Math.sign(p.u) * 1.5, 0.04, p.width - 2], '#337e9690', 2);
+      // 河道長度只取決於船速、水流與河寬：取偏角全範圍內的最大漂流，左右對稱，
+      // 拖動偏角時河岸不會跟著伸縮。
+      let reach = 0;
+      for (let a = -60; a <= 60; a++) {
+        const r = (a * Math.PI) / 180;
+        reach = Math.max(reach, Math.abs(((p.u - p.v * Math.sin(r)) * p.width) / (p.v * Math.cos(r))));
+      }
+      const right = Math.max(8, Math.ceil(reach + 4)),
+        left = -right,
+        heading = (p.angle * Math.PI) / 180,
+        boatVel = [-p.v * Math.sin(heading), p.v * Math.cos(heading)];
+      // 河面切成小塊：長河道的端點落到鏡頭後方時其餘部分仍會繪出，深度排序也不會蓋過船。
+      const tileX = Math.max(2, (right - left) / 40),
+        tileZ = p.width / 4,
+        waterStart = primitives.length;
+      for (let x = left; x < right - 1e-9; x += tileX)
+        for (let z = 0; z < p.width - 1e-9; z += tileZ) {
+          const x2 = Math.min(right, x + tileX),
+            z2 = Math.min(p.width, z + tileZ);
+          polygon(
+            [
+              [x, 0.01, z],
+              [x2, 0.01, z],
+              [x2, 0.01, z2],
+              [x, 0.01, z2]
+            ],
+            '#75b5c5bb'
+          );
+        }
+      for (let x = left; x < right - 1e-9; x += tileX) {
+        const x2 = Math.min(right, x + tileX);
+        segment([x, 0.02, 0], [x2, 0.02, 0], '#4c94a4', 2);
+        segment([x, 0.02, p.width], [x2, 0.02, p.width], '#4c94a4', 2);
+      }
+      // 水面在船與箭頭之下：一律先畫（地板已另外先畫完）。
+      for (let i = waterStart; i < primitives.length; i++) primitives[i].depth += 1e6;
+      // 水面流向標記：短線＋箭頭，長度隨水流速率，水流為 0 時不畫。
+      if (Math.abs(p.u) > 0.05) {
+        const dir = Math.sign(p.u),
+          len = Math.min(2.2, 0.6 + Math.abs(p.u) * 0.35),
+          step = Math.max(3, (right - left) / 10);
+        for (const z of [p.width * 0.25, p.width * 0.75])
+          for (let x = left + 1; x < right - len; x += step) {
+            const tip = x + dir * len;
+            segment([x, 0.04, z], [tip, 0.04, z], '#1f5f8a', 2);
+            segment([tip, 0.04, z], [tip - dir * 0.35, 0.04, z - 0.25], '#1f5f8a', 2);
+            segment([tip, 0.04, z], [tip - dir * 0.35, 0.04, z + 0.25], '#1f5f8a', 2);
+          }
       }
       label([left, 0, 0], '此岸');
       label([left, 0, p.width], '對岸');
-      box(point(s), [1.4, 0.5, 0.8]);
-      if ($('vectors').checked) {
-        arrow(point(s), [s.x + p.u * velocityScale, s.y, s.z], '#357dba', '水流');
-        arrow(
-          point(s),
-          [
-            s.x - p.v * Math.sin((p.angle * Math.PI) / 180) * velocityScale,
-            s.y,
-            s.z + p.v * Math.cos((p.angle * Math.PI) / 180) * velocityScale
-          ],
-          '#9a5cb6',
-          '船／水'
+      // 小船：船頭朝航向（船相對水的速度方向），甲板低於箭頭起點，避免遮住向量。
+      const c = point(s),
+        f = [boatVel[0] / p.v, boatVel[1] / p.v],
+        side = [f[1], -f[0]],
+        at = (a, b, y) => [c[0] + f[0] * a + side[0] * b, y, c[2] + f[1] * a + side[1] * b],
+        deck = [
+          [0.85, 0],
+          [0.45, 0.32],
+          [-0.7, 0.3],
+          [-0.8, 0],
+          [-0.7, -0.3],
+          [0.45, -0.32]
+        ],
+        keel = deck.map(([a, b]) => [a * 0.82, b * 0.5]),
+        deckY = 0.22,
+        keelY = -0.06,
+        hullStart = primitives.length;
+      for (let i = 0; i < deck.length; i++) {
+        const j = (i + 1) % deck.length;
+        polygon(
+          [at(...deck[i], deckY), at(...deck[j], deckY), at(...keel[j], keelY), at(...keel[i], keelY)],
+          '#b8643c',
+          '#6e3a22'
         );
+      }
+      const hullNear = Math.min(...primitives.slice(hullStart).map(q => q.depth));
+      polygon(
+        deck.map(([a, b]) => at(a, b, deckY)),
+        '#e3c48e',
+        '#6e3a22'
+      );
+      // 甲板是船的頂面：排在船殼之後畫，避免遠側船殼蓋到甲板。
+      if (Number.isFinite(hullNear) && primitives.length > hullStart)
+        primitives[primitives.length - 1].depth = hullNear - 1e-4;
+      // 整艘船排在水面之後、速度箭頭與軌跡之前，箭頭不會被甲板蓋住。
+      for (let i = hullStart; i < primitives.length; i++) primitives[i].depth += 1e5;
+      if ($('vectors').checked) {
+        // 向量相加：v地 = v船／水 + v水／地。船／水由船出發，水流接在其尖端，終點即 v 箭頭尖端。
+        const y = c[1],
+          tipBoat = [c[0] + boatVel[0] * velocityScale, y, c[2] + boatVel[1] * velocityScale];
+        arrow(c, tipBoat, '#8b5ac4', '船／水');
+        arrow(tipBoat, [tipBoat[0] + p.u * velocityScale, y, tipBoat[2]], '#1f5f8a', '水流');
       }
       break;
     }

@@ -93,7 +93,10 @@ const learningBranches = [
         '幾何光學',
         [
           ['反射與面鏡', 'plane-mirror shared-mirror double-mirror conic-mirror'],
-          ['折射與色散', 'refraction-cart layered-refraction straw-cup apparent-depth sphere-lens rainbow'],
+          [
+            '折射與色散',
+            'refraction-cart layered-refraction straw-cup apparent-depth sphere-lens rainbow prism-dispersion optical-fiber'
+          ],
           [
             '成像與光學儀器',
             'image-drawing half-lens eye-lens dancing-image optical-parallax optical-instruments dolly-zoom'
@@ -105,8 +108,11 @@ const learningBranches = [
         '物理光學',
         '波動光學',
         [
-          ['干涉與繞射', 'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film newton-rings michelson'],
-          ['偏振與色彩', 'fresnel rgb-lights optical-polarizers']
+          [
+            '干涉與繞射',
+            'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film newton-rings michelson'
+          ],
+          ['偏振與色彩', 'fresnel rgb-lights optical-polarizers waveplate']
         ]
       ]
     ]
@@ -246,6 +252,8 @@ const aliases = {
   elevator: '電梯變重 視重',
   'bicycle-friction': '腳踏車煞車',
   'half-lens': '鏡頭遮一半',
+  'optical-fiber': '光纖 光導管 全反射 臨界角 數值孔徑',
+  'prism-dispersion': '三稜鏡 色散 偏向角 最小偏向 白光分光',
   'eye-lens': '眼鏡',
   doppler: '救護車',
   'pv-path': '打氣筒 PV圖',
@@ -257,7 +265,8 @@ const aliases = {
   photoelectric: '光電管 光電子 光電流',
   'millikan-oil-drop': '油滴 基本電荷 電荷量子化',
   'xray-bragg': 'X光 倫琴射線 晶體繞射 布拉格',
-  'em-wave': '電磁波 光 無線電波 偏振 馬克士威'
+  'em-wave': '電磁波 光 無線電波 偏振 馬克士威',
+  waveplate: '波片 四分之一波片 半波片 雙折射 方解石 石英 圓偏振 橢圓偏振 Jones'
 };
 
 const experimentPrerequisites = {
@@ -273,10 +282,17 @@ const experimentPrerequisites = {
   'matter-wave': [['diffraction-amplitudes', '先比較相干的雙縫分布，再觀察逐次探測事件。']],
   'hydrogen-orbitals': [['quantum-well', '先區分波函數和機率密度，再觀察三維點雲。']],
   'pn-junction': [['two-charges', '先區分電場、電位和電位能，再讀接面的能帶障壁。']],
-  'nuclear-binding': [['radioactive-decay', '先辨認核種和反應前後的變化，再比較質量差。']]
+  'nuclear-binding': [['radioactive-decay', '先辨認核種和反應前後的變化，再比較質量差。']],
+  waveplate: [['optical-polarizers', '先用馬呂斯定律讀懂偏振片的透射，再看波片如何改變偏振態。']]
 };
 
 const learningActivities = {
+  waveplate: [
+    '45° 線偏振光穿過 λ/4 片後，會變成什麼偏振態？',
+    '起偏 45°、快軸 0°、延遲 0.25 λ，觀察電場末端的軌跡，再轉動檢偏片看強度。',
+    '快、慢軸分量振幅相等且相差 90°，合成圓偏振：軌跡是圓，任何檢偏角的強度都是 50%。',
+    '改成 λ/2 片，起偏 0°、快軸 30°，預測出射線偏振的方向（2α − θₚ），再用檢偏片找出消光角。'
+  ],
   michelson: [
     '讓鏡子移動，中心每亮暗循環一次，鏡子移動了多少？',
     '播放等速移動，數中心經過的條紋數 N，再讀實際位移。',
@@ -384,6 +400,18 @@ const learningActivities = {
     '保留線偏振，觀察 E、B 和傳播軸；轉動偏振方向，比較 E 與 B 的方向。',
     'E、B 互相垂直，也垂直於傳播方向；E×B 指向前進方向，且 E/B 等於光速。',
     '頻率加倍，預測波長與 E/B 的變化，再改成圓偏振比較。'
+  ],
+  'optical-fiber': [
+    '光從光纖端面斜射進去，入射角多大時會從側面漏出來？',
+    '在直光纖中逐步加大入射角，記下開始逸出的角度，與 NA 算出的受光角比較。',
+    'sin θc = n₂/n₁，sin θa = √(n₁² − n₂²)；牆面入射角 φ ≥ θc 才全反射。',
+    '把光纖彎曲並縮小半徑，找出光開始逸出的半徑，觀察逸出發生在彎道哪一側。'
+  ],
+  'prism-dispersion': [
+    '白光通過三稜鏡後，哪一色偏折最多？偏向角會隨入射角一直變大嗎？',
+    '固定頂角與材料，拖動入射角找參考色偏向角的最小值，觀察稜鏡內光線的方向。',
+    '最小偏向時光路對稱、稜鏡內光線平行底邊；n = sin[(A+δmin)/2]/sin(A/2) 可回推折射率。',
+    '換成重火石玻璃並加大頂角，預測哪些顏色先在第二面全反射，再用讀值驗證。'
   ],
   'radioactive-decay': [
     '過一個半衰期，每次都剛好剩一半嗎？',

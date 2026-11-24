@@ -132,7 +132,7 @@
       "purpose": "原始平面斜拋",
       "read": [],
       "sources": [
-        "index.html",
+        "projectile.html",
         "verify-projectile.cjs"
       ],
       "symbols": [
@@ -291,7 +291,7 @@
     {
       "id": "projectile",
       "title": "平面斜拋",
-      "entry": "index.html",
+      "entry": "projectile.html",
       "task": "legacy-projectile"
     },
     {
@@ -337,6 +337,7 @@
     "millikan-oil-drop": "millikan-oil-drop.html",
     "xray-bragg": "xray-bragg.html",
     "em-wave": "em-wave.html",
+    "waveplate": "waveplate.html",
     "bungee": "bungee.html",
     "massive-spring": "massive-spring.html",
     "double-slit": "double-slit.html",
@@ -424,6 +425,8 @@
     "optical-parallax": "optical-parallax.html",
     "optical-instruments": "optical-instruments.html",
     "rainbow": "rainbow.html",
+    "prism-dispersion": "prism-dispersion.html",
+    "optical-fiber": "optical-fiber.html",
     "dolly-zoom": "dolly-zoom.html",
     "diffraction-amplitudes": "diffraction-amplitudes.html",
     "aperture-pattern": "aperture-pattern.html",
@@ -479,6 +482,7 @@
     "millikan-oil-drop": "assets/scenes-millikan-oil-drop.js",
     "xray-bragg": "assets/scenes-xray-bragg.js",
     "em-wave": "assets/scenes-em-wave.js",
+    "waveplate": "assets/scenes-waveplate.js",
     "airplane-drop": "assets/scenes-airplane-drop.js",
     "safe-parabola": "assets/scenes-safe-parabola.js",
     "relative-motion": "assets/scenes-relative-motion.js",
@@ -558,6 +562,8 @@
     "optical-parallax": "assets/scenes-optical-parallax.js",
     "optical-instruments": "assets/scenes-optical-instruments.js",
     "rainbow": "assets/scenes-rainbow.js",
+    "prism-dispersion": "assets/scenes-prism-dispersion.js",
+    "optical-fiber": "assets/scenes-optical-fiber.js",
     "dolly-zoom": "assets/scenes-dolly-zoom.js",
     "diffraction-amplitudes": "assets/scenes-diffraction-amplitudes.js",
     "aperture-pattern": "assets/scenes-aperture-pattern.js",
@@ -606,6 +612,7 @@
     "millikan-oil-drop": "verify-millikan-oil-drop.cjs",
     "xray-bragg": "verify-xray-bragg.cjs",
     "em-wave": "verify-em-wave.cjs",
+    "waveplate": "verify-waveplate.cjs",
     "airplane-drop": "verify-airplane-drop.cjs",
     "safe-parabola": "verify-safe-parabola.cjs",
     "relative-motion": "verify-relative-motion.cjs",
@@ -689,6 +696,8 @@
     "optical-parallax": "verify-optical-parallax.cjs",
     "optical-instruments": "verify-optical-instruments.cjs",
     "rainbow": "verify-rainbow.cjs",
+    "prism-dispersion": "verify-prism-dispersion.cjs",
+    "optical-fiber": "verify-optical-fiber.cjs",
     "dolly-zoom": "verify-dolly-zoom.cjs",
     "double-slit": "verify-double-slit.cjs",
     "diffraction-amplitudes": "verify-diffraction-amplitudes.cjs",

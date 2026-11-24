@@ -15,7 +15,7 @@
 
 1. 等加速度直線運動
 2. 自由落體與鉛直上拋
-3. 平面斜拋（既有 index.html）
+3. 平面斜拋（projectile.html）
 4. 階梯斜拋與反彈（既有 staircase-projectile.html）
 5. 斜面上的斜拋（既有 inclined-projectile.html）
 6. 渡河與相對速度
@@ -187,6 +187,10 @@
 
 - [光學儀器](optical-instruments.html)：多薄透鏡矩陣、無焦望遠鏡、顯微鏡／放大鏡角放大參考、近視矯正與固定視網膜；子午樣本通過率非三維能量。
 
+- [稜鏡色散與最小偏向角](prism-dispersion.html)：向量Snell逐面追跡七色、第二面全反射判定、δ=θ₁+θ₂−A及最小偏向對稱光路，n=sin[(A+δmin)/2]/sin(A/2)回推；材料以nd與阿貝數換算兩項Cauchy式，屬教學近似。
+
+- [全反射與光纖](optical-fiber.html)：直段與90°圓弧彎曲的精確壁面交點與局部法線，n₁sinφ≥n₂全反射判定、sinθc=n₂/n₁、NA=√(n₁²−n₂²)受光角；只追主光路，逸出時不追部分反射與包層外表面。
+
 - [虹與霓](rainbow.html)：主／次虹偏向極值、色序相反、反太陽角錐及部分內反射；支路s/p通量分別連乘，天空弧只定位幾何極值。
 
 - [希區考克變焦](dolly-zoom.html)：f/d同步、聚焦像距投影、固定主體像高與背景深度比；非整張畫面縮放，省略景深與像差。
@@ -216,6 +220,7 @@
 - 熱學：`pv-path`（兩路徑的功、熱與內能，可閉合循環）、`carnot-engine`（理想氣體可逆循環與效率上限）。
 - 靜電與電路：`parallel-capacitor`（固定電壓／固定電荷）、`gauss-surface`（點電荷通量與數值積分）、`cathode-ray`（電子加速、平行板偏轉、交叉場速度選擇與湯姆森荷質比）、`circuit-rc`（串並聯與 RC 指數充放電）、`rlc-resonance`（串聯受迫穩態、相位與共振）、`emf-power`（電動勢與內電阻、端電壓、功率分配與最大功率傳輸）。
 - 磁與電磁感應：`wire-magnetic-field`（長直導線磁場與背景場合成）、`charged-particle`（均勻磁場圓周／螺旋）、`current-balance`（載流導線受力 F = IL × B 與電流天平）、`magnetic-induction`（磁通變化與感應電壓）、`eddy-current`（等效環電阻的磁阻尼與能量收支）、`generator-transformer`（交流發電與理想變壓器）、`em-wave`（真空單頻平面電磁波，E、B 與傳播方向及偏振）。
+- 光學：`thin-film`（單層膜雙光束干涉、s／p 偏振）、`optical-polarizers`（馬呂斯定律與三片偏振）、`waveplate`（雙折射波片的偏振態轉換：λ/4、λ/2 片與 Jones 計算）。
 - 光學：`thin-film`（單層膜雙光束干涉、s／p 偏振）、`michelson`（移動鏡子數條紋 ΔL = Nλ/2、同心環與傾斜直條紋）、`newton-rings`（等厚干涉：牛頓環 rₘ = √(mλR/n)、楔形膜等距條紋、反射／透射互補）、`optical-polarizers`（馬呂斯定律與三片偏振）。
 - 近代物理：`photoelectric`、`blackbody-radiation`、`hydrogen-spectrum`、`radioactive-decay`（固定種子抽樣）、`matter-wave`（電子雙縫與路徑資訊）、`quantum-well`（無限方井定態與疊加）、`hydrogen-orbitals`（1s／2s／2p_z 機率取樣）、`pn-junction`（耗盡近似、偏壓與能帶）、`rutherford-scattering`（點核與擴散正電球）、`nuclear-binding`（NIST 質量資料計算的融合與分裂能量）、`millikan-oil-drop`（Stokes 終端速度、懸浮電壓、固定種子電荷分布與基本電荷擬合）、`xray-bragg`（連續譜 λmin = hc/eV、特徵線與布拉格各階反射）。
 - 靜力學：`hydrostatic-buoyancy`（靜水壓差與浮力平衡）。

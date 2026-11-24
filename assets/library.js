@@ -4,7 +4,7 @@ const legacy = [
     id: 'projectile',
     title: '平面斜拋',
     group: '運動學',
-    href: 'index.html',
+    href: 'projectile.html',
     formula: '拋體 水平 鉛直',
     description: '改變初速、仰角與方位角，追蹤自由拋體的三維軌跡。'
   },

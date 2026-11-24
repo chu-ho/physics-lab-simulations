@@ -247,6 +247,8 @@
     'apparent-depth': ['III3-1'],
     'sphere-lens': ['III3-2', 'III3-4'],
     rainbow: ['III3-3', 'III3-2'],
+    'prism-dispersion': ['III3-3', 'III3-1'],
+    'optical-fiber': ['III3-2', 'III3-1'],
     'eye-lens': ['III3-4'],
     'dancing-image': ['III3-4'],
     'half-lens': ['III3-4'],
@@ -292,7 +294,8 @@
     'nuclear-binding': ['V3-4', 'B5-4'],
     'millikan-oil-drop': ['V2-2'],
     'xray-bragg': ['V2-3'],
-    'em-wave': ['B4-4', 'IV3-5']
+    'em-wave': ['B4-4', 'IV3-5'],
+    waveplate: ['IV3-5', 'X-uni']
   };
 
   const sections = new Map();
