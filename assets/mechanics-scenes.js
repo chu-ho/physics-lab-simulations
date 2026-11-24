@@ -332,6 +332,12 @@ function apparatus(s) {
     case 'thin-film':
       drawThinFilm(s);
       break;
+    case 'michelson':
+      drawMichelson(s);
+      break;
+    case 'newton-rings':
+      drawNewtonRings(s);
+      break;
     case 'matter-wave':
       drawMatterWave(s);
       break;
