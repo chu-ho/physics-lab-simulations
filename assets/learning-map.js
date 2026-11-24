@@ -106,7 +106,7 @@ const learningBranches = [
         '波動光學',
         [
           ['干涉與繞射', 'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film'],
-          ['偏振與色彩', 'fresnel rgb-lights optical-polarizers']
+          ['偏振與色彩', 'fresnel rgb-lights optical-polarizers waveplate']
         ]
       ]
     ]
@@ -255,7 +255,8 @@ const aliases = {
   photoelectric: '光電管 光電子 光電流',
   'millikan-oil-drop': '油滴 基本電荷 電荷量子化',
   'xray-bragg': 'X光 倫琴射線 晶體繞射 布拉格',
-  'em-wave': '電磁波 光 無線電波 偏振 馬克士威'
+  'em-wave': '電磁波 光 無線電波 偏振 馬克士威',
+  waveplate: '波片 四分之一波片 半波片 雙折射 方解石 石英 圓偏振 橢圓偏振 Jones'
 };
 
 const experimentPrerequisites = {
@@ -269,10 +270,17 @@ const experimentPrerequisites = {
   'matter-wave': [['diffraction-amplitudes', '先比較相干的雙縫分布，再觀察逐次探測事件。']],
   'hydrogen-orbitals': [['quantum-well', '先區分波函數和機率密度，再觀察三維點雲。']],
   'pn-junction': [['two-charges', '先區分電場、電位和電位能，再讀接面的能帶障壁。']],
-  'nuclear-binding': [['radioactive-decay', '先辨認核種和反應前後的變化，再比較質量差。']]
+  'nuclear-binding': [['radioactive-decay', '先辨認核種和反應前後的變化，再比較質量差。']],
+  waveplate: [['optical-polarizers', '先用馬呂斯定律讀懂偏振片的透射，再看波片如何改變偏振態。']]
 };
 
 const learningActivities = {
+  waveplate: [
+    '45° 線偏振光穿過 λ/4 片後，會變成什麼偏振態？',
+    '起偏 45°、快軸 0°、延遲 0.25 λ，觀察電場末端的軌跡，再轉動檢偏片看強度。',
+    '快、慢軸分量振幅相等且相差 90°，合成圓偏振：軌跡是圓，任何檢偏角的強度都是 50%。',
+    '改成 λ/2 片，起偏 0°、快軸 30°，預測出射線偏振的方向（2α − θₚ），再用檢偏片找出消光角。'
+  ],
   'optical-polarizers': [
     '首末兩片互相垂直時，插入第三片會更暗嗎？',
     '固定非偏振入射與末片 90°，比較移除中間片及放入 45° 中間片時的輸出。',
