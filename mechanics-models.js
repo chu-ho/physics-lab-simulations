@@ -1718,5 +1718,6 @@
     require('./models/millikan-oil-drop.js');
     require('./models/xray-bragg.js');
     require('./models/em-wave.js');
+    require('./models/prism-dispersion.js');
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this);

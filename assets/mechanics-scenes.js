@@ -401,6 +401,9 @@ function apparatus(s) {
     case 'em-wave':
       drawEmWave(s);
       break;
+    case 'prism-dispersion':
+      drawPrismDispersion(s);
+      break;
     case 'electroscope':
       drawElectroscope(s);
       break;
