@@ -346,6 +346,7 @@ node tools/context.cjs --task chart
 - [薄膜干涉](thin-film.html)：膜厚、折射率、入射角與偏振的反射光譜及鍍膜。
 - [偏振片與馬呂斯定律](optical-polarizers.html)：交叉偏振、插入中間偏振片與角度掃描。
 - [電磁波的傳播](em-wave.html)：3D 行進平面電磁波，E、B 與傳播方向互相垂直，c = fλ、E/B = c，可調偏振。
+- [雙折射與波片](waveplate.html)：起偏片 → 波片 → 檢偏片，o／e 光相位差 Δφ = 2πΔn·d/λ 把線偏振轉成橢圓或圓偏振，Jones 矩陣計算透射強度。
 
 **近代物理**
 
