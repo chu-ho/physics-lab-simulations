@@ -12,6 +12,7 @@ const LibraryHighlights = {
     { id: 'two-charges', note: '電場、電力線與等位線' }
   ],
   recent: [
+    { id: 'michelson', date: '2026-11-24', note: '新增' },
     { id: 'newton-rings', date: '2026-11-24', note: '新增' },
     { id: 'em-wave', date: '2026-11-22', note: '新增' },
     { id: 'xray-bragg', date: '2026-11-22', note: '新增' },

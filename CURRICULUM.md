@@ -216,7 +216,7 @@
 - 熱學：`pv-path`（兩路徑的功、熱與內能，可閉合循環）、`carnot-engine`（理想氣體可逆循環與效率上限）。
 - 靜電與電路：`parallel-capacitor`（固定電壓／固定電荷）、`gauss-surface`（點電荷通量與數值積分）、`cathode-ray`（電子加速、平行板偏轉、交叉場速度選擇與湯姆森荷質比）、`circuit-rc`（串並聯與 RC 指數充放電）、`rlc-resonance`（串聯受迫穩態、相位與共振）、`emf-power`（電動勢與內電阻、端電壓、功率分配與最大功率傳輸）。
 - 磁與電磁感應：`wire-magnetic-field`（長直導線磁場與背景場合成）、`charged-particle`（均勻磁場圓周／螺旋）、`current-balance`（載流導線受力 F = IL × B 與電流天平）、`magnetic-induction`（磁通變化與感應電壓）、`eddy-current`（等效環電阻的磁阻尼與能量收支）、`generator-transformer`（交流發電與理想變壓器）、`em-wave`（真空單頻平面電磁波，E、B 與傳播方向及偏振）。
-- 光學：`thin-film`（單層膜雙光束干涉、s／p 偏振）、`newton-rings`（等厚干涉：牛頓環 rₘ = √(mλR/n)、楔形膜等距條紋、反射／透射互補）、`optical-polarizers`（馬呂斯定律與三片偏振）。
+- 光學：`thin-film`（單層膜雙光束干涉、s／p 偏振）、`michelson`（移動鏡子數條紋 ΔL = Nλ/2、同心環與傾斜直條紋）、`newton-rings`（等厚干涉：牛頓環 rₘ = √(mλR/n)、楔形膜等距條紋、反射／透射互補）、`optical-polarizers`（馬呂斯定律與三片偏振）。
 - 近代物理：`photoelectric`、`blackbody-radiation`、`hydrogen-spectrum`、`radioactive-decay`（固定種子抽樣）、`matter-wave`（電子雙縫與路徑資訊）、`quantum-well`（無限方井定態與疊加）、`hydrogen-orbitals`（1s／2s／2p_z 機率取樣）、`pn-junction`（耗盡近似、偏壓與能帶）、`rutherford-scattering`（點核與擴散正電球）、`nuclear-binding`（NIST 質量資料計算的融合與分裂能量）、`millikan-oil-drop`（Stokes 終端速度、懸浮電壓、固定種子電荷分布與基本電荷擬合）、`xray-bragg`（連續譜 λmin = hc/eV、特徵線與布拉格各階反射）。
 - 靜力學：`hydrostatic-buoyancy`（靜水壓差與浮力平衡）。
 - 選修補充：`power-hoist`（等功不同時的功率、機械與馬達效率）、`gravitation-g`（卡文迪西扭秤 θeq 與地球 g(h, φ)）、`measurement-uncertainty`（固定種子計時、標準誤、有效數字）、`dimensional-analysis`（指數搜尋 m^a L^b g^c 與單擺預測）。

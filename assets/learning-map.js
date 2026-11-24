@@ -105,7 +105,7 @@ const learningBranches = [
         '物理光學',
         '波動光學',
         [
-          ['干涉與繞射', 'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film newton-rings'],
+          ['干涉與繞射', 'double-slit aperture-pattern optical-grating diffraction-amplitudes thin-film newton-rings michelson'],
           ['偏振與色彩', 'fresnel rgb-lights optical-polarizers']
         ]
       ]
@@ -241,6 +241,7 @@ const learningFocus = {
   4.7: ['高中深化', '以多次放射性衰變取樣區分單次結果與統計期望。']
 };
 const aliases = {
+  michelson: '麥克森 邁克耳孫 干涉儀 數條紋 LIGO',
   'newton-rings': '牛頓環 等厚干涉 空氣楔 劈尖 半波損失',
   elevator: '電梯變重 視重',
   'bicycle-friction': '腳踏車煞車',
@@ -260,6 +261,7 @@ const aliases = {
 };
 
 const experimentPrerequisites = {
+  michelson: [['newton-rings', '先看楔形空氣膜的等厚條紋，再把兩面鏡子想成可調厚度的空氣層。']],
   'newton-rings': [['thin-film', '先理解平行薄膜兩道反射光的光程差，再看膜厚隨位置變化時的等厚條紋。']],
   'current-balance': [['wire-magnetic-field', '先確認電流會產生磁場，再看外加磁場對電流的作用力。']],
   'cathode-ray': [['two-charges', '先區分電場、電位和電位能，再看電子經電位差獲得的動能。']],
@@ -275,6 +277,12 @@ const experimentPrerequisites = {
 };
 
 const learningActivities = {
+  michelson: [
+    '讓鏡子移動，中心每亮暗循環一次，鏡子移動了多少？',
+    '播放等速移動，數中心經過的條紋數 N，再讀實際位移。',
+    '中心每變化一條，光程差改變 λ、鏡子移動 λ/2，所以 ΔL = Nλ/2。',
+    '把臂長差調到接近 0 並加大傾角，觀察同心環變成直條紋。'
+  ],
   'newton-rings': [
     '牛頓環的中心是亮點還是暗點？為什麼？',
     '在反射光下讀第 1、4、9 條暗環半徑，再切換到透射光比較中心。',

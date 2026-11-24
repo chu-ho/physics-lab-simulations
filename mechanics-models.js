@@ -1692,6 +1692,7 @@
     require('./models/hydrogen-spectrum.js');
     require('./models/radioactive-decay.js');
     require('./models/thin-film.js');
+    require('./models/michelson.js');
     require('./models/newton-rings.js');
     require('./models/matter-wave.js');
     require('./models/parallel-capacitor.js');

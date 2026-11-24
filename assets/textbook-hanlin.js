@@ -259,6 +259,7 @@
     'diffraction-amplitudes': ['III4-2', 'III4-1'],
     'optical-grating': ['III4-1', 'III4-2'],
     'thin-film': ['III4-1', 'X-uni'],
+    'michelson': ['III4-1', 'X-uni'],
     'newton-rings': ['III4-1', 'X-uni'],
     fresnel: ['III3-1', 'X-uni'],
     'optical-polarizers': ['IV3-5', 'X-uni'],

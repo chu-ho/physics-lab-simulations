@@ -344,6 +344,7 @@ node tools/context.cjs --task chart
 **光學**
 
 - [薄膜干涉](thin-film.html)：膜厚、折射率、入射角與偏振的反射光譜及鍍膜。
+- [邁克生干涉儀](michelson.html)：分光鏡、兩面鏡與屏，移動鏡子數中心條紋 N 量位移 ΔL = Nλ/2，傾斜鏡子由同心環變為直條紋。
 - [牛頓環與楔形空氣膜](newton-rings.html)：平凸透鏡牛頓環與兩玻璃片楔形膜的等厚條紋，暗環半徑 rₘ = √(mλR/n)、條紋間距 λ/(2nα) 與半波損失。
 - [偏振片與馬呂斯定律](optical-polarizers.html)：交叉偏振、插入中間偏振片與角度掃描。
 - [電磁波的傳播](em-wave.html)：3D 行進平面電磁波，E、B 與傳播方向互相垂直，c = fλ、E/B = c，可調偏振。
