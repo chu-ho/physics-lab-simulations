@@ -4,6 +4,10 @@ function drawCarnotEngine(s) {
   const maxVolume = Math.max(...curve.map(state => state.volume));
   const maxPressure = curve[0].pressure;
   const xy = state => [-3.1 + (6.1 * state.volume) / maxVolume, 0.65 + (3.3 * state.pressure) / maxPressure, 0];
+  // 循環圍住的面積就是淨作功：半透明填色，並在中心標出。
+  polygon(curve.map(xy), '#8ee0c040');
+  const center = curve.map(xy).reduce((a, b) => a.map((v, j) => v + b[j] / curve.length), [0, 0, 0]);
+  label(center, '面積 = 淨作功', '#2e6b5f', 12);
   segment([-3.1, 0.65, 0], [3.35, 0.65, 0], '#647f8c', 2);
   segment([-3.1, 0.65, 0], [-3.1, 4.1, 0], '#647f8c', 2);
   for (let i = 1; i < curve.length; i++) {
