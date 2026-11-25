@@ -19,7 +19,9 @@ function ring(center, radius, plane = 'xz', color = '#526c77', width = 2) {
     const v = a =>
       plane === 'xy'
         ? [center[0] + radius * Math.sin(a), center[1] - radius * Math.cos(a), center[2]]
-        : [center[0] + radius * Math.cos(a), center[1], center[2] + radius * Math.sin(a)];
+        : plane === 'yz'
+          ? [center[0], center[1] + radius * Math.cos(a), center[2] + radius * Math.sin(a)]
+          : [center[0] + radius * Math.cos(a), center[1], center[2] + radius * Math.sin(a)];
     segment(v((i * TAU) / 64), v(((i + 1) * TAU) / 64), color, width);
   }
 }
@@ -920,24 +922,49 @@ function apparatus(s) {
       sphere(point(s), p.R);
       segment(point(s), [s.x + p.R * Math.cos(s.theta), s.y + p.R * Math.sin(s.theta), s.z], '#a64f20', 3);
       break;
-    case 'pulley':
-      ring([0, 8, 0], 2, 'xy');
-      segment([-2, s.y, 0], [-2, 8, 0], '#506e78', 2);
-      segment([2, 8, 0], [2, s.y2, 0], '#506e78', 2);
+    case 'pulley': {
+      // 滑輪中心比重物最高點（y = 7，頂面 7.65）高出一個半徑以上，重物不會撞進輪緣；橫樑在輪上方，以輪軸吊住。
+      const cy = 9.5;
+      ring([0, cy, 0], 2, 'xy', '#526c77', 3);
+      for (let k = 0; k < 4; k++) {
+        const a = (k * Math.PI) / 4 + (s.s || 0) / 2;
+        segment(
+          [-2 * Math.cos(a), cy - 2 * Math.sin(a), 0],
+          [2 * Math.cos(a), cy + 2 * Math.sin(a), 0],
+          '#7d939a',
+          1.5
+        );
+      }
+      sphere([0, cy, 0], 0.22, '#526c77');
+      segment([0, cy, 0], [0, cy + 2.6, 0], '#46616a', 4);
+      box([0, cy + 2.75, 0], [5, 0.3, 1]);
+      segment([-2, s.y, 0], [-2, cy, 0], '#506e78', 2);
+      segment([2, cy, 0], [2, s.y2, 0], '#506e78', 2);
       box([-2, s.y, 0], [1.2, 1.3, 1.2]);
       box([2, s.y2, 0], [1.2, 1.3, 1.2]);
-      box([0, 8.1, -0.8], [5, 0.3, 1]);
       label([-2, s.y + 0.9, 0], p.m1 + ' kg');
       label([2, s.y2 + 0.9, 0], p.m2 + ' kg');
       break;
-    case 'table-pulley':
-      box([-2, 5.4, 0], [11, 0.4, 5]);
-      segment([s.x, 6, 0], [3, 6, 0], '#506e78', 2);
-      segment([3, 6, 0], [3, s.y2, 0], '#506e78', 2);
-      ring([3, 5.8, 0], 0.2, 'xy');
+    }
+    case 'table-pulley': {
+      // 桌緣 E 在物塊最遠前緣（x = 2.5）之外；滑輪裝在桌緣外側，懸掛重物完全在桌面外，不穿過桌板。
+      const E = 2.6,
+        r = 0.25,
+        px = E + r,
+        py = 6 - r,
+        hx = px + r,
+        floor = -0.45;
+      box([(E - 7.5) / 2, 5.4, 0], [E + 7.5, 0.4, 5]);
+      for (const x of [-7.1, E - 0.4])
+        for (const z of [-2.1, 2.1]) box([x, (5.2 + floor) / 2, z], [0.3, 5.2 - floor, 0.3], '#8d9fa3');
+      segment([E, 5.45, 0], [px, py, 0], '#46616a', 3);
+      ring([px, py, 0], r, 'xy', '#526c77', 3);
+      segment([s.x + 0.5, 6, 0], [px, 6, 0], '#506e78', 2);
+      segment([hx, py, 0], [hx, s.y2 + 0.4, 0], '#506e78', 2);
       box(point(s), [1, 0.8, 1]);
-      box([3, s.y2, 0], [0.8, 0.8, 0.8]);
+      box([hx, s.y2, 0], [0.8, 0.8, 0.8]);
       break;
+    }
     case 'elevator':
       box([0, s.floor, 0], [4, 0.3, 3]);
       segment([-2, s.floor, -1.5], [-2, s.floor + 7, -1.5], '#607a82', 3);
@@ -1027,16 +1054,20 @@ function apparatus(s) {
       break;
     }
     case 'massive-pulley': {
-      const R = p.R;
-      ring([0, 8, 0], R, 'xy', '#526c77', 4);
-      segment([0, 8, 0], [R * Math.sin(s.theta), 8 - R * Math.cos(s.theta), 0], '#a64f20', 3);
-      segment([-R, s.y, 0], [-R, 8, 0], '#506e78', 2);
-      segment([R, 8, 0], [R, s.y2, 0], '#506e78', 2);
+      // 輪心高於重物最高點（y = 7，頂面 7.6）至少一個半徑加餘裕，重物不會撞進輪緣。
+      const R = p.R,
+        cy = Math.max(9.5, 8 + R);
+      ring([0, cy, 0], R, 'xy', '#526c77', 4);
+      segment([0, cy, 0], [R * Math.sin(s.theta), cy - R * Math.cos(s.theta), 0], '#a64f20', 3);
+      segment([0, cy, 0], [0, cy + R + 0.6, 0], '#46616a', 4);
+      box([0, cy + R + 0.75, 0], [Math.max(4, 2 * R + 1.5), 0.3, 1]);
+      segment([-R, s.y, 0], [-R, cy, 0], '#506e78', 2);
+      segment([R, cy, 0], [R, s.y2, 0], '#506e78', 2);
       box([-R, s.y, 0], [1, 1.2, 1]);
       box([R, s.y2, 0], [1, 1.2, 1]);
       label([-R, s.y + 0.9, 0], p.m1 + ' kg');
       label([R, s.y2 + 0.9, 0], p.m2 + ' kg');
-      sphere([0, 8, 0], 0.12);
+      sphere([0, cy, 0], 0.12);
       break;
     }
     case 'ballistic': {

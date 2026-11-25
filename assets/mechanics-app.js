@@ -536,8 +536,9 @@ function framePositions() {
   if (def.kind === 'relative-motion')
     for (const s of plotSamples) positions.push([s.cartX - 1.5, s.cartY - 0.5, -1], [s.cartX + 1.5, s.cartY + 1, 1]);
   if (def.kind === 'elevator') for (const s of plotSamples) positions.push([-2, s.floor, 0], [2, s.floor + 7, 0]);
-  if (def.kind === 'table-pulley') positions.push([-7.5, 5.4, -2.5], [3.5, 6, 2.5]);
-  if (['pulley', 'massive-pulley'].includes(def.kind)) positions.push([-3, 10, 0], [3, 0, 0]);
+  if (def.kind === 'table-pulley') positions.push([-7.5, 5.4, -2.5], [3.6, 6, 2.5], [3.1, -0.45, 0]);
+  if (def.kind === 'pulley') positions.push([-3, 12.5, 0], [3, 0, 0]);
+  if (def.kind === 'massive-pulley') positions.push([-3, Math.max(9.5, 8 + params.R) + params.R + 1, 0], [3, 0, 0]);
   if (def.kind === 'skater') {
     const r = Math.max(params.r0, params.r1) + 0.4;
     positions.push([-r, 0, -r], [r, 2, r]);

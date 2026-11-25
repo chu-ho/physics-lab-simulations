@@ -310,7 +310,18 @@
         duration = Math.min(a < 0 ? -v / a : Infinity, edge);
       return trajectory(duration, t => {
         const d = v * t + 0.5 * a * t * t;
-        return { x: d - 3, y: 6, x2: 3, y2: 5 - d, vx: v + a * t, ax: a, tension: p.m2 * (p.g - a), s: d, fx: p.m * a };
+        return {
+          x: d - 3,
+          y: 6,
+          x2: 3,
+          y2: 5 - d,
+          vx: v + a * t,
+          ax: a,
+          tension: p.m2 * (p.g - a),
+          s: d,
+          fx: p.m * a,
+          groundY: -0.45
+        };
       });
     }
   );
@@ -328,8 +339,18 @@
     p =>
       trajectory(3, t => {
         const a = Math.max(p.a, -p.g),
-          y = 2 + 0.5 * a * t * t;
-        return { y, vy: a * t, a, N: Math.max(0, p.m * (p.g + p.a)), floor: 1 + 0.5 * p.a * t * t, fy: p.m * a };
+          y = 2 + 0.5 * a * t * t,
+          // 地面（井底）固定在電梯 3 秒內最低位置之下，向下加速時平台不會穿過地面。
+          groundY = Math.min(0, 1 + 4.5 * p.a) - 0.3;
+        return {
+          y,
+          vy: a * t,
+          a,
+          N: Math.max(0, p.m * (p.g + p.a)),
+          floor: 1 + 0.5 * p.a * t * t,
+          fy: p.m * a,
+          groundY
+        };
       })
   );
 

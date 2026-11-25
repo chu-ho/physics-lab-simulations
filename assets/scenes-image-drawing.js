@@ -16,7 +16,7 @@ function drawImageDrawing(s) {
     let prev;
     for (let k = 0; k <= 80; k++) {
       const y = -sim.aperture + (2 * sim.aperture * k) / 80,
-        x = (p.kind === 3 ? 1 : -1) * 0.08 * y * y,
+        x = (p.kind === 3 ? -1 : 1) * 0.08 * y * y, // 物在左方：凹面鏡邊緣彎向物體，凸面鏡邊緣彎離物體
         q = pt(x, y);
       if (prev) segment(prev, q, '#83acb2', 4);
       prev = q;
