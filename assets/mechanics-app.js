@@ -455,9 +455,14 @@ function setup(fit, preserveAudio = false) {
         Math.hypot(s.vx, s.vy, s.vz, s.rdot || 0, s.radius && Number.isFinite(s.omega) ? s.radius * s.omega : 0)
       )
     ),
-    maxF = Math.max(1, ...plotSamples.map(s => Math.hypot(s.fx, s.fy, s.fz)));
+    // 有受力分解箭頭時，合力與各分力共用同一比例，箭頭長度才能直接比較、相加。
+    maxF = Math.max(
+      1,
+      ...plotSamples.map(s => Math.hypot(s.fx, s.fy, s.fz)),
+      ...(def.forceParts ? plotSamples.flatMap(s => def.forceParts(s, params).map(f => Math.hypot(...f.v))) : [])
+    );
   velocityScale = Math.min(0.4, (scale * 0.12) / maxV);
-  forceScale = Math.min(0.25, (scale * 0.12) / maxF);
+  forceScale = Math.min(0.25, (scale * (def.forceParts ? 0.16 : 0.12)) / maxF);
   if (def.kind === 'lever') forceScale = 2 / (Math.max(params.m1, params.m2) * params.g);
   $('scaleNote').textContent =
     '速度箭頭：1 m/s → ' +

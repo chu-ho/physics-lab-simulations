@@ -1266,7 +1266,19 @@ function render() {
       quantityColors.velocity,
       'v'
     );
-  if ($('forces').checked && !hidePrimary && !['rotor', 'lever'].includes(def.kind))
+  // 受力分解：定義了 forceParts 的實驗改畫各分力與合力（位置由定義決定），不再畫預設的 ΣF。
+  if ($('forces').checked && def.forceParts)
+    for (const f of def.forceParts(s, params)) {
+      const at = f.at || pos;
+      if (Math.hypot(...f.v) * forceScale > 0.05)
+        arrow(
+          at,
+          at.map((v, j) => v + f.v[j] * forceScale),
+          f.net ? quantityColors.force : f.color,
+          f.label
+        );
+    }
+  else if ($('forces').checked && !hidePrimary && !['rotor', 'lever'].includes(def.kind))
     arrow(
       pos,
       [pos[0] + s.fx * forceScale, pos[1] + s.fy * forceScale, pos[2] + s.fz * forceScale],
