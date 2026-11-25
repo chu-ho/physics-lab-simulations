@@ -51,6 +51,14 @@
 .plot-panel[hidden] {
   display: none;
 }
+/* 圖表展開時 3D 視窗保留足夠高度，讀數面板與播放列才不會蓋住大半場景；空間不夠時整欄捲動。 */
+.simulation-column:has(> .plot-panel:not([hidden])) {
+  overflow-y: auto;
+}
+.simulation-column:has(> .plot-panel:not([hidden])) > .viewport {
+  flex: 1 0 auto;
+  min-height: 460px;
+}
 .plot-heading {
   font-size: var(--fs-label);
   display: flex;

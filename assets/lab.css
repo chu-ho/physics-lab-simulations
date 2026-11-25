@@ -1046,3 +1046,26 @@ dialog summary {
     white-space: nowrap;
   }
 }
+/* 程式檔載入失敗提示（mechanics.html 內的載入守衛） */
+.load-error {
+  position: fixed;
+  top: 12px;
+  left: 50%%;
+  transform: translateX(-50%%);
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #5a1f1f;
+  color: #fff;
+  box-shadow: 0 6px 24px #0006;
+}
+.load-error button {
+  font: inherit;
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 0;
+  cursor: pointer;
+}

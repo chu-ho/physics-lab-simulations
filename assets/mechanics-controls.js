@@ -89,6 +89,8 @@ function setPlotVisible(visible) {
   $('togglePlot').textContent = visible ? '隱藏圖表' : '顯示圖表';
   $('togglePlot').setAttribute('aria-expanded', String(visible));
   resize();
+  if (visible && typeof $('plotPanel').scrollIntoView === 'function')
+    $('plotPanel').scrollIntoView({ block: 'nearest' });
   dirty = true;
 }
 $('togglePlot').onclick = () => setPlotVisible($('plotPanel').hidden);

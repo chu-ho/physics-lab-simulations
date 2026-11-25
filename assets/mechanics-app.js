@@ -36,10 +36,17 @@ function setupEnergy() {
   const ok = s => Number.isFinite(s.K) && Number.isFinite(s.U);
   energyInfo = null;
   if (plotSamples.length && plotSamples.every(ok)) {
-    const shift = Math.min(...plotSamples.map(s => s.U)),
+    // 例外一：U 整段幾乎不變（多粒子系綜的平均位能）時不平移，否則位能會被扣成 0。
+    // 例外二：讀數列本身有「總機械能」時，文字改用該讀數（真實零點，例如萬有引力的負能量），
+    // 長條仍以最低位能為起點，避免能量條與讀數互相矛盾。
+    const Us = plotSamples.map(s => s.U),
+      minU = Math.min(...Us),
+      flat = Math.max(...Us) - minU <= 1e-3 * Math.abs(minU),
+      shift = flat ? 0 : minU,
+      totalMetric = def.metrics.find(m => ['energy', 'E'].includes(m.key) || m.label.includes('機械能')),
       heat = plotSamples.every(s => Number.isFinite(s.heat)),
       max = Math.max(...plotSamples.map(s => s.K + s.U - shift + (heat ? s.heat : 0)));
-    if (max > 0) energyInfo = { shift, heat, max };
+    if (max > 0) energyInfo = { shift, heat, max, totalMetric };
   }
   $('energyOption').hidden = !energyInfo;
   updateEnergy(stateAt(t));
@@ -51,17 +58,21 @@ function updateEnergy(s) {
     resize();
   }
   if (!show) return;
-  const { shift, heat, max } = energyInfo,
+  const { shift, heat, max, totalMetric } = energyInfo,
     u = s.U - shift,
     h = heat ? s.heat : 0,
     pct = v => Math.max(0, Math.min(100, (v / max) * 100)) + '%',
-    uName = Math.abs(shift) > 1e-9 * max ? 'U（最低點為零）' : 'U';
+    total = totalMetric && Number.isFinite(s[totalMetric.key]) ? s[totalMetric.key] : null,
+    shifted = Math.abs(shift) > 1e-3 * max,
+    uName = shifted && total === null ? 'U（最低點為零）' : 'U';
   $('energyK').style.width = pct(s.K);
   $('energyU').style.width = pct(u);
   $('energyH').style.width = pct(h);
-  const parts = ['K ' + format(s.K), uName + ' ' + format(u)];
+  const shownU = total === null ? u : total - s.K - h,
+    parts = ['K ' + format(s.K), uName + ' ' + format(shownU)];
   if (heat) parts.push('熱 ' + format(h));
-  parts.push('總 ' + format(s.K + u + h) + ' J');
+  parts.push('總 ' + format(total === null ? s.K + u + h : total) + ' ' + (totalMetric?.unit || 'J'));
+  if (total !== null && shifted) parts.push('（長條以最低位能為起點）');
   $('energyText').textContent = parts.join('　');
   $('energyTrack').setAttribute('aria-label', '能量條：' + parts.join('，'));
 }
@@ -140,16 +151,22 @@ function formatParameter(value, step) {
     digits = Math.max(0, (coefficient.split('.')[1]?.length || 0) - Number(exponent));
   return Number(value).toFixed(Math.min(8, digits));
 }
+// 讀數格式：浮點殘差（|v| < 1e-9）顯示 0.00；小量保留三位有效數字而不是被捨成 0.00；
+// 一萬到一千萬之間用整數，不用科學記號。
 function format(v) {
   if (!Number.isFinite(v)) return '—';
-  if (v !== 0 && simulation?.scientificNumbers && Math.abs(v) < 0.01) return v.toExponential(2);
-  return Math.abs(v) < 0.0005
-    ? v !== 0 && simulation?.scientificNumbers
-      ? v.toExponential(2)
-      : '0.00'
-    : Math.abs(v) >= 10000
-      ? v.toExponential(2)
-      : v.toFixed(2);
+  const a = Math.abs(v);
+  if (v !== 0 && simulation?.scientificNumbers && a < 0.01) return v.toExponential(2);
+  if (a < 1e-9) return '0.00';
+  if (a < 0.005) return v.toPrecision(3);
+  if (a >= 1e7) return v.toExponential(2);
+  if (a >= 10000) return v.toFixed(0);
+  return v.toFixed(2);
+}
+// 計數類讀數（顆、次、個…）顯示整數。
+const countUnits = new Set(['顆', '次', '個', '條', '粒', '階', '層', '圈']);
+function formatMetric(v, unit) {
+  return countUnits.has(unit) && Number.isFinite(v) ? String(Math.round(v)) : format(v);
 }
 // 網址 #experiment=id&參數=值：可分享目前參數；只記錄與預設不同的參數。
 function shareURL() {
@@ -327,7 +344,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   for (const m of plotMetrics()) {
     const option = document.createElement('option');
     option.value = m.key;
-    option.textContent = m.label + '（' + m.unit + '）';
+    option.textContent = m.unit ? m.label + '（' + m.unit + '）' : m.label;
     $('plotMetric').append(option);
   }
   $('plotMetric').value = def.defaultPlotMetric || def.metrics[0].key;
@@ -360,6 +377,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   }
 }
 function setup(fit, preserveAudio = false) {
+  const wasInView = !fit && allInView();
   simulation = def.build(params);
   experimentAudio.setExperiment(simulation, params, { preserveEnabled: preserveAudio });
   for (const p of def.params) showParam(p);
@@ -368,7 +386,13 @@ function setup(fit, preserveAudio = false) {
   const selectedMode = $('plotMode').value,
     modes = [['time', '時間圖']];
   if (simulation.positionPlot)
-    modes.push(['position', simulation.positionPlot.menuLabel || simulation.positionPlot.modeLabel || '位置—能量圖']);
+    modes.push([
+      'position',
+      simulation.positionPlot.menuLabel ||
+        simulation.positionPlot.modeLabel ||
+        simulation.positionPlot.title ||
+        ((simulation.positionPlot.yUnit ?? 'J') === 'J' ? '位置—能量圖' : '對' + simulation.positionPlot.label + '作圖')
+    ]);
   if (simulation.phasePlot) modes.push(['phase', '左右位移相圖']);
   if (simulation.histogramPlot) modes.push(['distribution', '樣本分布與理論']);
   if (simulation.barPlot) modes.push(['bars', '模式能量比較']);
@@ -382,7 +406,8 @@ function setup(fit, preserveAudio = false) {
   $('plotMode').value = modes.some(m => m[0] === selectedMode) ? selectedMode : 'time';
   $('plotModeChoice').hidden = modes.length === 1;
   updatePlotMode();
-  if (fit) fitCamera();
+  if (fit || (wasInView && !allInView())) fitCamera();
+  updateFrontView();
   renderDerivation();
   $('duration').textContent = format(simulation.duration) + ' s';
   $('extraInfo').textContent = '';
@@ -439,7 +464,7 @@ function setup(fit, preserveAudio = false) {
     velocityScale.toPrecision(2) +
     ' m；合力箭頭：1 N → ' +
     forceScale.toPrecision(2) +
-    ' m。兩者採不同尺度。改參數不自動改鏡頭；可按「完整取景」。';
+    ' m。兩者採不同尺度。改參數後若裝置跑出畫面會自動重新取景；也可隨時按「完整取景」。';
   if (def.kind === 'orbit') $('scaleNote').textContent += ' 軌道模型合力按 1 kg 測試質點計。';
   if (simulation.scaleNote) $('scaleNote').textContent = simulation.scaleNote;
   if (def.kind === 'bicycle')
@@ -449,7 +474,8 @@ function setup(fit, preserveAudio = false) {
       '狹縫孔徑放大 4000 倍，屏幕橫向／縱向另採示意尺度；屏距與光學計算使用參數中的真實數值。圖表為相對光強對位置，不是光飛行時間。';
   reset();
 }
-function fitCamera() {
+// 取景要包含的世界座標點：整段運動的物體位置加上裝置範圍。
+function framePositions() {
   const positions = plotSamples.flatMap(s => {
     const pts = [point(s)];
     if (Number.isFinite(s.x2)) pts.push([s.x2, s.y2 ?? s.y, s.z2 ?? (def.kind === 'two-carts' ? 2.5 : 0)]);
@@ -518,6 +544,36 @@ function fitCamera() {
   }
   if (def.kind === 'lever') positions.push([-params.L1, 3, 0], [params.L2, 3, 0]);
   if (def.kind === 'torque' || def.kind === 'rotor') positions.push([-params.R, 1, -params.R], [params.R, 1, params.R]);
+  return positions;
+}
+// 改參數後：原本整個裝置都在畫面內、改完卻有部分跑出畫面，才自動重新取景；
+// 使用者自行放大觀察細節（原本就有部分在畫面外）或跟隨物體時不動鏡頭。
+function allInView() {
+  if (!simulation || following) return false;
+  updateCamera();
+  const bounds = sceneBounds(),
+    pad = 12;
+  return framePositions().every(q => {
+    const p = project(q);
+    return (
+      p &&
+      p.x >= bounds.left - pad &&
+      p.x <= bounds.right + pad &&
+      p.y >= bounds.top - pad &&
+      p.y <= bounds.bottom + pad
+    );
+  });
+}
+// 運動物體幾乎全在 x–y 平面（z 方向沒有位移）時，「正視」沿 x 軸看只剩一條線：停用並說明。
+function updateFrontView() {
+  const pts = plotSamples.map(point),
+    range = i => Math.max(...pts.map(p => p[i])) - Math.min(...pts.map(p => p[i])),
+    flat = !simulation.allowFrontView && range(2) < 0.05 * Math.max(range(0), range(1));
+  $('front').disabled = flat;
+  $('front').title = flat ? '此實驗裝置位於 x–y 平面，正視只會看到側邊；請用「側視」。' : '沿 x 軸看裝置';
+}
+function fitCamera() {
+  const positions = framePositions();
   const mins = [0, 1, 2].map(i => Math.min(...positions.map(p => p[i]))),
     maxs = [0, 1, 2].map(i => Math.max(...positions.map(p => p[i])));
   camera.target = mins.map((v, i) => (v + maxs[i]) / 2);
@@ -560,7 +616,7 @@ function updateUI() {
   const s = stateAt(t),
     ended = t >= simulation.duration;
   $('time').textContent = format(t);
-  def.metrics.forEach((m, i) => ($('m' + i).textContent = format(s[m.key])));
+  def.metrics.forEach((m, i) => ($('m' + i).textContent = formatMetric(s[m.key], m.unit)));
   updateEnergy(s);
   if (typeof measureUpdate === 'function' && (measureTool || stopwatch.on)) measureUpdate();
   $('timeline').value = simulation.duration ? (t / simulation.duration) * 1000 : 0;
@@ -595,7 +651,7 @@ function updateUI() {
 // 播放中不更新（狀態列已會報「實驗進行中」），避免螢幕閱讀器被數字洗版。
 let sceneSummaryTimer = null;
 function sceneSummaryText(s, ended) {
-  const parts = def.metrics.map(m => m.label + ' ' + format(s[m.key]) + (m.unit ? ' ' + m.unit : ''));
+  const parts = def.metrics.map(m => m.label + ' ' + formatMetric(s[m.key], m.unit) + (m.unit ? ' ' + m.unit : ''));
   if (energyInfo && $('energyToggle').checked) parts.push($('energyText').textContent);
   return (
     def.title +
@@ -681,7 +737,7 @@ function drawPlot() {
   const px = time => left + (right - left) * (simulation.duration ? time / simulation.duration : 0),
     py = v => bottom - ((v - min) / (max - min)) * (bottom - top);
   const axis = simulation.plotAxis;
-  $('plotLabel').textContent = m.label + ' / ' + m.unit;
+  $('plotLabel').textContent = m.unit ? m.label + ' / ' + m.unit : m.label;
   c.setAttribute(
     'aria-label',
     m.label +
