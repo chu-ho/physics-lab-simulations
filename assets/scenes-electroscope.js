@@ -4,7 +4,9 @@ function drawElectroscope(s) {
     e = simulation.electrical(t),
     pivot = [0, 3, 0],
     len = 0.65,
-    tip = sign => [sign * len * Math.sin(e.theta), 3 - len * Math.cos(e.theta), 0];
+    // 模型張角只有幾度：畫面用單調的示意放大 75°×(1−e^(−θ/2°))，張角越大畫得越開，閉合時仍為 0；標籤寫真實角度。
+    drawTheta = ((75 * Math.PI) / 180) * (1 - Math.exp(-e.theta / ((2 * Math.PI) / 180))),
+    tip = sign => [sign * len * Math.sin(drawTheta), 3 - len * Math.cos(drawTheta), 0];
   box([0, 0.3, 0], [2, 0.3, 1.5], '#697d84');
   segment([0, 0.5, 0], [0, 4.6, 0], '#9eacb4', 8);
   sphere([0, 4.65, 0], 0.38, '#c5cbd0');
@@ -20,7 +22,7 @@ function drawElectroscope(s) {
   const rodX = -0.38 - e.g;
   segment([rodX - 1.1, 4.65, 0], [rodX, 4.65, 0], p.rod >= 0 ? '#c5716f' : '#617cb5', 15);
   label([rodX - 0.5, 5.15, 0], '棒 ' + e.rodCharge.toFixed(2) + ' nC', p.rod >= 0 ? '#b35c59' : '#5779ac', 10);
-  label([0, 1.5, 0], '張角 ±' + e.angle.toFixed(1) + '°', '#a4873d', 11);
+  label([0, 1.5, 0], '張角 ±' + e.angle.toFixed(1) + '°（畫面張角為示意放大）', '#a4873d', 11);
   label([0, 0.8, 0], '淨電荷 ' + e.Q.toFixed(2) + ' nC · 大地 ' + e.earth.toFixed(2) + ' nC', '#536d79', 10);
   if (e.grounded) {
     segment([0, 4.2, 0], [2.2, 4.2, 0], '#68a696', 3);

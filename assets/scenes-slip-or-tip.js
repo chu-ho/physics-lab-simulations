@@ -19,7 +19,13 @@ function drawSlipOrTip(s) {
       const p = C(u, 0);
       return [p[0], p[1], z];
     };
-  polygon([plane(left, -2), plane(right, -2), plane(right, 2), plane(left, 2)], '#c0d0c5');
+  // 斜面畫成實心楔形，底面落到地面，物塊才看得出是站在斜面上，而不是浮在空中。
+  const base = Math.min(0, plane(right, 0)[1], plane(left, 0)[1]) - 0.05,
+    foot = (u, z) => [plane(u, z)[0], base, z];
+  for (const z of [-2, 2])
+    polygon([plane(left, z), plane(right, z), foot(right, z), foot(left, z)], '#8fa59b', '#5f7a72');
+  polygon([plane(left, -2), plane(left, 2), foot(left, 2), foot(left, -2)], '#7b938a', '#5f7a72');
+  polygon([plane(left, -2), plane(right, -2), plane(right, 2), plane(left, 2)], '#b3c4b5', '#5f7a72');
   for (let u = Math.ceil(left); u <= right; u++) segment(plane(u, -2), plane(u, 2), '#78938a55', 1);
   const corners = [
       [-b / 2, 0],

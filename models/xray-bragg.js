@@ -12,7 +12,9 @@
   ];
   const sources = ['Kα 特徵線', 'Kβ 特徵線', '連續譜中自選波長'];
   // 多晶面反射的相對強度：x = 2d sinθ/λ，整數時為 1（各階主極大）
+  // x < 0.5 屬於第 0 階（θ → 0 的未偏折直射光），不是布拉格反射，強度記為 0。
   const planeResponse = x => {
+    if (Math.abs(x) < 0.5) return 0;
     const s = Math.sin(Math.PI * x);
     return Math.abs(s) < 1e-9 ? 1 : (Math.sin(planes * Math.PI * x) / (planes * s)) ** 2;
   };

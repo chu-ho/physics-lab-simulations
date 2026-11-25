@@ -3,8 +3,14 @@ function drawConveyorFriction(s) {
   const left = simulation.bounds.min[0],
     right = simulation.bounds.max[0],
     r = 0.45;
-  box([(left + right) / 2, 0.72, 0], [right - left, 0.18, 1.7], '#507c79');
-  box([(left + right) / 2, 1.18, 0], [right - left, 0.13, 1.7], '#446f70');
+  // 長帶面切成約 1 m 小段分別排序深度；整條一個面時平均深度在帶子中央，近端的箱子會被畫在帶面之下。
+  const pieces = Math.max(1, Math.ceil(right - left)),
+    w = (right - left) / pieces;
+  for (let i = 0; i < pieces; i++) {
+    const cx = left + (i + 0.5) * w;
+    box([cx, 0.72, 0], [w, 0.18, 1.7], '#507c79');
+    box([cx, 1.18, 0], [w, 0.13, 1.7], '#446f70');
+  }
   // Marks circulate around the rounded belt path at its actual prescribed displacement.
   const length = right - left,
     total = 2 * length + 2 * Math.PI * r,

@@ -6,8 +6,13 @@ function drawJouleExperiment(s) {
       z = side * params.R;
     ring([x, H, z], 0.3, 'xy', '#667e87', 3);
     segment([side * params.R, H, z], [x, H, z], '#b69b60', 2);
+    // 落地後繩子仍連到重錘，只是鬆弛：畫成向外微彎的折線。
     if (!s.grounded) segment([x, H, z], [x, s.y + 0.35, z], '#b69b60', 2);
-    else segment([x, H, z], [x - 0.15, H - 0.5, z], '#b69b60', 2);
+    else {
+      const mid = [x + side * 0.35, (H + s.y + 0.35) / 2, z];
+      segment([x, H, z], mid, '#b69b60', 2);
+      segment(mid, [x, s.y + 0.35, z], '#b69b60', 2);
+    }
     box([x, 0.125, z], [1.1, 0.25, 1.1]);
     box([x, s.y, z], [0.7, 0.7, 0.7]);
     label([x, s.y + 0.8, z], params.m + ' kg', '#63808a', 11);

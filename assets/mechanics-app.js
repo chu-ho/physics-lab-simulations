@@ -616,7 +616,8 @@ function reset() {
 function updateUI() {
   const s = stateAt(t),
     ended = t >= simulation.duration;
-  $('time').textContent = format(t);
+  // 播放時間與物理時間不同的實驗（例如渦電流、量子井）主讀數顯示物理時間。
+  $('time').textContent = format(Number.isFinite(s.physicalTime) ? s.physicalTime : t);
   def.metrics.forEach((m, i) => ($('m' + i).textContent = formatMetric(s[m.key], m.unit)));
   updateEnergy(s);
   if (typeof measureUpdate === 'function' && (measureTool || stopwatch.on)) measureUpdate();

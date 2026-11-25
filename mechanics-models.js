@@ -569,7 +569,8 @@
             y: 1 + p.L * (1 - Math.cos(s[0])),
             vx: p.L * Math.cos(s[0]) * s[1],
             vy: p.L * Math.sin(s[0]) * s[1],
-            angle: (s[0] * 180) / Math.PI,
+            // 擺過頂點繞圈時顯示 −180°～180° 的擺角位置，不累加成 506°。
+            angle: (((((s[0] * 180) / Math.PI + 180) % 360) + 360) % 360) - 180,
             rise: p.L * (1 - Math.cos(s[0])),
             loss,
             fx: (p.m + p.M) * (-p.g * Math.sin(s[0]) * Math.cos(s[0]) - p.L * s[1] ** 2 * Math.sin(s[0])),
