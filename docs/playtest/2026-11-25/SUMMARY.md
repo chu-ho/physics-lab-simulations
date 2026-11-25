@@ -91,6 +91,10 @@
 - A8 的根因：`python -m http.server` 在 Windows 會偶發掉檔（8 次冷啟動失敗 3 次）；改用 `node tools/serve.cjs`（0 次），`.claude/launch.json` 已更新。
 - 幾何：ring() 缺 yz 平面（half-lens、optical-parallax、dolly-zoom）、image-drawing 凹凸面鏡、atwood／massive-pulley 滑輪、table-pulley 桌腳與滑輪、elevator 穿地、slip-or-tip 實心斜面、conveyor 箱子陷入帶面、joule 繩子、michelson 輸出光束。
 - 細節：electroscope 張角示意放大、parallel-capacitor 介電質與場線密度、ballistic 擺角取模、eddy-current 顯示物理時間、xray-bragg θ=0 假峰。
+- 取景與標示（第二輪）：rutherford-scattering 只框軌跡平面並由上方俯看；sun-earth 取景收緊；sound-speed 距離拉桿會改變場景中的距離；bicycle-friction 摩擦箭頭畫在觸地點並按比例；torque 施力箭頭常駐、盤面圖樣跟著轉；angular-momentum 手持物與身體分開並加 L 箭頭；belt-wheels 輪 C/D 移到前方不再遮擋。
+- 教學內容：牛頓定律組（friction、incline、atwood、table-pulley、elevator）與 work 勾選「合力」時畫出各分力（施力、摩擦、正向力、重力、張力）與合力，共用同一比例，畫在物體朝向鏡頭的一面。
+- 重新設計：blackbody-radiation 球色依溫度、場景內畫兩溫度光譜與峰值、可見光帶、掃描波長；carnot-engine 正對 P–V 平面並填色標出淨作功面積；matter-wave 加入電子槍、雙縫板、光束示意，落點改為方點並在屏上方即時累積直方圖。
+- 總覽頁：兩個搜尋框共用同一比對規則並互相同步（「X光」→「X射線」、忽略空白與全半形，並納入學習地圖別名）；從實驗頁返回保留搜尋字與捲動位置；標題數字說明 164 = 161 個 3D 實驗＋3 個拋體專頁。實驗選單分組已由 main 的 #24 完成。
 
 **查證後不是錯誤**
 - thermal-lattice「單位錯 10¹⁵ 倍」：實際是能量條零點平移造成（已在 A4 修正）。
@@ -98,7 +102,9 @@
 - A5「預設顯示位置線」：那是運動軌跡，不是位置向量。
 
 **尚未處理**
-- 需重新設計畫面：blackbody-radiation、matter-wave、carnot-engine P–V 圖、two-source-interference／newton-rings／straw-cup／sphere-lens 的解析度與疊紋。
-- 個別取景與標示：xray-bragg、rutherford-scattering、gravitation-g 模式 1、天文三實驗取景太小；table-pulley 預設視角看不到懸掛重物；bicycle-friction 箭頭位置與比例；torque 半徑線閃爍；belt-wheels 遮擋；angular-momentum 手持物嵌入身體；spring-atwood 結尾疑似穿地；sound-speed 距離拉桿無視覺變化；prism-dispersion 文字與畫面不一致（疑似）；moon-earth 月相鏡像（待核對）。
-- 教學內容：牛頓定律組預設受力箭頭與分力、work 缺外力箭頭、近代物理沿用力學模板的顯示選項（A11）、開關型參數改為選單（A12）。
-- 總覽頁：兩個搜尋框不同步、「X光」同義詞、返回時保留搜尋與捲動位置、切換實驗選單分組、實驗數 164／161 不一致。
+- 解析度與疊紋：two-source-interference、newton-rings、straw-cup、sphere-lens。
+- 標籤擁擠：xray-bragg、dimensional-analysis、measurement-uncertainty。
+- 待核對：prism-dispersion 文字與畫面是否一致；moon-earth 月相是否鏡像。
+- 共通介面：近代物理沿用力學模板的顯示選項（A11）、開關型參數改為選單（A12）；這兩項會動到大量實驗的參數與顯示選項，建議另開一輪處理。
+- 總覽頁過長（桌面約 2.6 萬 px）。
+- matter-wave 與 blackbody 場景在預設取景下偏小（共用取景較保守），可再調。
