@@ -9,6 +9,20 @@ function atlasNode(tag, text, className) {
   if (className) element.className = className;
   return element;
 }
+// 搜尋比對鍵：學習地圖與「全部實驗」共用。忽略大小寫、全形半形與空白，並把常見口語同義詞換成正式名稱
+// （例如「X光」→「X射線」），兩個搜尋框才會得到一致的結果。
+const searchSynonyms = [
+  [/x光/g, 'x射線'],
+  [/倫琴射線/g, 'x射線']
+];
+function searchKey(text) {
+  let key = String(text || '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/\s+/g, '');
+  for (const [pattern, replacement] of searchSynonyms) key = key.replace(pattern, replacement);
+  return key;
+}
 function atlasButton(text, className) {
   const element = atlasNode('button', text, className);
   element.type = 'button';
@@ -27,19 +41,19 @@ function createAtlasFilters(root, chapters, catalogue) {
       for (const lab of topic.labs)
         haystacks.set(
           lab.id,
-          [
-            lab.title,
-            lab.id,
-            lab.group,
-            aliases[lab.id] || '',
-            topic.name,
-            chapter.id,
-            chapter.title,
-            chapter.branch,
-            book ? book.searchText(lab.id) : ''
-          ]
-            .join(' ')
-            .toLowerCase()
+          searchKey(
+            [
+              lab.title,
+              lab.id,
+              lab.group,
+              aliases[lab.id] || '',
+              topic.name,
+              chapter.id,
+              chapter.title,
+              chapter.branch,
+              book ? book.searchText(lab.id) : ''
+            ].join(' ')
+          )
         );
 
   const trunkNav = atlasNode('nav', '', 'atlas-trunks');
@@ -101,7 +115,7 @@ function createAtlasFilters(root, chapters, catalogue) {
   select.addEventListener('change', () => set({ textbook: select.value }));
 
   function labMatches(id) {
-    const query = state.query.trim().toLowerCase();
+    const query = searchKey(state.query);
     if (query && !(haystacks.get(id) || '').includes(query)) return false;
     if (state.textbook && !(book && book.inChapter(id, state.textbook))) return false;
     return true;
