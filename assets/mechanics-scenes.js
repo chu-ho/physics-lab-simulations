@@ -44,9 +44,10 @@ function coil(a, b, color = '#607a82', radius = 0.18) {
 }
 function disc(center, R, angle) {
   const [x, y, z] = center;
+  // 色塊跟著轉角一起轉，才看得出盤子在轉動（原本色塊固定，只有半徑線在動）。
   for (let i = 0; i < 32; i++) {
-    const a = (i * TAU) / 32,
-      b = ((i + 1) * TAU) / 32;
+    const a = angle + (i * TAU) / 32,
+      b = angle + ((i + 1) * TAU) / 32;
     polygon(
       [
         [x, y, z],
@@ -671,13 +672,16 @@ function apparatus(s) {
       segment([s.x - 0.15, p.R + 1.12, 0], seat, '#b76b26', 4);
       segment([s.x - 0.15, p.R + 1.12, 0], steer, '#b76b26', 3);
       segment(seat, pedal, '#46616a', 3);
+      // 摩擦力畫在各輪觸地點，長度與大小成正比（本次觀察最大摩擦力對應 1.5 m）。
+      const maxFriction = Math.max(1e-9, ...plotSamples.map(q => Math.max(Math.abs(q.rearF), Math.abs(q.frontF))));
       for (const [wheel, F, name, color, z] of [
-        [rear, s.rearF, '後輪', '#8b5ac4', 1.2],
-        [front, s.frontF, '前輪', '#b25842', -1.2]
+        [rear, s.rearF, '後輪', '#8b5ac4', 0.12],
+        [front, s.frontF, '前輪', '#b25842', -0.12]
       ]) {
-        const pos = [wheel[0], 0.03, z];
-        if (Math.abs(F) > 1e-8) arrow(pos, [pos[0] + Math.sign(F) * 0.8, pos[1], pos[2]], color, name);
-        label([pos[0], -0.08, z], name + ' ' + format(F) + ' N', color, 10);
+        const pos = [wheel[0], 0.03, z],
+          len = (1.5 * F) / maxFriction;
+        if (Math.abs(len) > 0.02) arrow(pos, [pos[0] + len, pos[1], pos[2]], color, '');
+        label([pos[0] + len / 2, -0.12, z * 6], name + ' f ' + format(F) + ' N', color, 10);
       }
       break;
     }
@@ -1043,10 +1047,12 @@ function apparatus(s) {
         vz = s.rdot * sn + s.radius * s.omega * c;
       disc([0, 0.2, 0], Math.max(p.r0, p.r1) + 0.4, s.theta);
       segment([-x, 1, -z], [x, 1, z], '#526c77', 4);
-      sphere([x, 1, z], 0.3);
-      sphere([-x, 1, -z], 0.3);
-      box([0, 0.7, 0], [0.5, 1.2, 0.5]);
-      label([0, 2, 0], 'L = ' + format(s.angular));
+      // 手持物半徑 0.18、身體寬 0.36：最短臂長 0.5 m 時手持物也不會嵌進身體。
+      sphere([x, 1, z], 0.18);
+      sphere([-x, 1, -z], 0.18);
+      box([0, 0.7, 0], [0.36, 1.2, 0.36]);
+      arrow([0, 1.35, 0], [0, 2.6, 0], colors.purple, '');
+      label([0, 2.8, 0], 'L = ' + format(s.angular) + '（守恆，方向沿轉軸）');
       if ($('vectors').checked) {
         arrow([x, 1, z], [x + vx * velocityScale, 1, z + vz * velocityScale], quantityColors.velocity, 'v₁');
         arrow([-x, 1, -z], [-x - vx * velocityScale, 1, -z - vz * velocityScale], quantityColors.velocity, 'v₂');
@@ -1131,7 +1137,8 @@ function apparatus(s) {
     case 'rotor':
       disc([0, 1, 0], p.R, s.theta);
       segment([0, 0, 0], [0, 2, 0], '#526c77', 4);
-      if ($('forces').checked) {
+      // 切向力是本實驗的主角，不受「合力箭頭」選項控制。
+      {
         const pos = [p.R * Math.cos(s.theta), 1, p.R * Math.sin(s.theta)];
         arrow(
           pos,

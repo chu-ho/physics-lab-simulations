@@ -468,7 +468,8 @@ function setup(fit, preserveAudio = false) {
   if (def.kind === 'orbit') $('scaleNote').textContent += ' 軌道模型合力按 1 kg 測試質點計。';
   if (simulation.scaleNote) $('scaleNote').textContent = simulation.scaleNote;
   if (def.kind === 'bicycle')
-    $('scaleNote').textContent += ' 輪下前後輪摩擦箭頭僅表方向，大小以 N 標示；ΣF 箭頭仍採上列比例。';
+    $('scaleNote').textContent +=
+      ' 輪下前後輪摩擦箭頭畫在觸地點，長度與大小成正比（本次最大摩擦力對應 1.5 m）；ΣF 箭頭仍採上列比例。';
   if (def.kind === 'double-slit')
     $('scaleNote').textContent =
       '狹縫孔徑放大 4000 倍，屏幕橫向／縱向另採示意尺度；屏距與光學計算使用參數中的真實數值。圖表為相對光強對位置，不是光飛行時間。';
@@ -506,7 +507,7 @@ function framePositions() {
     for (const x of [simulation.bounds.min[0], simulation.bounds.max[0]])
       for (const y of [simulation.bounds.min[1], simulation.bounds.max[1]])
         for (const z of [simulation.bounds.min[2], simulation.bounds.max[2]]) positions.push([x, y, z]);
-  if (def.kind === 'belt-wheels') positions.push([-7, 0, -1], [7, 7, 1.5]);
+  if (def.kind === 'belt-wheels') positions.push([-7, 0, -1], [7, 7, 2.2]);
   if (def.kind === 'slip-or-tip') {
     const end = simulation.sample(simulation.duration),
       left = -Math.max(3, params.b * 2),

@@ -100,14 +100,14 @@
           r,
           rate,
           get bounds() {
-            return p.view ? { min: [-2, -2, -2], max: [2, 2, 2] } : { min: [-9, -3, -9], max: [9, 3, 9] };
+            return p.view ? { min: [-2, -2, -2], max: [2, 2, 2] } : { min: [-8.2, -1.6, -8.2], max: [8.2, 2.4, 8.2] };
           },
           scaleNote: '太陽、地球半徑與公轉距離分開放大；日照角度採平行光幾何。',
           endLabel: p.speed ? '一個理想年完成' : '兩個太陽日完成'
         }
       );
       Object.defineProperty(sim, 'bounds', {
-        get: () => (p.view ? { min: [-2.2, -2.2, -1.4], max: [2.2, 2.2, 1.4] } : { min: [-9, -3, -9], max: [9, 3, 9] })
+        get: () => (p.view ? { min: [-2.2, -2.2, -1.4], max: [2.2, 2.2, 1.4] } : { min: [-8.2, -1.6, -8.2], max: [8.2, 2.4, 8.2] })
       });
       sim.displayPoint = s => (p.view ? [0, 0, 0] : [s.x, s.y, s.z]);
       sim.plotAxis = { key: 'elapsedDays', label: '經過天數', unit: '天' };

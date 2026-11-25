@@ -2,8 +2,10 @@
 function drawSoundSpeed(s) {
   const sim = simulation,
     height = 2.8,
-    map = x => -4 + (8 * x) / params.distance;
-  for (const x of [-4, 4]) {
+    // 兩座山的間距隨距離拉桿改變（100 m → 4 單位，1500 m → 13 單位），聲包長度仍按真實比例。
+    D = 2 + (4.5 * (params.distance - 100)) / 1400,
+    map = x => -D + (2 * D * x) / params.distance;
+  for (const x of [-D, D]) {
     const peak = [x, height - 0.1, 0],
       corners = [
         [x - 1.4, 0, -1.3],
@@ -18,14 +20,14 @@ function drawSoundSpeed(s) {
     sphere([x, height + 0.6, 0], 0.12, col);
     segment([x - 0.18, height + 0.25, 0], [x + 0.18, height + 0.25, 0], col, 2);
   }
-  label([-4, height + 1, 0], s.sourceEnvelope > 0 ? '小明：發聲中' : '小明', '#a6854a', 11);
+  label([-D, height + 1, 0], s.sourceEnvelope > 0 ? '小明：發聲中' : '小明', '#a6854a', 11);
   label(
-    [4, height + 1, 0],
+    [D, height + 1, 0],
     s.receiverEnvelope > 0 ? '姊姊：收到聲音' : s.packetPassed ? '姊姊：聲包通過' : '姊姊：等待',
     '#97708f',
     11
   );
-  if (params.path) segment([-4, height, 0], [4, height, 0], '#89a6a088', 1, true);
+  if (params.path) segment([-D, height, 0], [D, height, 0], '#89a6a088', 1, true);
   const left = Math.max(0, s.packetTailDistance),
     right = Math.min(params.distance, s.wavefrontDistance);
   if (right > left && t >= sim.emitTime) {

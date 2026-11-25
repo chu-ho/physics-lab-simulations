@@ -75,10 +75,12 @@
           hidePrimary: true,
           hideFloor: true,
           schematic: true,
-          bounds: { min: [-5.4, 0, -5.4], max: [5.4, 4.5, 5.4] }
+          // 軌跡在 y = 1.3 的水平面，x、z 約 ±4.2（fm/100）；取景只框這個平面，預設由斜上方俯看才看得出偏折。
+          bounds: { min: [-4.6, 1.2, -2.6], max: [4.6, 1.4, 2.6] }
         }
       );
     },
     'models/rutherford-scattering.js'
   );
+  M.defs.find(d => d.id === 'rutherford-scattering').initialView = { yaw: 0, pitch: 1.15 };
 })(globalThis.Mechanics);

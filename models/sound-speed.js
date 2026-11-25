@@ -35,6 +35,7 @@
         end = arrival + p.pulse,
         duration = end + 0.5,
         envelope = (time, x) => M.Acoustics.pulseEnvelope(time, emit + x / c, p.pulse);
+      const span = 2 + (4.5 * (p.distance - 100)) / 1400;
       return trajectory(
         duration,
         t => {
@@ -73,8 +74,9 @@
           envelope,
           hidePrimary: true,
           hideGrid: () => true,
-          displayPoint: s => [-4 + (8 * s.x) / p.distance, 2.8, 0],
-          bounds: { min: [-6, 0, -2.5], max: [6, 5, 2.5] },
+          // 畫面半距 D 與 scenes-sound-speed.js 相同：100 m → 2，1500 m → 6.5。
+          displayPoint: s => [-span + (2 * span * s.x) / p.distance, 2.8, 0],
+          bounds: { min: [-span - 1.6, 0, -2.5], max: [span + 1.6, 5, 2.5] },
           audio: (state, parameters) => ({
             frequency: state.frequency,
             gain: 0.7 * (parameters.listen ? state.receiverEnvelope : state.sourceEnvelope),
