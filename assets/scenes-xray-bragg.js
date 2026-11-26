@@ -1,5 +1,16 @@
 'use strict';
 
+// 矮寬視窗（可用區高度不足、寬度有餘）時，光譜與干涉讀值改排在晶體右側，
+// 取景高度由 7.6 降為 6.5 單位，標籤才不會被避讓機制擠成一團。
+// 比較兩種版面在目前可用區能得到的每單位像素，橫排明顯較大才切換。
+function xrayWideLayout() {
+  if (typeof sceneBounds !== 'function') return false;
+  const b = sceneBounds(),
+    w = b.right - b.left,
+    h = b.bottom - b.top;
+  return Math.min(w / 18, h / 6.5) > 1.08 * Math.min(w / 12, h / 7.6);
+}
+
 function drawXrayBragg(s) {
   const th = (s.angle * Math.PI) / 180,
     u = [Math.cos(th), Math.sin(th)],
@@ -90,11 +101,15 @@ function drawXrayBragg(s) {
   }
   label(at([O[0] - 1.5, O[1] + 0.25]), 'θ = ' + s.angle.toFixed(1) + '°', '#576577', 12);
 
-  // 干涉結果（右下角分行）
-  const constructive = s.present && s.nearestOrder >= 1 && Math.abs(s.orderExact - s.nearestOrder) < 0.03,
-    rx = 2.0;
+  // 干涉結果（直排：晶體下方；橫排：光譜下方）
+  const wide = xrayWideLayout(),
+    constructive = s.present && s.nearestOrder >= 1 && Math.abs(s.orderExact - s.nearestOrder) < 0.03,
+    rx = wide ? 7.7 : 2.0,
+    ry = wide ? -0.35 : -1.1,
+    // 橫排時每單位像素較少，行距放寬到 0.55 單位，避免相鄰讀值被避讓機制連鎖推開。
+    gap = wide ? 0.55 : 0.45;
   label(
-    [rx, -1.1, 0],
+    [rx, ry, 0],
     s.present
       ? simulation.sourceName + ' λ = ' + s.lambda.toFixed(4) + ' nm（' + s.photonEnergy.toFixed(2) + ' keV）'
       : '此入射波長在目前電壓下不存在',
@@ -103,30 +118,36 @@ function drawXrayBragg(s) {
   );
   if (s.present) {
     label(
-      [rx, -1.55, 0],
+      [rx, ry - gap, 0],
       '2d sinθ = ' + s.pathDifference.toFixed(3) + ' nm = ' + s.orderExact.toFixed(2) + ' λ',
       constructive ? '#2f7a55' : '#576577',
       12
     );
     label(
-      [rx, -2.0, 0],
+      [rx, ry - 2 * gap, 0],
       constructive ? '→ 第 ' + s.nearestOrder + ' 階建設性干涉' : '非整數倍，反射微弱',
       constructive ? '#2f7a55' : '#576577',
       12
     );
     label(
-      [rx, -2.5, 0],
-      '階數角：' + (simulation.orders.map(o => 'n=' + o.n + ' ' + o.angle.toFixed(1) + '°').join('　') || '無'),
+      [rx, ry - 3 * gap - 0.05, 0],
+      // 晶面間距大、波長短時可達十多階，整行會超出畫面；只列前 5 階，其餘以總數帶過。
+      '階數角：' +
+        (simulation.orders
+          .slice(0, 5)
+          .map(o => 'n=' + o.n + ' ' + o.angle.toFixed(1) + '°')
+          .join('　') || '無') +
+        (simulation.orders.length > 5 ? '　…共 ' + simulation.orders.length + ' 階' : ''),
       '#576577',
       10
     );
   }
 
   // 光譜：Kramers 連續譜與特徵線
-  const x0 = -5.8,
-    x1 = -1.4,
-    y0 = -2.3,
-    h = 1.3,
+  const x0 = wide ? 5.0 : -5.8,
+    x1 = wide ? 10.4 : -1.4,
+    y0 = wide ? 1.2 : -2.3,
+    h = wide ? 1.9 : 1.3,
     lo = 0.02,
     hi = 0.3,
     X = l => x0 + ((l - lo) / (hi - lo)) * (x1 - x0),
@@ -135,9 +156,11 @@ function drawXrayBragg(s) {
   segment(at([x0, y0]), at([x1, y0]), '#6a7d88', 1);
   for (const l of [0.05, 0.1, 0.15, 0.2, 0.25, 0.3]) {
     segment(at([X(l), y0]), at([X(l), y0 - 0.06]), '#6a7d88', 1);
-    label(at([X(l), y0 - 0.3]), l.toFixed(2), '#6a7d88', 9);
+    if (!wide || Math.round(l * 100) % 10 === 0) label(at([X(l), y0 - 0.3]), l.toFixed(2), '#6a7d88', 9);
   }
-  label(at([(x0 + x1) / 2, y0 - 0.52]), '波長 λ（nm）', '#6a7d88', 10);
+  // 橫排時光譜下方只剩一排刻度與入射標記的空間，軸名改放在軸的右端。
+  if (wide) label(at([x1 + 0.75, y0 + 0.05]), 'λ（nm）', '#6a7d88', 10);
+  else label(at([(x0 + x1) / 2, y0 - 0.52]), '波長 λ（nm）', '#6a7d88', 10);
   label(at([(x0 + x1) / 2, y0 + h + 0.8]), '管內產生的 X 射線光譜', '#375765', 11);
   let last = null;
   for (const l of pts) {
