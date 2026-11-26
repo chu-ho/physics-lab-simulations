@@ -265,7 +265,11 @@ window.addEventListener('hashchange', () => {
   const next = routeFromURL();
   selectExperiment(next.id, false, next.overrides);
 });
-new ResizeObserver(resize).observe(canvas.parentElement);
+const sceneResizeObserver = new ResizeObserver(resize);
+sceneResizeObserver.observe(canvas.parentElement);
+// 讀數列換行或能量條出現時，取景範圍跟著更新。
+if (typeof document.querySelector === 'function' && document.querySelector('.viewport .bottom'))
+  sceneResizeObserver.observe(document.querySelector('.viewport .bottom'));
 requestAnimationFrame(frame);
 
 // 手機底部抽屜：三段高度（只剩把手／原本的預設高度／約 55% 畫面），點一下在預設與展開間切換，

@@ -142,9 +142,30 @@ function point(s) {
   const a = simulation?.displayScale || 1;
   return [s.x * a, s.y * a, s.z * a];
 }
+// 取景範圍：上緣在視角按鈕列下方、下緣在讀數與播放列上方。依實際元素位置量測（resize 時更新），
+// 矮視窗或讀數只有一列時，3D 場景可以用到兩者之間的全部空間；量不到時用固定估計值。
+let sceneInsets = null;
+function measureSceneInsets(r) {
+  sceneInsets = null;
+  if (typeof document === 'undefined' || !document.querySelector) return;
+  const cameraBar = document.querySelector('.camera-buttons'),
+    bottomBar = document.querySelector('.viewport .bottom');
+  if (!cameraBar || !bottomBar || !cameraBar.getBoundingClientRect) return;
+  const c = cameraBar.getBoundingClientRect(),
+    b = bottomBar.getBoundingClientRect();
+  if (c.height && b.height) sceneInsets = { top: c.bottom - r.top + 10, bottom: b.top - r.top - 10 };
+}
 function sceneBounds() {
-  const top = H > 480 ? 125 : 90;
-  return { left: Math.min(30, W * 0.05), right: W - Math.min(30, W * 0.05), top, bottom: Math.max(top + 55, H - 180) };
+  const left = Math.min(30, W * 0.05),
+    right = W - left;
+  const fallbackTop = H > 480 ? 125 : 90;
+  if (sceneInsets) {
+    // 手機版的縮放按鈕另成一欄、不在視角按鈕列內，上緣仍用固定值；下緣不超出畫布。
+    const top = W < 700 ? Math.max(fallbackTop, sceneInsets.top) : sceneInsets.top,
+      bottom = Math.min(H - 10, sceneInsets.bottom);
+    if (bottom - top >= 120) return { left, right, top, bottom };
+  }
+  return { left, right, top: fallbackTop, bottom: Math.max(fallbackTop + 55, H - 180) };
 }
 function formatParameter(value, step) {
   const [coefficient, exponent = '0'] = String(step).toLowerCase().split('e'),
@@ -677,12 +698,31 @@ function fitCamera() {
       [p[0], p[1] - margin, p[2]],
       [p[0], p[1] + margin, p[2]]
     ]);
-  for (let i = 0; i < 35; i++) {
+  const fits = () => {
     updateCamera();
-    const points = fitPoints.map(project);
-    if (points.every(p => p && p.x >= bounds.left && p.x <= bounds.right && p.y >= bounds.top && p.y <= bounds.bottom))
+    return fitPoints
+      .map(project)
+      .every(p => p && p.x >= bounds.left && p.x <= bounds.right && p.y >= bounds.top && p.y <= bounds.bottom);
+  };
+  let fitted = false;
+  for (let i = 0; i < 35; i++) {
+    if (fits()) {
+      fitted = true;
       break;
+    }
     camera.zoom *= 0.88;
+  }
+  // 粗調每步縮 12%，再用二分法在最後一步之間細調，讓裝置盡量填滿可用範圍。
+  if (fitted && camera.zoom < 1.25) {
+    let low = camera.zoom,
+      high = Math.min(1.25, camera.zoom / 0.88);
+    for (let i = 0; i < 8; i++) {
+      camera.zoom = (low + high) / 2;
+      if (fits()) low = camera.zoom;
+      else high = camera.zoom;
+    }
+    camera.zoom = low;
+    updateCamera();
   }
   following = false;
   $('follow').setAttribute('aria-pressed', 'false');
@@ -776,6 +816,7 @@ function resize() {
   canvas.width = Math.round(W * d);
   canvas.height = Math.round(H * d);
   ctx.setTransform(d, 0, 0, d, 0, 0);
+  measureSceneInsets(r);
   dirty = true;
 }
 function drawPlot() {

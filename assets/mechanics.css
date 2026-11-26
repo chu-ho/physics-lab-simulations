@@ -472,3 +472,18 @@ header h1 {
     min-height: var(--tap);
   }
 }
+/* 矮視窗（桌面寬度）：收起操作提示、視角按鈕上移、讀數列變矮，讓 3D 場景有更多高度 */
+@media (min-width: 781px) and (max-height: 700px) {
+  .view-title small {
+    display: none;
+  }
+  .camera-buttons {
+    top: 52px;
+  }
+  .metrics {
+    padding-block: 4px;
+  }
+  .metric strong {
+    font-size: 17px;
+  }
+}
