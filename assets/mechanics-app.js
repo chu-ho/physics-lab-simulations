@@ -632,10 +632,11 @@ function framePositions() {
       for (const y of [b.ymin, b.ymax]) for (const z of [b.zmin, b.zmax]) positions.push([x, y, z]);
   }
   if (def.kind === 'shm-projection') positions.push([-params.A - 1, 0, -0.5], [params.A + 1, 2 * params.A + 2.5, 0.5]);
-  if (simulation.bounds?.min && simulation.bounds?.max)
-    for (const x of [simulation.bounds.min[0], simulation.bounds.max[0]])
-      for (const y of [simulation.bounds.min[1], simulation.bounds.max[1]])
-        for (const z of [simulation.bounds.min[2], simulation.bounds.max[2]]) positions.push([x, y, z]);
+  // frameBounds()：場景版面會隨可用區長寬比改變時（例如矮寬視窗改橫排），由模型依目前版面給取景範圍。
+  const box = typeof simulation.frameBounds === 'function' ? simulation.frameBounds() : simulation.bounds;
+  if (box?.min && box?.max)
+    for (const x of [box.min[0], box.max[0]])
+      for (const y of [box.min[1], box.max[1]]) for (const z of [box.min[2], box.max[2]]) positions.push([x, y, z]);
   if (def.kind === 'belt-wheels') positions.push([-7, 0, -1], [7, 7, 2.2]);
   if (def.kind === 'slip-or-tip') {
     const end = simulation.sample(simulation.duration),
@@ -703,13 +704,17 @@ function updateFrontView() {
   $('front').disabled = flat;
   $('front').title = flat ? '此實驗裝置位於 x–y 平面，正視只會看到側邊；請用「側視」。' : '沿 x 軸看裝置';
 }
+let frameKey = null;
 function fitCamera() {
+  frameKey = typeof simulation?.frameBounds === 'function' ? JSON.stringify(simulation.frameBounds()) : null;
   const positions = framePositions();
   const mins = [0, 1, 2].map(i => Math.min(...positions.map(p => p[i]))),
     maxs = [0, 1, 2].map(i => Math.max(...positions.map(p => p[i])));
   camera.target = mins.map((v, i) => (v + maxs[i]) / 2);
   scale = Math.max(simulation.minimumSceneScale ?? 9, ...maxs.map((v, i) => v - mins[i])) * 1.05;
-  camera.zoom = 1.25;
+  // 預設取景倍率上限 1.25；版面可能過扁的實驗可用 maxFitZoom 放寬，讓內容填滿可用區。
+  const maxZoom = simulation.maxFitZoom ?? 1.25;
+  camera.zoom = maxZoom;
   // Fit projected geometry to the usable region above the transport controls.
   const margin = Math.max(0.65, Math.min(1.2, scale * 0.014)),
     bounds = sceneBounds(),
@@ -735,9 +740,9 @@ function fitCamera() {
     camera.zoom *= 0.88;
   }
   // 粗調每步縮 12%，再用二分法在最後一步之間細調，讓裝置盡量填滿可用範圍。
-  if (fitted && camera.zoom < 1.25) {
+  if (fitted && camera.zoom < maxZoom) {
     let low = camera.zoom,
-      high = Math.min(1.25, camera.zoom / 0.88);
+      high = Math.min(maxZoom, camera.zoom / 0.88);
     for (let i = 0; i < 8; i++) {
       camera.zoom = (low + high) / 2;
       if (fits()) low = camera.zoom;
@@ -839,6 +844,11 @@ function resize() {
   canvas.height = Math.round(H * d);
   ctx.setTransform(d, 0, 0, d, 0, 0);
   measureSceneInsets(r);
+  // 視窗尺寸改變使場景換版面（frameBounds 改變）時重新取景，否則新版面的內容可能落在畫面外。
+  if (frameKey !== null && typeof simulation?.frameBounds === 'function') {
+    const key = JSON.stringify(simulation.frameBounds());
+    if (key !== frameKey) fitCamera();
+  }
   dirty = true;
 }
 function drawPlot() {

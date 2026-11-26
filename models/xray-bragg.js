@@ -109,6 +109,12 @@
           schematic: true,
           minimumSceneScale: 5,
           bounds: { min: [-6.4, -3.3, -1.8], max: [5.6, 4.3, 1.8] },
+          // 矮寬視窗改用橫排版面（光譜與讀值移到晶體右側），取景範圍跟著換。
+          maxFitZoom: 2,
+          frameBounds: () =>
+            typeof xrayWideLayout === 'function' && xrayWideLayout()
+              ? { min: [-6.6, -2.2, -1], max: [11.4, 4.3, 1] }
+              : { min: [-6.4, -3.3, -1.8], max: [5.6, 4.3, 1.8] },
           scaleNote: '管、晶體與光路為示意比例；晶面間距放大顯示。以圖表與讀值比較物理量。',
           endLabel: p.sweep === 1 ? '角度掃描完成' : '觀察結束'
         }
