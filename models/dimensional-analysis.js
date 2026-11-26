@@ -69,7 +69,7 @@
           hideFloor: true,
           schematic: true,
           endLabel: '三個乙擺週期',
-          bounds: { min: [-3.5, 0, -2.4], max: [3.5, 7.4, 2.4] }
+          bounds: { min: [-4, 0, -1], max: [4.4, 8.1, 1] }
         }
       );
     },
@@ -77,4 +77,6 @@
   );
   const d = M.defs.find(d => d.id === 'dimensional-analysis');
   d.plotMetrics = [metric('theta1', '甲擺角度', 'rad'), metric('theta2', '乙擺角度', 'rad'), metric('k', '常數 k', '')];
+  // 圖示畫在 xy 平面，預設正對它看，標籤才不會被斜角透視擠在一起。
+  M.defs.find(d => d.id === 'dimensional-analysis').initialView = { yaw: 0, pitch: 0.12 };
 })(typeof module !== 'undefined' && module.exports ? require('../mechanics-models.js') : globalThis.Mechanics);

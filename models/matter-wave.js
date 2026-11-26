@@ -66,7 +66,7 @@
             scopeLabel: '可見範圍內的理論機率密度',
             series: [{ label: '理論分布', color: '#8ee0c0', value: x => density(x) / ((total * 240) / cells) }]
           },
-          bounds: { min: [-3, 0.2, -4.4], max: [3, 4.4, 0.4] }
+          bounds: { min: [-3, 0.2, -4.4], max: [3, 4.9, 0.4] }
         }
       );
     },

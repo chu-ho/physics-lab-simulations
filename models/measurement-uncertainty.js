@@ -105,4 +105,6 @@
     metric('offset', '平均與真值之差', 's'),
     metric('T', '真值 T', 's')
   ];
+  // 圖示畫在 xy 平面，預設正對它看，標籤才不會被斜角透視擠在一起。
+  M.defs.find(d => d.id === 'measurement-uncertainty').initialView = { yaw: 0, pitch: 0.12 };
 })(typeof module !== 'undefined' && module.exports ? require('../mechanics-models.js') : globalThis.Mechanics);

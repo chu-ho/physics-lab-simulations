@@ -128,4 +128,6 @@
     metric('nearestOrder', '最接近的階數 n', ''),
     metric('maxOrder', '可出現的最高階數', '')
   ];
+  // 圖示畫在 xy 平面，預設正對它看，標籤才不會被斜角透視擠在一起。
+  M.defs.find(d => d.id === 'xray-bragg').initialView = { yaw: 0, pitch: 0.12 };
 })(typeof module !== 'undefined' && module.exports ? require('../mechanics-models.js') : globalThis.Mechanics);

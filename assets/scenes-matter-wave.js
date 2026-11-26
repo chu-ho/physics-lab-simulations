@@ -8,8 +8,8 @@ function drawMatterWave(s) {
     gunZ = -3.8,
     yMid = 1.8;
   // 電子槍與加速電壓。
-  box([0, yMid, gunZ], [0.7, 0.7, 1], '#5b6f78');
-  label([0, yMid + 0.75, gunZ], '電子槍 ' + p.voltage + ' V', '#365464', 12);
+  box([0, yMid, gunZ], [0.45, 0.45, 0.8], '#5b6f78');
+  label([0, yMid + 0.55, gunZ], '電子槍 ' + p.voltage + ' V', '#365464', 12);
   segment([0, yMid, gunZ + 0.5], [0, yMid, slitZ - 0.05], '#5d6fb0', 2, true);
   // 雙縫板：三塊板子之間留兩道縫。
   const gap = 0.08,
@@ -70,6 +70,7 @@ function drawMatterWave(s) {
       '#2e7c75'
     );
   }
+  // 狀態文字放在屏上方（不放屏下方：從電子槍那側看會被雙縫板擋住）。
   label([0, base + 1.2, screenZ], '電子落點 · ' + s.count + ' 次', '#365464', 14);
-  label([0, yMid - 1.45, screenZ], p.whichPath ? '有路徑資訊：條紋消失' : '兩路相干：出現干涉條紋', '#365464', 13);
+  label([0, base + 1.65, screenZ], p.whichPath ? '有路徑資訊：條紋消失' : '兩路相干：出現干涉條紋', '#365464', 13);
 }
