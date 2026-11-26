@@ -7,11 +7,28 @@ function frame(now) {
   if (dirty) render();
   requestAnimationFrame(frame);
 }
+// 依分類放進 optgroup；目前實驗在選單裡加「▶ …（目前）」，展開時一眼看出位置。
+const experimentGroups = new Map(),
+  experimentOptions = [];
 for (const d of typeof MechanicsCatalog !== 'undefined' ? MechanicsCatalog : Mechanics.defs) {
+  if (!experimentGroups.has(d.group)) {
+    const group = document.createElement('optgroup');
+    group.label = d.group;
+    experimentGroups.set(d.group, group);
+    $('experiment').append(group);
+  }
   const option = document.createElement('option');
   option.value = d.id;
-  option.textContent = d.group + ' · ' + d.title;
-  $('experiment').append(option);
+  option.textContent = option.baseLabel = d.group + ' · ' + d.title;
+  experimentGroups.get(d.group).append(option);
+  experimentOptions.push(option);
+}
+function markCurrentExperiment(id) {
+  for (const option of experimentOptions) {
+    const current = option.value === id;
+    option.textContent = current ? '▶ ' + option.baseLabel + '（目前）' : option.baseLabel;
+    option.classList.toggle('current', current);
+  }
 }
 $('experiment').onchange = () => selectExperiment($('experiment').value);
 $('plotMode').onchange = updatePlotMode;

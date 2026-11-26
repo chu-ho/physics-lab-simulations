@@ -282,6 +282,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
     ).padStart(2, '0');
   $('sceneTitle').firstChild.textContent = def.title;
   $('experiment').value = def.id;
+  if (typeof markCurrentExperiment === 'function') markCurrentExperiment(def.id);
   $('controls').replaceChildren();
   $('referencePanel').hidden = def.id !== 'relative-motion';
   $('referenceFrame').value = 'ground';

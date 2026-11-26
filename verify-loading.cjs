@@ -42,7 +42,7 @@ for (const entry of MechanicsCatalog) {
     throw new Error(entry.id + ' fails with only [' + entry.files.join(', ') + ']: ' + error.message);
   }
   // 下拉選單仍列出全部實驗，編號依目錄順序
-  assert.equal(vm.runInContext("$('experiment').children.length", sandbox), MechanicsCatalog.length);
+  assert.equal(vm.runInContext("$('experiment').children.reduce((n, g) => n + g.children.length, 0)", sandbox), MechanicsCatalog.length);
   assert.equal(vm.runInContext("$('overline').textContent", sandbox), 'PHYSICS LAB / ' + String(MechanicsCatalog.indexOf(entry) + 4).padStart(2, '0'));
   if (entry.files.length > worst.count) worst = {id: entry.id, count: entry.files.length};
 }

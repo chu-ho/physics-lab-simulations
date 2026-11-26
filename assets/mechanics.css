@@ -20,6 +20,19 @@
   font-size: 12px;
   margin-top: 5px;
 }
+.experiment-picker optgroup {
+  color: var(--mint, #8ee0c0);
+  font-style: normal;
+}
+.experiment-picker option {
+  color: var(--ink, #ecf2f4);
+  font-weight: 400;
+}
+.experiment-picker option.current {
+  background: #2c6b5d;
+  color: #fff;
+  font-weight: 700;
+}
 .formula {
   font: 12px/1.8 system-ui;
   color: #b8f0d7;
