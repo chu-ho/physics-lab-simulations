@@ -1309,11 +1309,15 @@ function renderScene() {
   const showGrid = $('grid').checked && !(simulation.hideGrid && simulation.hideGrid(params));
   const gridStep = nice(scale / 12),
     N = 9,
-    gx = Math.round(camera.target[0] / gridStep),
-    gz = Math.round(camera.target[2] / gridStep),
-    cx = gx * gridStep,
-    cz = gz * gridStep,
-    ground = stateAt(t).groundY ?? Math.min(0, ...plotSamples.map(s => point(s)[1])) - scale * 0.02;
+    // 移動參考系：地板格子對齊地面（世界）座標，跟著世界原點在參考系中的位置滑動，看起來像鏡頭跟著參考物移動。
+    now = stateAt(t),
+    ox = now.worldOriginX ?? 0,
+    oz = now.worldOriginZ ?? 0,
+    gx = Math.round((camera.target[0] - ox) / gridStep),
+    gz = Math.round((camera.target[2] - oz) / gridStep),
+    cx = ox + gx * gridStep,
+    cz = oz + gz * gridStep,
+    ground = now.groundY ?? Math.min(0, ...plotSamples.map(s => point(s)[1])) - scale * 0.02;
   const hideFloor = typeof simulation.hideFloor === 'function' ? simulation.hideFloor(params) : !!simulation.hideFloor;
   if (!hideFloor)
     for (let i = -N; i < N; i++)
@@ -1338,7 +1342,7 @@ function renderScene() {
   if (showGrid) {
     for (let i = -4; i <= 4; i++) {
       const x = cx + i * gridStep;
-      label([x, ground, cz], format(x) + ' ' + (simulation.displayLengthUnit || 'm'), '#45636a', 10, true);
+      label([x, ground, cz], format(x - ox) + ' ' + (simulation.displayLengthUnit || 'm'), '#45636a', 10, true);
     }
     const len = Math.min(4, scale * 0.1);
     arrow([0, ground, 0], [len, ground, 0], '#b66555', 'x');

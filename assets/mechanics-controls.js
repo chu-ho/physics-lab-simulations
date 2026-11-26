@@ -32,9 +32,19 @@ function markCurrentExperiment(id) {
 }
 $('experiment').onchange = () => selectExperiment($('experiment').value);
 $('plotMode').onchange = updatePlotMode;
+// 切換參考系不重新取景：切換當下畫面維持不動（同一個世界位置留在原處），之後鏡頭跟著新的參考物移動。
+// 模型若沒有提供世界原點（worldOriginX/Y）則照舊重新取景。
 $('referenceFrame').onchange = () => {
+  const frame = $('referenceFrame').value,
+    before = simulation.inFrame ? simulation.inFrame(t, $('referenceFrame').previousFrame || 'ground') : null,
+    after = simulation.inFrame ? simulation.inFrame(t, frame) : null;
+  $('referenceFrame').previousFrame = frame;
   collectPlotSamples();
-  fitCamera();
+  if (before && after && Number.isFinite(before.worldOriginX) && Number.isFinite(after.worldOriginX) && !following) {
+    camera.target[0] += after.worldOriginX - before.worldOriginX;
+    camera.target[1] += (after.worldOriginY ?? 0) - (before.worldOriginY ?? 0);
+    camera.target[2] += (after.worldOriginZ ?? 0) - (before.worldOriginZ ?? 0);
+  } else fitCamera();
   updateUI();
 };
 $('play').onclick = () => {
