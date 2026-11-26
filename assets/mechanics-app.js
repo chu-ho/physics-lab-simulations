@@ -237,7 +237,47 @@ function routeFromURL() {
   const hash = Object.fromEntries(new URLSearchParams((location.hash || '').slice(1)));
   return { id: hash.experiment || new URLSearchParams(location.search).get('experiment'), overrides: hash };
 }
+// 開關與模式參數：模型以 0～N 整數拉桿定義，標籤寫成「名稱：0甲／1乙／…」或單純「顯示…」（0／1）。
+// 介面改成下拉選單或勾選框，比拖拉桿對照數字代碼直覺；元素仍以 value 讀寫數字，網址參數與程式不受影響。
+const toggleWords = [
+  ['隱藏', '顯示'],
+  ['關', '開'],
+  ['否', '是'],
+  ['無', '有']
+];
+function paramChoice(p) {
+  if (p.min !== 0 || p.step !== 1 || !(p.max >= 1) || p.max > 12 || p.unit) return null;
+  const label = p.label,
+    codes = [];
+  let from = 0;
+  for (let k = 0; k <= p.max; k++) {
+    const re = new RegExp('(^|[：:（(／/；;\\s])' + k + '(?!\\d)', 'g');
+    re.lastIndex = from;
+    const m = re.exec(label);
+    if (!m) break;
+    codes.push({ at: m.index + m[1].length, end: m.index + m[0].length });
+    from = m.index + m[0].length;
+  }
+  if (codes.length !== p.max + 1) return p.max === 1 ? { kind: 'toggle', name: label } : null;
+  // 選項去掉分隔符；整段包在括號內（「名稱（0甲／1乙）」）時，最後一項多出的右括號也去掉。
+  const count = (text, re) => (text.match(re) || []).length,
+    clean = text => {
+      text = text.replace(/^[\s：:]+|[\s／/；;]+$/g, '');
+      while (/[）)]$/.test(text) && count(text, /[）)]/g) > count(text, /[（(]/g)) text = text.slice(0, -1).trim();
+      return text;
+    },
+    options = codes.map((c, k) => clean(label.slice(c.end, k < p.max ? codes[k + 1].at : label.length))),
+    name = label.slice(0, codes[0].at).replace(/[\s：:（(]+$/, '') || '模式';
+  if (options.some(o => !o)) return null;
+  if (p.max === 1 && toggleWords.some(([a, b]) => options[0] === a && options[1] === b))
+    return { kind: 'toggle', name };
+  return { kind: 'select', name, options };
+}
 function showParam(p) {
+  if (paramChoice(p)) {
+    $(p.id + 'Out').textContent = '';
+    return;
+  }
   const text = formatParameter(params[p.id], p.step) + ' ' + p.unit;
   $(p.id + 'Out').textContent = text;
   $('param-' + p.id).setAttribute('aria-valuetext', text.trim());
@@ -293,21 +333,54 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
     label.id = 'control-' + p.id;
     const head = document.createElement('span');
     head.className = 'label';
-    head.append(document.createTextNode(p.label));
+    const choice = paramChoice(p);
+    head.append(document.createTextNode(choice ? choice.name : p.label));
     const output = document.createElement('output');
     output.id = p.id + 'Out';
     head.append(output);
-    const input = document.createElement('input');
-    Object.assign(input, {
-      type: 'range',
-      id: 'param-' + p.id,
-      min: p.min,
-      max: p.max,
-      step: p.step,
-      value: params[p.id]
-    });
-    input.setAttribute('aria-label', p.label);
-    input.addEventListener('input', () => {
+    let input;
+    if (choice && choice.kind === 'select') {
+      input = document.createElement('select');
+      input.id = 'param-' + p.id;
+      choice.options.forEach((text, k) => {
+        const option = document.createElement('option');
+        option.value = k;
+        option.textContent = text;
+        input.append(option);
+      });
+      input.value = params[p.id];
+      input.setAttribute('aria-label', choice.name);
+      label.classList.add('choice');
+    } else if (choice) {
+      input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = 'param-' + p.id;
+      // 勾選框的 value 對應 checked（0／1），與拉桿、下拉選單同樣以 value 讀寫。
+      Object.defineProperty(input, 'value', {
+        configurable: true,
+        get() {
+          return this.checked ? '1' : '0';
+        },
+        set(v) {
+          this.checked = +v === 1;
+        }
+      });
+      input.value = params[p.id];
+      input.setAttribute('aria-label', choice.name);
+      label.classList.add('toggle');
+    } else {
+      input = document.createElement('input');
+      Object.assign(input, {
+        type: 'range',
+        id: 'param-' + p.id,
+        min: p.min,
+        max: p.max,
+        step: p.step,
+        value: params[p.id]
+      });
+      input.setAttribute('aria-label', p.label);
+    }
+    const onChange = () => {
       params[p.id] = +input.value;
       for (const [key, value] of Object.entries(
         typeof p.setOnInput === 'function' ? p.setOnInput(params[p.id], params) : p.setOnInput || {}
@@ -328,15 +401,21 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
         updateUI();
       } else setup(!!p.refit);
       syncURL();
-    });
-    const limits = document.createElement('span');
-    limits.className = 'limits';
-    for (const v of [p.min, p.max]) {
-      const span = document.createElement('span');
-      span.textContent = v + ' ' + p.unit;
-      limits.append(span);
+    };
+    input.addEventListener('input', onChange);
+    if (choice) input.addEventListener('change', () => +input.value !== params[p.id] && onChange());
+    if (choice && choice.kind === 'toggle') label.append(input, head);
+    else if (choice) label.append(head, input);
+    else {
+      const limits = document.createElement('span');
+      limits.className = 'limits';
+      for (const v of [p.min, p.max]) {
+        const span = document.createElement('span');
+        span.textContent = v + ' ' + p.unit;
+        limits.append(span);
+      }
+      label.append(head, input, limits);
     }
-    label.append(head, input, limits);
     $('controls').append(label);
   }
   setupParamLevel();
