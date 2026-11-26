@@ -347,6 +347,8 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   $('controls').replaceChildren();
   $('referencePanel').hidden = def.id !== 'relative-motion';
   $('referenceFrame').value = 'ground';
+  $('referenceFrame').previousFrame = 'ground';
+  sliderHold = null;
   if (typeof resetDisplayOptions === 'function') resetDisplayOptions();
   for (const p of def.params) {
     const label = document.createElement('label');
@@ -412,7 +414,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
       if (p.visual || (def.kind === 'safe-parabola' && ['envelope', 'circle', 'ellipse'].includes(p.id))) {
         showParam(p);
         dirty = true;
-        if (p.refit) fitCamera();
+        if (p.refit && sliderHold === null) fitCamera();
       } else if (p.preservePlayback) {
         const previousTime = t,
           wasRunning = running;
@@ -423,8 +425,17 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
       } else setup(!!p.refit);
       syncURL();
     };
-    input.addEventListener('input', onChange);
-    if (choice) input.addEventListener('change', () => +input.value !== params[p.id] && onChange());
+    if (choice) {
+      input.addEventListener('input', onChange);
+      input.addEventListener('change', () => +input.value !== params[p.id] && onChange());
+    } else {
+      // 拖曳拉桿時鏡頭固定不動；放開後只有原本完整在畫面內、改完卻有部分跑出畫面，才重新取景一次。
+      input.addEventListener('input', () => {
+        if (sliderHold === null) sliderHold = allInView();
+        onChange();
+      });
+      input.addEventListener('change', releaseSlider);
+    }
     if (choice && choice.kind === 'toggle') label.append(input, head);
     else if (choice) label.append(head, input);
     else {
@@ -478,6 +489,17 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
     $('follow').setAttribute('aria-pressed', 'true');
   }
 }
+// 拖曳拉桿期間記錄開始時裝置是否完整在畫面內（null 表示沒有在拖曳），期間 setup() 不自動取景。
+let sliderHold = null;
+function releaseSlider() {
+  if (sliderHold === null) return;
+  const wasInView = sliderHold;
+  sliderHold = null;
+  if (wasInView && !allInView()) {
+    fitCamera();
+    dirty = true;
+  }
+}
 function setup(fit, preserveAudio = false) {
   const wasInView = !fit && allInView();
   simulation = def.build(params);
@@ -508,7 +530,7 @@ function setup(fit, preserveAudio = false) {
   $('plotMode').value = modes.some(m => m[0] === selectedMode) ? selectedMode : 'time';
   $('plotModeChoice').hidden = modes.length === 1;
   updatePlotMode();
-  if (fit || (wasInView && !allInView())) fitCamera();
+  if (sliderHold === null && (fit || (wasInView && !allInView()))) fitCamera();
   updateFrontView();
   renderDerivation();
   $('duration').textContent = format(simulation.duration) + ' s';
