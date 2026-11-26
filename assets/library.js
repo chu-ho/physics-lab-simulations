@@ -197,6 +197,51 @@ librarySearch.addEventListener('input', () => {
   if (atlas && atlas.filters && atlas.filters.state.query !== librarySearch.value)
     atlas.filters.set({ query: librarySearch.value });
 });
+// 顯示方式：「卡片」含縮圖與說明；「清單」只列編號、分類與標題，整頁短很多（手機預設清單）。
+// 選擇記在 localStorage，不可用時照預設。
+const libraryViewKey = 'library-view';
+function setLibraryView(view, remember) {
+  const cards = document.getElementById('cards');
+  if (cards.classList) cards.classList.toggle('list', view === 'list');
+  for (const button of libraryViewButtons) button.setAttribute('aria-pressed', String(button.dataset.view === view));
+  if (remember)
+    try {
+      localStorage.setItem(libraryViewKey, view);
+    } catch (error) {
+      /* 儲存不可用時略過 */
+    }
+}
+const libraryViewButtons = [];
+{
+  const result = document.getElementById('result');
+  if (result && typeof result.after === 'function') {
+    const group = document.createElement('div');
+    group.className = 'view-toggle';
+    group.setAttribute('role', 'group');
+    group.setAttribute('aria-label', '實驗清單顯示方式');
+    for (const [view, text] of [
+      ['cards', '卡片'],
+      ['list', '清單']
+    ]) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.view = view;
+      button.textContent = text;
+      button.addEventListener('click', () => setLibraryView(view, true));
+      libraryViewButtons.push(button);
+      group.append(button);
+    }
+    result.after(group);
+    let saved = null;
+    try {
+      saved = localStorage.getItem(libraryViewKey);
+    } catch (error) {
+      saved = null;
+    }
+    const narrow = typeof matchMedia === 'function' && matchMedia('(max-width: 700px)').matches;
+    setLibraryView(saved === 'list' || saved === 'cards' ? saved : narrow ? 'list' : 'cards', false);
+  }
+}
 renderCards();
 
 atlas = typeof mountAtlas === 'function' ? mountAtlas(experiments) : null;
