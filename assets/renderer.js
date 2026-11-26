@@ -28,7 +28,7 @@ function updateCamera() {
   keyLabels = [];
   minorLabels = [];
 }
-// 手機寬度（< 600px）：標籤縮小；次要標籤（格線刻度）若與其他標籤重疊就略過，實驗標籤一律保留。桌機不變。
+// 手機寬度（< 600px）：標籤縮小。重疊避讓見 label()。
 let keyLabels = [],
   minorLabels = [];
 function labelSize(size) {
@@ -100,23 +100,44 @@ function label(pos, text, color = '#355461', size = 11, minor = false) {
   const a = project(pos);
   if (!a) return;
   const px = labelSize(size),
-    font = `600 ${px}px system-ui`,
-    box = W < 600 ? labelBox(text, a.x, a.y - 6, font, px, 'center') : null;
-  if (box && !minor) keyLabels.push(box);
+    font = `600 ${px}px system-ui`;
   primitives.push({
     depth: a.d - 0.001 * scale,
+    // 標籤避讓（所有寬度）：與已畫的標籤重疊時，依序上下錯開一行找空位，並畫細引線回到原錨點；
+    // 次要標籤（格線刻度）找不到空位就略過，實驗標籤找不到空位時仍畫在原位。
     paint: () => {
-      if (box && minor) {
-        if (overlaps(box, keyLabels) || overlaps(box, minorLabels)) return;
-        minorLabels.push(box);
+      const step = px + 3;
+      let y = a.y - 6,
+        box = labelBox(text, a.x, y, font, px, 'center');
+      const taken = b => overlaps(b, keyLabels) || overlaps(b, minorLabels);
+      if (taken(box)) {
+        let found = null;
+        for (const k of [-1, 1, -2, 2, -3, 3]) {
+          const candidate = labelBox(text, a.x, a.y - 6 + k * step, font, px, 'center');
+          if (!taken(candidate)) {
+            found = { y: a.y - 6 + k * step, box: candidate };
+            break;
+          }
+        }
+        if (found) ({ y, box } = found);
+        else if (minor) return;
+      }
+      (minor ? minorLabels : keyLabels).push(box);
+      if (Math.abs(y - (a.y - 6)) > step * 1.5) {
+        ctx.strokeStyle = '#5a6f7580';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y - 4);
+        ctx.lineTo(a.x, y < a.y ? y + 3 : y - px);
+        ctx.stroke();
       }
       ctx.font = font;
       ctx.textAlign = 'center';
       ctx.fillStyle = color;
       ctx.strokeStyle = '#e5f1efcc';
       ctx.lineWidth = 3;
-      ctx.strokeText(text, a.x, a.y - 6);
-      ctx.fillText(text, a.x, a.y - 6);
+      ctx.strokeText(text, a.x, y);
+      ctx.fillText(text, a.x, y);
     }
   });
 }

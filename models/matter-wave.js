@@ -18,7 +18,7 @@
       metric('fringe', '近軸條紋間距', 'mm')
     ],
     'λ = h/√(2mₑeV)；相干雙縫 P ∝ sinc²(πa sinθ/λ) cos²(πd sinθ/λ)',
-    '非相對論電子、遠場、等寬雙縫，單縫寬度取 0.25 nm。取得完整路徑資訊時，以兩路機率相加移除交叉項。屏幕只計入中心左右 120 mm；分布在可見窗口內歸一化。圖示僅顯示落點。',
+    '非相對論電子、遠場、等寬雙縫，單縫寬度取 0.25 nm。取得完整路徑資訊時，以兩路機率相加移除交叉項。屏幕只計入中心左右 120 mm；分布在可見窗口內歸一化。場景中電子槍、雙縫與屏的距離和縫距都是示意放大；屏上方直方圖統計目前累積的落點。',
     ['改變加速電壓，預測條紋間距如何變化。', '比較有無路徑資訊時的累積落點。'],
     p => {
       const wavelength = 1.2264 / Math.sqrt(p.voltage);
@@ -66,11 +66,13 @@
             scopeLabel: '可見範圍內的理論機率密度',
             series: [{ label: '理論分布', color: '#8ee0c0', value: x => density(x) / ((total * 240) / cells) }]
           },
-          bounds: { min: [-3, 0, -1], max: [3, 4, 1] }
+          bounds: { min: [-3, 0.2, -4.4], max: [3, 4.9, 0.4] }
         }
       );
     },
     'models/matter-wave.js'
   );
   M.defs.find(d => d.id === 'matter-wave').defaultPlotMode = 'position';
+  // 由電子槍斜後方看：同時看得到槍、雙縫與屏上的落點和直方圖。
+  M.defs.find(d => d.id === 'matter-wave').initialView = { yaw: 2.6, pitch: 0.35 };
 })(globalThis.Mechanics);

@@ -117,7 +117,7 @@
           antinodeLines: loci('antinode'),
           displayPoint: (s, parameters) => [s.x, base + (s.y - base) * parameters.gain, s.z],
           hideGrid: () => true,
-          bounds: { min: [-7, base - 10 * p.A - 0.2, -7], max: [7, Math.max(6.7, base + 10 * p.A + 0.2), 7] },
+          bounds: { min: [-7, base - 10 * p.A - 0.2, -7], max: [7, base + 10 * p.A + 1.3, 7] },
           scaleNote: '等幅徑向相位波，無幾何衰減；位移依倍率示意放大。節腹線投影於平衡平面，源附近非精確水波解。',
           events: [
             { t: 0, label: '同頻穩態雙波源；以路徑差與初相位共同決定干涉' },

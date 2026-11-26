@@ -46,8 +46,16 @@ const categories = ['全部', ...new Set(experiments.map(d => d.group))],
     波動光學: '≋'
   };
 let selected = '全部';
+// 實驗頁的「切換實驗」只列 3D 實驗室的實驗；三個拋體專頁另外計，數字寫清楚才不會對不上。
 document.getElementById('count').textContent =
-  experiments.length + ' 個互動實驗 · ' + (categories.length - 1) + ' 大主題 · 自由旋轉視角';
+  experiments.length +
+  ' 個互動實驗（' +
+  MechanicsCatalog.length +
+  ' 個 3D 實驗室＋' +
+  legacy.length +
+  ' 個拋體專頁）· ' +
+  (categories.length - 1) +
+  ' 大主題 · 自由旋轉視角';
 for (const cat of categories) {
   const button = document.createElement('button');
   button.textContent = cat;
@@ -78,16 +86,24 @@ function thumbnail(d, className) {
   return img;
 }
 function renderCards() {
-  const q = document.getElementById('search').value.trim().toLowerCase(),
+  const key = typeof searchKey === 'function' ? searchKey : text => String(text).trim().toLowerCase(),
+    q = key(document.getElementById('search').value),
     chapter = chapterSelect ? chapterSelect.value : '',
     filtered = experiments.filter(
       d =>
         (selected === '全部' || d.group === selected) &&
         (!chapter || (window.Textbook && Textbook.inChapter(d.id, chapter))) &&
-        [d.title, d.group, d.description, d.formula, d.id, window.Textbook ? Textbook.searchText(d.id) : '']
-          .join(' ')
-          .toLowerCase()
-          .includes(q)
+        key(
+          [
+            d.title,
+            d.group,
+            d.description,
+            d.formula,
+            d.id,
+            typeof aliases !== 'undefined' ? aliases[d.id] || '' : '',
+            window.Textbook ? Textbook.searchText(d.id) : ''
+          ].join(' ')
+        ).includes(q)
     );
   document.getElementById('result').textContent = '顯示 ' + filtered.length + ' / ' + experiments.length + ' 個實驗';
   const cards = document.getElementById('cards');
@@ -154,10 +170,95 @@ if (chapterSelect && window.Textbook) {
   }
   chapterSelect.addEventListener('change', renderCards);
 }
-document.getElementById('search').addEventListener('input', renderCards);
+// 從實驗頁返回時，保留上次的搜尋字與捲動位置（同一分頁內；儲存不可用時直接略過）。
+const libraryMemoryKey = 'library-state';
+function rememberLibrary() {
+  try {
+    sessionStorage.setItem(
+      libraryMemoryKey,
+      JSON.stringify({ query: document.getElementById('search').value, scrollY: window.scrollY || 0 })
+    );
+  } catch (error) {
+    /* 隱私模式等情況下 sessionStorage 不可用 */
+  }
+}
+let libraryMemory = null;
+try {
+  libraryMemory = JSON.parse(sessionStorage.getItem(libraryMemoryKey) || 'null');
+} catch (error) {
+  libraryMemory = null;
+}
+if (libraryMemory && libraryMemory.query) document.getElementById('search').value = libraryMemory.query;
+const librarySearch = document.getElementById('search');
+let atlas = null;
+// 學習地圖與「全部實驗」兩個搜尋框同步：在任一處輸入，另一處跟著更新（只註冊一個 input 監聽）。
+librarySearch.addEventListener('input', () => {
+  renderCards();
+  if (atlas && atlas.filters && atlas.filters.state.query !== librarySearch.value)
+    atlas.filters.set({ query: librarySearch.value });
+});
+// 顯示方式：「卡片」含縮圖與說明；「清單」只列編號、分類與標題，整頁短很多（手機預設清單）。
+// 選擇記在 localStorage，不可用時照預設。
+const libraryViewKey = 'library-view';
+function setLibraryView(view, remember) {
+  const cards = document.getElementById('cards');
+  if (cards.classList) cards.classList.toggle('list', view === 'list');
+  for (const button of libraryViewButtons) button.setAttribute('aria-pressed', String(button.dataset.view === view));
+  if (remember)
+    try {
+      localStorage.setItem(libraryViewKey, view);
+    } catch (error) {
+      /* 儲存不可用時略過 */
+    }
+}
+const libraryViewButtons = [];
+{
+  const result = document.getElementById('result');
+  if (result && typeof result.after === 'function') {
+    const group = document.createElement('div');
+    group.className = 'view-toggle';
+    group.setAttribute('role', 'group');
+    group.setAttribute('aria-label', '實驗清單顯示方式');
+    for (const [view, text] of [
+      ['cards', '卡片'],
+      ['list', '清單']
+    ]) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.view = view;
+      button.textContent = text;
+      button.addEventListener('click', () => setLibraryView(view, true));
+      libraryViewButtons.push(button);
+      group.append(button);
+    }
+    result.after(group);
+    let saved = null;
+    try {
+      saved = localStorage.getItem(libraryViewKey);
+    } catch (error) {
+      saved = null;
+    }
+    const narrow = typeof matchMedia === 'function' && matchMedia('(max-width: 700px)').matches;
+    setLibraryView(saved === 'list' || saved === 'cards' ? saved : narrow ? 'list' : 'cards', false);
+  }
+}
 renderCards();
 
-if (typeof mountAtlas === 'function') mountAtlas(experiments);
+atlas = typeof mountAtlas === 'function' ? mountAtlas(experiments) : null;
+if (atlas && atlas.filters) {
+  if (librarySearch.value) atlas.filters.set({ query: librarySearch.value });
+  atlas.filters.onChange(state => {
+    if (librarySearch.value !== state.query) {
+      librarySearch.value = state.query;
+      renderCards();
+    }
+  });
+}
+if (typeof window.addEventListener === 'function') {
+  window.addEventListener('pagehide', rememberLibrary);
+  if (libraryMemory && libraryMemory.scrollY && !location.hash)
+    window.addEventListener('load', () => window.scrollTo(0, libraryMemory.scrollY));
+}
 
 // 入口頁小橫列：「從這裡開始」與「最近更新」共用一列，用兩個切換鈕換內容（手機也只占一列高度）。
 function mountShelves(root, highlights) {

@@ -35,12 +35,14 @@
         N = (p.node * Math.PI) / 180,
         R = 5,
         H = 3,
+        // +y 為黃道北方：由北往下看，月球公轉與太陽視運動都是逆時針（x 轉向 −z）。
+        // 若改成 x 轉向 +z，會變成從南方看的順時針，地球所見月相盤也會左右顛倒。
         rot = a => [
           Math.cos(N) * Math.cos(a) - Math.sin(N) * Math.sin(a) * Math.cos(i),
           Math.sin(a) * Math.sin(i),
-          Math.sin(N) * Math.cos(a) + Math.cos(N) * Math.sin(a) * Math.cos(i)
+          -(Math.sin(N) * Math.cos(a) + Math.cos(N) * Math.sin(a) * Math.cos(i))
         ],
-        normal = [Math.sin(N) * Math.sin(i), Math.cos(i), -Math.cos(N) * Math.sin(i)];
+        normal = [Math.sin(N) * Math.sin(i), Math.cos(i), Math.cos(N) * Math.sin(i)];
       const sim = trajectory(
         p.days,
         t => {
@@ -49,7 +51,7 @@
             sunAngle = (TAU * day) / YEAR,
             u = rot(a),
             tangent = rot(a + Math.PI / 2),
-            sun = [Math.cos(sunAngle), 0, Math.sin(sunAngle)],
+            sun = [Math.cos(sunAngle), 0, -Math.sin(sunAngle)],
             cosAlpha = -u.reduce((v, c, j) => v + c * sun[j], 0),
             phaseAngle = (Math.acos(Math.max(-1, Math.min(1, cosAlpha))) * 180) / Math.PI;
           return {

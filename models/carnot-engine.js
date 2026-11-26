@@ -84,4 +84,6 @@
     metric('heat', '累積淨吸熱', 'J'),
     metric('internalChange', '內能變化', 'J')
   ];
+  // P–V 圖畫在 xy 平面，預設正對它看，循環才不會被透視壓扁。
+  M.defs.at(-1).initialView = { yaw: 0, pitch: 0.12 };
 })(globalThis.Mechanics);

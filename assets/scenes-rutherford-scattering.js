@@ -26,10 +26,10 @@ function drawRutherfordScattering(s) {
     sphere(point(state), 0.085, color);
   }
   label(
-    [0, 4, 0],
+    [0, 1.3, -2.4],
     '集中電荷 ' + s.nucleusAngle.toFixed(1) + '° · 擴散電荷 ' + s.cloudAngle.toFixed(1) + '°',
     '#365464',
     13
   );
-  label([0, 0.25, 0], '橘色：點核 · 綠色：均勻正電球', '#365464', 12);
+  label([0, 1.3, 2.4], '橘色：點核 · 綠色：均勻正電球', '#365464', 12);
 }

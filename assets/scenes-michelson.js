@@ -27,7 +27,15 @@ function michelsonTexture(d) {
 function drawMichelson(s) {
   const p = params,
     h = 1,
-    beam = '#' + spectralColor(p.lambda).map(c => Math.round(c * 210).toString(16).padStart(2, '0')).join(''),
+    beam =
+      '#' +
+      spectralColor(p.lambda)
+        .map(c =>
+          Math.round(c * 210)
+            .toString(16)
+            .padStart(2, '0')
+        )
+        .join(''),
     m1x = 2.4 + 0.009 * s.mirror,
     tilt = 3.5 * p.tilt,
     m2z = 2.6,
@@ -56,9 +64,19 @@ function drawMichelson(s) {
   polygon([q(-0.55, -0.55), q(0.55, -0.55), q(0.55, 0.55), q(-0.55, 0.55)], '#9fd0e0aa', '#4c7c8c');
   label([0.2, h + 0.85, 0.3], '分光鏡', '#3c697b', 10);
   // 兩臂與回到屏的光
-  segment([0, h, 0], [m1x, h, 0], beam, 2.5);
-  segment([0, h, 0], [0, h, m2z], beam, 2.5);
-  segment([0, h, 0], [0, h, screenZ], beam, 3);
+  // 光束切成短段，各段依自身深度排序；整條一段時會被大塊桌面蓋住（往屏的輸出光束原本看不見）。
+  const ray = (a, b, width) => {
+    for (let i = 0; i < 12; i++)
+      segment(
+        a.map((v, j) => v + ((b[j] - v) * i) / 12),
+        a.map((v, j) => v + ((b[j] - v) * (i + 1)) / 12),
+        beam,
+        width
+      );
+  };
+  ray([0, h, 0], [m1x, h, 0], 2.5);
+  ray([0, h, 0], [0, h, m2z], 2.5);
+  ray([0, h, 0], [0, h, screenZ], 3);
   for (const [dx, dy] of [
     [1, 1],
     [1, -1],
@@ -92,5 +110,15 @@ function drawMichelson(s) {
   );
   label([-4.8, 3.45, -3.6], 'ΔL = Nλ/2 = ' + s.estimate.toFixed(3) + ' μm', '#375765', 12);
   label([-4.8, 3.0, -3.6], '實際位移 Δd = ' + s.displacement.toFixed(3) + ' μm', '#576577', 11);
-  if (p.tilt > 0) label([-4.8, 2.55, -3.6], '傾角 β = ' + p.tilt.toFixed(3) + ' mrad → 直條紋間距 ≈ ' + ((p.lambda * 1e-6) / (2 * p.tilt * 1e-3)).toFixed(1) + ' mm', '#576577', 10);
+  if (p.tilt > 0)
+    label(
+      [-4.8, 2.55, -3.6],
+      '傾角 β = ' +
+        p.tilt.toFixed(3) +
+        ' mrad → 直條紋間距 ≈ ' +
+        ((p.lambda * 1e-6) / (2 * p.tilt * 1e-3)).toFixed(1) +
+        ' mm',
+      '#576577',
+      10
+    );
 }

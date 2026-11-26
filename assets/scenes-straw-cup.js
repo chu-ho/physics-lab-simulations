@@ -46,11 +46,10 @@ function drawStrawCup(s) {
               const t = (-0.025 - origin[1]) / dir[1];
               if (t > 0) {
                 const floor = advance(origin, dir, t),
-                  even = (Math.floor(floor[0]) + Math.floor(floor[2])) % 2 === 0;
-                const contrast = Math.max(0, 1 - (t / focal) * (W / width));
-                rgb = (even ? [186, 201, 185] : [152, 175, 161]).map(
-                  (x, j) => ([169, 188, 173][j] + (x - [169, 188, 173][j]) * contrast) * tint
-                );
+                  // 每個取樣點在地板上涵蓋的長度（斜看時拉長），用來做方框濾波的棋盤格。
+                  footprint = ((t / focal) * (W / width)) / Math.max(0.05, -dir[1]),
+                  shade = filteredChecker(floor[0], floor[2], footprint);
+                rgb = [152, 175, 161].map((x, j) => (x + ([186, 201, 185][j] - x) * shade) * tint);
                 break;
               }
             }

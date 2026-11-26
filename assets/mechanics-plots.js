@@ -2,9 +2,9 @@
 function updatePlotMode() {
   const position = Boolean(
     (simulation?.positionPlot && $('plotMode').value === 'position') ||
-      (simulation?.phasePlot && $('plotMode').value === 'phase') ||
-      (simulation?.histogramPlot && $('plotMode').value === 'distribution') ||
-      (simulation?.barPlot && $('plotMode').value === 'bars')
+    (simulation?.phasePlot && $('plotMode').value === 'phase') ||
+    (simulation?.histogramPlot && $('plotMode').value === 'distribution') ||
+    (simulation?.barPlot && $('plotMode').value === 'bars')
   );
   $('plotMetricChoice').hidden = position;
   dirty = true;
@@ -14,8 +14,8 @@ function drawEnergyPositionPlot(g, w, h, diagram, state) {
   else if (diagram.dynamic) $('plotScope').textContent = '— 目前時間的空間分布　● 追蹤位置';
   const series = diagram.series.filter(s => !s.visible || s.visible()),
     value = (s, x) => s.value(x, state),
-    yUnit = diagram.yUnit || 'J',
-    title = diagram.title || '能量對位置';
+    yUnit = diagram.yUnit ?? 'J',
+    title = diagram.title || (yUnit === 'J' ? '能量對位置' : '數值對' + diagram.label);
   const N = 200,
     values = Array.from({ length: N + 1 }, (_, i) => diagram.min + ((diagram.max - diagram.min) * i) / N),
     high = Math.max(1e-12, ...values.flatMap(x => series.map(s => value(s, x))).filter(Number.isFinite)),
@@ -30,7 +30,7 @@ function drawEnergyPositionPlot(g, w, h, diagram, state) {
   const px = x => left + ((right - left) * (x - diagram.min)) / (diagram.max - diagram.min),
     py = v => bottom - ((v - min) / (max - min)) * (bottom - top),
     current = state[diagram.key];
-  $('plotLabel').textContent = title + ' / ' + yUnit;
+  $('plotLabel').textContent = yUnit ? title + ' / ' + yUnit : title;
   $('plot').setAttribute(
     'aria-label',
     `${title}圖，橫軸${diagram.label} ${diagram.unit}，目前位置 ${format(current)}；` +

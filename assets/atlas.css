@@ -1236,3 +1236,58 @@
     overflow: hidden;
   }
 }
+/* 「全部實驗」顯示方式切換與精簡清單 */
+.view-toggle {
+  display: inline-flex;
+  gap: 0;
+  margin: -12px 0 18px;
+  border: 1px solid #39505a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.view-toggle button {
+  border: 0;
+  border-radius: 0;
+  font-size: 12px;
+  padding: 7px 14px;
+}
+.view-toggle button[aria-pressed='true'] {
+  background: var(--mint);
+  color: #15392f;
+  font-weight: 700;
+}
+.cards.list {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 8px;
+}
+.cards.list .card {
+  min-height: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.cards.list .card:hover {
+  transform: none;
+}
+.cards.list .card h3 {
+  font-size: 15px;
+  margin: 4px 0 0;
+}
+.cards.list .thumb,
+.cards.list .icon,
+.cards.list .card > p,
+.cards.list .textbook-tags,
+.cards.list .open {
+  display: none;
+}
+.cards.list .card {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+.cards.list .card .number {
+  flex: none;
+  min-width: 7.5em;
+}
+.cards.list .card h3 {
+  margin: 0;
+}

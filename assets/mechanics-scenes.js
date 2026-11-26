@@ -19,7 +19,9 @@ function ring(center, radius, plane = 'xz', color = '#526c77', width = 2) {
     const v = a =>
       plane === 'xy'
         ? [center[0] + radius * Math.sin(a), center[1] - radius * Math.cos(a), center[2]]
-        : [center[0] + radius * Math.cos(a), center[1], center[2] + radius * Math.sin(a)];
+        : plane === 'yz'
+          ? [center[0], center[1] + radius * Math.cos(a), center[2] + radius * Math.sin(a)]
+          : [center[0] + radius * Math.cos(a), center[1], center[2] + radius * Math.sin(a)];
     segment(v((i * TAU) / 64), v(((i + 1) * TAU) / 64), color, width);
   }
 }
@@ -42,9 +44,10 @@ function coil(a, b, color = '#607a82', radius = 0.18) {
 }
 function disc(center, R, angle) {
   const [x, y, z] = center;
+  // 色塊跟著轉角一起轉，才看得出盤子在轉動（原本色塊固定，只有半徑線在動）。
   for (let i = 0; i < 32; i++) {
-    const a = (i * TAU) / 32,
-      b = ((i + 1) * TAU) / 32;
+    const a = angle + (i * TAU) / 32,
+      b = angle + ((i + 1) * TAU) / 32;
     polygon(
       [
         [x, y, z],
@@ -92,7 +95,51 @@ function spectralColor(lambda) {
   if (lambda < 645) return [1, (645 - lambda) / 65, 0];
   return [1, 0, 0];
 }
+// 1 m 棋盤格經寬度 w 的方框濾波後的亮度（0 深、1 淺）。光線追蹤場景用它畫地板：
+// 格線不會鋸齒，遠處（w 大）自然淡成平均色，不會出現疊紋。
+function filteredChecker(x, z, w) {
+  w = Math.max(1e-3, w);
+  const tri = p => {
+    const f = v => Math.abs(((((v * 0.5) % 1) + 1) % 1) - 0.5);
+    return (2 * (f(p - 0.5 * w) - f(p + 0.5 * w))) / w;
+  };
+  return 0.5 - 0.5 * tri(x) * tri(z);
+}
+// 依貼圖在畫面上的大小挑一張逐級減半的縮圖：canvas 縮小繪製不做 mipmap，細環／細紋會出現疊紋。
+const textureMips = new WeakMap();
+function textureForSize(texture, pixels) {
+  let mips = textureMips.get(texture);
+  if (!mips) textureMips.set(texture, (mips = [texture]));
+  let level = 0;
+  while (Math.min(mips[level].width, mips[level].height) > 2 * pixels && mips[level].width > 16) {
+    if (!mips[level + 1]) {
+      const prev = mips[level],
+        next = document.createElement('canvas');
+      next.width = Math.max(1, prev.width >> 1);
+      next.height = Math.max(1, prev.height >> 1);
+      const g = next.getContext('2d');
+      g.imageSmoothingQuality = 'high';
+      g.drawImage(prev, 0, 0, next.width, next.height);
+      mips.push(next);
+    }
+    level++;
+  }
+  return mips[level];
+}
 function texturedScreen(texture, corner, width, height, horizontal = [0, 0, 1]) {
+  const corners = [
+      corner,
+      [corner[0] + horizontal[0] * width, corner[1] + horizontal[1] * width, corner[2] + horizontal[2] * width],
+      [corner[0], corner[1] - height, corner[2]]
+    ].map(project),
+    full = texture;
+  if (corners.every(Boolean)) {
+    const span = Math.max(
+      Math.hypot(corners[1].x - corners[0].x, corners[1].y - corners[0].y),
+      Math.hypot(corners[2].x - corners[0].x, corners[2].y - corners[0].y)
+    );
+    texture = textureForSize(full, span);
+  }
   const mesh = 6,
     tri = (world, uv) => {
       const p = world.map(project);
@@ -669,13 +716,16 @@ function apparatus(s) {
       segment([s.x - 0.15, p.R + 1.12, 0], seat, '#b76b26', 4);
       segment([s.x - 0.15, p.R + 1.12, 0], steer, '#b76b26', 3);
       segment(seat, pedal, '#46616a', 3);
+      // 摩擦力畫在各輪觸地點，長度與大小成正比（本次觀察最大摩擦力對應 1.5 m）。
+      const maxFriction = Math.max(1e-9, ...plotSamples.map(q => Math.max(Math.abs(q.rearF), Math.abs(q.frontF))));
       for (const [wheel, F, name, color, z] of [
-        [rear, s.rearF, '後輪', '#8b5ac4', 1.2],
-        [front, s.frontF, '前輪', '#b25842', -1.2]
+        [rear, s.rearF, '後輪', '#8b5ac4', 0.12],
+        [front, s.frontF, '前輪', '#b25842', -0.12]
       ]) {
-        const pos = [wheel[0], 0.03, z];
-        if (Math.abs(F) > 1e-8) arrow(pos, [pos[0] + Math.sign(F) * 0.8, pos[1], pos[2]], color, name);
-        label([pos[0], -0.08, z], name + ' ' + format(F) + ' N', color, 10);
+        const pos = [wheel[0], 0.03, z],
+          len = (1.5 * F) / maxFriction;
+        if (Math.abs(len) > 0.02) arrow(pos, [pos[0] + len, pos[1], pos[2]], color, '');
+        label([pos[0] + len / 2, -0.12, z * 6], name + ' f ' + format(F) + ' N', color, 10);
       }
       break;
     }
@@ -920,24 +970,49 @@ function apparatus(s) {
       sphere(point(s), p.R);
       segment(point(s), [s.x + p.R * Math.cos(s.theta), s.y + p.R * Math.sin(s.theta), s.z], '#a64f20', 3);
       break;
-    case 'pulley':
-      ring([0, 8, 0], 2, 'xy');
-      segment([-2, s.y, 0], [-2, 8, 0], '#506e78', 2);
-      segment([2, 8, 0], [2, s.y2, 0], '#506e78', 2);
+    case 'pulley': {
+      // 滑輪中心比重物最高點（y = 7，頂面 7.65）高出一個半徑以上，重物不會撞進輪緣；橫樑在輪上方，以輪軸吊住。
+      const cy = 9.5;
+      ring([0, cy, 0], 2, 'xy', '#526c77', 3);
+      for (let k = 0; k < 4; k++) {
+        const a = (k * Math.PI) / 4 + (s.s || 0) / 2;
+        segment(
+          [-2 * Math.cos(a), cy - 2 * Math.sin(a), 0],
+          [2 * Math.cos(a), cy + 2 * Math.sin(a), 0],
+          '#7d939a',
+          1.5
+        );
+      }
+      sphere([0, cy, 0], 0.22, '#526c77');
+      segment([0, cy, 0], [0, cy + 2.6, 0], '#46616a', 4);
+      box([0, cy + 2.75, 0], [5, 0.3, 1]);
+      segment([-2, s.y, 0], [-2, cy, 0], '#506e78', 2);
+      segment([2, cy, 0], [2, s.y2, 0], '#506e78', 2);
       box([-2, s.y, 0], [1.2, 1.3, 1.2]);
       box([2, s.y2, 0], [1.2, 1.3, 1.2]);
-      box([0, 8.1, -0.8], [5, 0.3, 1]);
       label([-2, s.y + 0.9, 0], p.m1 + ' kg');
       label([2, s.y2 + 0.9, 0], p.m2 + ' kg');
       break;
-    case 'table-pulley':
-      box([-2, 5.4, 0], [11, 0.4, 5]);
-      segment([s.x, 6, 0], [3, 6, 0], '#506e78', 2);
-      segment([3, 6, 0], [3, s.y2, 0], '#506e78', 2);
-      ring([3, 5.8, 0], 0.2, 'xy');
+    }
+    case 'table-pulley': {
+      // 桌緣 E 在物塊最遠前緣（x = 2.5）之外；滑輪裝在桌緣外側，懸掛重物完全在桌面外，不穿過桌板。
+      const E = 2.6,
+        r = 0.25,
+        px = E + r,
+        py = 6 - r,
+        hx = px + r,
+        floor = -0.45;
+      box([(E - 7.5) / 2, 5.4, 0], [E + 7.5, 0.4, 5]);
+      for (const x of [-7.1, E - 0.4])
+        for (const z of [-2.1, 2.1]) box([x, (5.2 + floor) / 2, z], [0.3, 5.2 - floor, 0.3], '#8d9fa3');
+      segment([E, 5.45, 0], [px, py, 0], '#46616a', 3);
+      ring([px, py, 0], r, 'xy', '#526c77', 3);
+      segment([s.x + 0.5, 6, 0], [px, 6, 0], '#506e78', 2);
+      segment([hx, py, 0], [hx, s.y2 + 0.4, 0], '#506e78', 2);
       box(point(s), [1, 0.8, 1]);
-      box([3, s.y2, 0], [0.8, 0.8, 0.8]);
+      box([hx, s.y2, 0], [0.8, 0.8, 0.8]);
       break;
+    }
     case 'elevator':
       box([0, s.floor, 0], [4, 0.3, 3]);
       segment([-2, s.floor, -1.5], [-2, s.floor + 7, -1.5], '#607a82', 3);
@@ -1016,10 +1091,12 @@ function apparatus(s) {
         vz = s.rdot * sn + s.radius * s.omega * c;
       disc([0, 0.2, 0], Math.max(p.r0, p.r1) + 0.4, s.theta);
       segment([-x, 1, -z], [x, 1, z], '#526c77', 4);
-      sphere([x, 1, z], 0.3);
-      sphere([-x, 1, -z], 0.3);
-      box([0, 0.7, 0], [0.5, 1.2, 0.5]);
-      label([0, 2, 0], 'L = ' + format(s.angular));
+      // 手持物半徑 0.18、身體寬 0.36：最短臂長 0.5 m 時手持物也不會嵌進身體。
+      sphere([x, 1, z], 0.18);
+      sphere([-x, 1, -z], 0.18);
+      box([0, 0.7, 0], [0.36, 1.2, 0.36]);
+      arrow([0, 1.35, 0], [0, 2.6, 0], colors.purple, '');
+      label([0, 2.8, 0], 'L = ' + format(s.angular) + '（守恆，方向沿轉軸）');
       if ($('vectors').checked) {
         arrow([x, 1, z], [x + vx * velocityScale, 1, z + vz * velocityScale], quantityColors.velocity, 'v₁');
         arrow([-x, 1, -z], [-x - vx * velocityScale, 1, -z - vz * velocityScale], quantityColors.velocity, 'v₂');
@@ -1027,16 +1104,20 @@ function apparatus(s) {
       break;
     }
     case 'massive-pulley': {
-      const R = p.R;
-      ring([0, 8, 0], R, 'xy', '#526c77', 4);
-      segment([0, 8, 0], [R * Math.sin(s.theta), 8 - R * Math.cos(s.theta), 0], '#a64f20', 3);
-      segment([-R, s.y, 0], [-R, 8, 0], '#506e78', 2);
-      segment([R, 8, 0], [R, s.y2, 0], '#506e78', 2);
+      // 輪心高於重物最高點（y = 7，頂面 7.6）至少一個半徑加餘裕，重物不會撞進輪緣。
+      const R = p.R,
+        cy = Math.max(9.5, 8 + R);
+      ring([0, cy, 0], R, 'xy', '#526c77', 4);
+      segment([0, cy, 0], [R * Math.sin(s.theta), cy - R * Math.cos(s.theta), 0], '#a64f20', 3);
+      segment([0, cy, 0], [0, cy + R + 0.6, 0], '#46616a', 4);
+      box([0, cy + R + 0.75, 0], [Math.max(4, 2 * R + 1.5), 0.3, 1]);
+      segment([-R, s.y, 0], [-R, cy, 0], '#506e78', 2);
+      segment([R, cy, 0], [R, s.y2, 0], '#506e78', 2);
       box([-R, s.y, 0], [1, 1.2, 1]);
       box([R, s.y2, 0], [1, 1.2, 1]);
       label([-R, s.y + 0.9, 0], p.m1 + ' kg');
       label([R, s.y2 + 0.9, 0], p.m2 + ' kg');
-      sphere([0, 8, 0], 0.12);
+      sphere([0, cy, 0], 0.12);
       break;
     }
     case 'ballistic': {
@@ -1100,7 +1181,8 @@ function apparatus(s) {
     case 'rotor':
       disc([0, 1, 0], p.R, s.theta);
       segment([0, 0, 0], [0, 2, 0], '#526c77', 4);
-      if ($('forces').checked) {
+      // 切向力是本實驗的主角，不受「合力箭頭」選項控制。
+      {
         const pos = [p.R * Math.cos(s.theta), 1, p.R * Math.sin(s.theta)];
         arrow(
           pos,
@@ -1157,7 +1239,63 @@ function apparatus(s) {
       break;
   }
 }
+// 顯示選項：記錄場景繪製時實際讀過哪些勾選框；沒讀過的（例如近代物理沒有軌跡、合力）就隱藏，
+// 避免面板列出對這個實驗沒有作用的選項。只在繪製期間記錄，其他程式讀取勾選狀態不算。
+const displayOptionIds = ['trail', 'vectors', 'forces'];
+let displayOptionUse = new Set(),
+  trackDisplayOptions = false,
+  displayOptionsWrapped = false,
+  primaryMotionCache = null,
+  displayOptionsTracked = false;
+// 預設主體全程速度（或合力）都是 0 時（例如只上下振動的追蹤點沒有合力資料），不畫也不列該箭頭選項。
+function primaryMotion() {
+  if (!primaryMotionCache) {
+    const any = key =>
+      plotSamples.some(q => Math.hypot(q[key + 'x'] || 0, q[key + 'y'] || 0, q[key + 'z'] || 0) > 1e-9);
+    primaryMotionCache = { v: any('v'), f: any('f') };
+  }
+  return primaryMotionCache;
+}
+function resetDisplayOptions() {
+  displayOptionUse = new Set();
+  primaryMotionCache = null;
+  if (displayOptionsWrapped) return;
+  displayOptionsWrapped = true;
+  // 非瀏覽器環境（驗證器的簡化 DOM）沒有 HTMLInputElement：不追蹤，選項全部照常顯示。
+  if (typeof HTMLInputElement === 'undefined') return;
+  displayOptionsTracked = true;
+  const base = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'checked');
+  for (const id of displayOptionIds)
+    Object.defineProperty($(id), 'checked', {
+      configurable: true,
+      get() {
+        if (trackDisplayOptions) displayOptionUse.add(id);
+        return base.get.call(this);
+      },
+      set(v) {
+        base.set.call(this, v);
+      }
+    });
+}
+function syncDisplayOptions() {
+  if (!displayOptionsTracked) return;
+  for (const id of displayOptionIds) $(id).parentElement.hidden = !displayOptionUse.has(id);
+  const arrows = displayOptionUse.has('vectors') || displayOptionUse.has('forces');
+  $('helpArrows').hidden = !arrows && !displayOptionUse.has('trail');
+  if ($('scaleNote').textContent.startsWith('速度箭頭：1 m/s')) $('scaleNote').hidden = !arrows;
+  else $('scaleNote').hidden = false;
+}
 function render() {
+  if (!displayOptionsWrapped) resetDisplayOptions();
+  trackDisplayOptions = true;
+  try {
+    renderScene();
+  } finally {
+    trackDisplayOptions = false;
+    syncDisplayOptions();
+  }
+}
+function renderScene() {
   dirty = false;
   if (following) camera.target = point(stateAt(t));
   const grad = ctx.createLinearGradient(0, 0, 0, H);
@@ -1209,7 +1347,7 @@ function render() {
   }
   const hidePrimary =
     simulation.hidePrimary || def.kind === 'belt-wheels' || (def.kind === 'shm-projection' && !params.showX);
-  if ($('trail').checked && t > 0 && !hidePrimary && !['rotor', 'lever', 'skater'].includes(def.kind)) {
+  if (!hidePrimary && !['rotor', 'lever', 'skater'].includes(def.kind) && $('trail').checked && t > 0) {
     const count = 240;
     for (let i = 0; i < count; i++) {
       const a = stateAt((t * i) / count),
@@ -1221,14 +1359,26 @@ function render() {
   apparatus(s);
   if (typeof drawAnnotations === 'function') drawAnnotations();
   const pos = point(s);
-  if ($('vectors').checked && !hidePrimary && !['rotor', 'lever'].includes(def.kind))
+  if (!hidePrimary && !['rotor', 'lever'].includes(def.kind) && primaryMotion().v && $('vectors').checked)
     arrow(
       pos,
       [pos[0] + s.vx * velocityScale, pos[1] + s.vy * velocityScale, pos[2] + s.vz * velocityScale],
       quantityColors.velocity,
       'v'
     );
-  if ($('forces').checked && !hidePrimary && !['rotor', 'lever'].includes(def.kind))
+  // 受力分解：定義了 forceParts 的實驗改畫各分力與合力（位置由定義決定），不再畫預設的 ΣF。
+  if (def.forceParts && $('forces').checked)
+    for (const f of def.forceParts(s, params)) {
+      const at = f.at || pos;
+      if (Math.hypot(...f.v) * forceScale > 0.05)
+        arrow(
+          at,
+          at.map((v, j) => v + f.v[j] * forceScale),
+          f.net ? quantityColors.force : f.color,
+          f.label
+        );
+    }
+  else if (!hidePrimary && !['rotor', 'lever'].includes(def.kind) && primaryMotion().f && $('forces').checked)
     arrow(
       pos,
       [pos[0] + s.fx * forceScale, pos[1] + s.fy * forceScale, pos[2] + s.fz * forceScale],

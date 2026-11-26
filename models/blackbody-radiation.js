@@ -21,7 +21,7 @@
       metric('intensity', '取樣光譜出射度', 'W/m²/nm')
     ],
     'λ峰 T = 2.89777×10⁶ nm·K；M = σT⁴',
-    '理想黑體，圖示為每單位波長的半球光譜出射度。時間軸掃描波長，物體溫度固定。圖中球體色彩僅區分兩組溫度。',
+    '理想黑體，圖示為每單位波長的半球光譜出射度。時間軸掃描波長，物體溫度固定。球體顏色依色溫近似公式示意（不是精確色度），下方曲線為兩溫度的光譜，共用同一縱軸比例。',
     ['提高溫度，預測峰值波長往何處移動。', '把溫度加倍，總輻射出射度會變成幾倍？'],
     p => {
       const peak = 2.897771955e6 / p.temperature;
@@ -50,7 +50,7 @@
           hidePrimary: true,
           hideFloor: true,
           schematic: true,
-          bounds: { min: [-3, 0, -1], max: [3, 4, 1] },
+          bounds: { min: [-3.2, -0.4, -1], max: [3.2, 4.4, 1] },
           endLabel: '波長掃描完成'
         }
       );
@@ -58,4 +58,6 @@
     'models/blackbody-radiation.js'
   );
   M.defs.find(d => d.id === 'blackbody-radiation').defaultPlotMode = 'position';
+  // 光譜畫在 xy 平面，預設正對它看，曲線才不會被透視壓扁。
+  M.defs.find(d => d.id === 'blackbody-radiation').initialView = { yaw: 0, pitch: 0.12 };
 })(globalThis.Mechanics);

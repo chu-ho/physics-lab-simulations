@@ -12,7 +12,9 @@
   ];
   const sources = ['Kα 特徵線', 'Kβ 特徵線', '連續譜中自選波長'];
   // 多晶面反射的相對強度：x = 2d sinθ/λ，整數時為 1（各階主極大）
+  // x < 0.5 屬於第 0 階（θ → 0 的未偏折直射光），不是布拉格反射，強度記為 0。
   const planeResponse = x => {
+    if (Math.abs(x) < 0.5) return 0;
     const s = Math.sin(Math.PI * x);
     return Math.abs(s) < 1e-9 ? 1 : (Math.sin(planes * Math.PI * x) / (planes * s)) ** 2;
   };
@@ -126,4 +128,6 @@
     metric('nearestOrder', '最接近的階數 n', ''),
     metric('maxOrder', '可出現的最高階數', '')
   ];
+  // 圖示畫在 xy 平面，預設正對它看，標籤才不會被斜角透視擠在一起。
+  M.defs.find(d => d.id === 'xray-bragg').initialView = { yaw: 0, pitch: 0.12 };
 })(typeof module !== 'undefined' && module.exports ? require('../mechanics-models.js') : globalThis.Mechanics);

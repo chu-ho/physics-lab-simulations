@@ -36,10 +36,17 @@ function setupEnergy() {
   const ok = s => Number.isFinite(s.K) && Number.isFinite(s.U);
   energyInfo = null;
   if (plotSamples.length && plotSamples.every(ok)) {
-    const shift = Math.min(...plotSamples.map(s => s.U)),
+    // 例外一：U 整段幾乎不變（多粒子系綜的平均位能）時不平移，否則位能會被扣成 0。
+    // 例外二：讀數列本身有「總機械能」時，文字改用該讀數（真實零點，例如萬有引力的負能量），
+    // 長條仍以最低位能為起點，避免能量條與讀數互相矛盾。
+    const Us = plotSamples.map(s => s.U),
+      minU = Math.min(...Us),
+      flat = Math.max(...Us) - minU <= 1e-3 * Math.abs(minU),
+      shift = flat ? 0 : minU,
+      totalMetric = def.metrics.find(m => ['energy', 'E'].includes(m.key) || m.label.includes('機械能')),
       heat = plotSamples.every(s => Number.isFinite(s.heat)),
       max = Math.max(...plotSamples.map(s => s.K + s.U - shift + (heat ? s.heat : 0)));
-    if (max > 0) energyInfo = { shift, heat, max };
+    if (max > 0) energyInfo = { shift, heat, max, totalMetric };
   }
   $('energyOption').hidden = !energyInfo;
   updateEnergy(stateAt(t));
@@ -51,17 +58,21 @@ function updateEnergy(s) {
     resize();
   }
   if (!show) return;
-  const { shift, heat, max } = energyInfo,
+  const { shift, heat, max, totalMetric } = energyInfo,
     u = s.U - shift,
     h = heat ? s.heat : 0,
     pct = v => Math.max(0, Math.min(100, (v / max) * 100)) + '%',
-    uName = Math.abs(shift) > 1e-9 * max ? 'U（最低點為零）' : 'U';
+    total = totalMetric && Number.isFinite(s[totalMetric.key]) ? s[totalMetric.key] : null,
+    shifted = Math.abs(shift) > 1e-3 * max,
+    uName = shifted && total === null ? 'U（最低點為零）' : 'U';
   $('energyK').style.width = pct(s.K);
   $('energyU').style.width = pct(u);
   $('energyH').style.width = pct(h);
-  const parts = ['K ' + format(s.K), uName + ' ' + format(u)];
+  const shownU = total === null ? u : total - s.K - h,
+    parts = ['K ' + format(s.K), uName + ' ' + format(shownU)];
   if (heat) parts.push('熱 ' + format(h));
-  parts.push('總 ' + format(s.K + u + h) + ' J');
+  parts.push('總 ' + format(total === null ? s.K + u + h : total) + ' ' + (totalMetric?.unit || 'J'));
+  if (total !== null && shifted) parts.push('（長條以最低位能為起點）');
   $('energyText').textContent = parts.join('　');
   $('energyTrack').setAttribute('aria-label', '能量條：' + parts.join('，'));
 }
@@ -131,25 +142,52 @@ function point(s) {
   const a = simulation?.displayScale || 1;
   return [s.x * a, s.y * a, s.z * a];
 }
+// 取景範圍：上緣在視角按鈕列下方、下緣在讀數與播放列上方。依實際元素位置量測（resize 時更新），
+// 矮視窗或讀數只有一列時，3D 場景可以用到兩者之間的全部空間；量不到時用固定估計值。
+let sceneInsets = null;
+function measureSceneInsets(r) {
+  sceneInsets = null;
+  if (typeof document === 'undefined' || !document.querySelector) return;
+  const cameraBar = document.querySelector('.camera-buttons'),
+    bottomBar = document.querySelector('.viewport .bottom');
+  if (!cameraBar || !bottomBar || !cameraBar.getBoundingClientRect) return;
+  const c = cameraBar.getBoundingClientRect(),
+    b = bottomBar.getBoundingClientRect();
+  if (c.height && b.height) sceneInsets = { top: c.bottom - r.top + 10, bottom: b.top - r.top - 10 };
+}
 function sceneBounds() {
-  const top = H > 480 ? 125 : 90;
-  return { left: Math.min(30, W * 0.05), right: W - Math.min(30, W * 0.05), top, bottom: Math.max(top + 55, H - 180) };
+  const left = Math.min(30, W * 0.05),
+    right = W - left;
+  const fallbackTop = H > 480 ? 125 : 90;
+  if (sceneInsets) {
+    // 手機版的縮放按鈕另成一欄、不在視角按鈕列內，上緣仍用固定值；下緣不超出畫布。
+    const top = W < 700 ? Math.max(fallbackTop, sceneInsets.top) : sceneInsets.top,
+      bottom = Math.min(H - 10, sceneInsets.bottom);
+    if (bottom - top >= 120) return { left, right, top, bottom };
+  }
+  return { left, right, top: fallbackTop, bottom: Math.max(fallbackTop + 55, H - 180) };
 }
 function formatParameter(value, step) {
   const [coefficient, exponent = '0'] = String(step).toLowerCase().split('e'),
     digits = Math.max(0, (coefficient.split('.')[1]?.length || 0) - Number(exponent));
   return Number(value).toFixed(Math.min(8, digits));
 }
+// 讀數格式：浮點殘差（|v| < 1e-9）顯示 0.00；小量保留三位有效數字而不是被捨成 0.00；
+// 一萬到一千萬之間用整數，不用科學記號。
 function format(v) {
   if (!Number.isFinite(v)) return '—';
-  if (v !== 0 && simulation?.scientificNumbers && Math.abs(v) < 0.01) return v.toExponential(2);
-  return Math.abs(v) < 0.0005
-    ? v !== 0 && simulation?.scientificNumbers
-      ? v.toExponential(2)
-      : '0.00'
-    : Math.abs(v) >= 10000
-      ? v.toExponential(2)
-      : v.toFixed(2);
+  const a = Math.abs(v);
+  if (v !== 0 && simulation?.scientificNumbers && a < 0.01) return v.toExponential(2);
+  if (a < 1e-9) return '0.00';
+  if (a < 0.005) return v.toPrecision(3);
+  if (a >= 1e7) return v.toExponential(2);
+  if (a >= 10000) return v.toFixed(0);
+  return v.toFixed(2);
+}
+// 計數類讀數（顆、次、個…）顯示整數。
+const countUnits = new Set(['顆', '次', '個', '條', '粒', '階', '層', '圈']);
+function formatMetric(v, unit) {
+  return countUnits.has(unit) && Number.isFinite(v) ? String(Math.round(v)) : format(v);
 }
 // 網址 #experiment=id&參數=值：可分享目前參數；只記錄與預設不同的參數。
 function shareURL() {
@@ -220,7 +258,47 @@ function routeFromURL() {
   const hash = Object.fromEntries(new URLSearchParams((location.hash || '').slice(1)));
   return { id: hash.experiment || new URLSearchParams(location.search).get('experiment'), overrides: hash };
 }
+// 開關與模式參數：模型以 0～N 整數拉桿定義，標籤寫成「名稱：0甲／1乙／…」或單純「顯示…」（0／1）。
+// 介面改成下拉選單或勾選框，比拖拉桿對照數字代碼直覺；元素仍以 value 讀寫數字，網址參數與程式不受影響。
+const toggleWords = [
+  ['隱藏', '顯示'],
+  ['關', '開'],
+  ['否', '是'],
+  ['無', '有']
+];
+function paramChoice(p) {
+  if (p.min !== 0 || p.step !== 1 || !(p.max >= 1) || p.max > 12 || p.unit) return null;
+  const label = p.label,
+    codes = [];
+  let from = 0;
+  for (let k = 0; k <= p.max; k++) {
+    const re = new RegExp('(^|[：:（(／/；;\\s])' + k + '(?!\\d)', 'g');
+    re.lastIndex = from;
+    const m = re.exec(label);
+    if (!m) break;
+    codes.push({ at: m.index + m[1].length, end: m.index + m[0].length });
+    from = m.index + m[0].length;
+  }
+  if (codes.length !== p.max + 1) return p.max === 1 ? { kind: 'toggle', name: label } : null;
+  // 選項去掉分隔符；整段包在括號內（「名稱（0甲／1乙）」）時，最後一項多出的右括號也去掉。
+  const count = (text, re) => (text.match(re) || []).length,
+    clean = text => {
+      text = text.replace(/^[\s：:]+|[\s／/；;]+$/g, '');
+      while (/[）)]$/.test(text) && count(text, /[）)]/g) > count(text, /[（(]/g)) text = text.slice(0, -1).trim();
+      return text;
+    },
+    options = codes.map((c, k) => clean(label.slice(c.end, k < p.max ? codes[k + 1].at : label.length))),
+    name = label.slice(0, codes[0].at).replace(/[\s：:（(]+$/, '') || '模式';
+  if (options.some(o => !o)) return null;
+  if (p.max === 1 && toggleWords.some(([a, b]) => options[0] === a && options[1] === b))
+    return { kind: 'toggle', name };
+  return { kind: 'select', name, options };
+}
 function showParam(p) {
+  if (paramChoice(p)) {
+    $(p.id + 'Out').textContent = '';
+    return;
+  }
   const text = formatParameter(params[p.id], p.step) + ' ' + p.unit;
   $(p.id + 'Out').textContent = text;
   $('param-' + p.id).setAttribute('aria-valuetext', text.trim());
@@ -269,27 +347,61 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   $('controls').replaceChildren();
   $('referencePanel').hidden = def.id !== 'relative-motion';
   $('referenceFrame').value = 'ground';
+  if (typeof resetDisplayOptions === 'function') resetDisplayOptions();
   for (const p of def.params) {
     const label = document.createElement('label');
     label.className = 'control';
     label.id = 'control-' + p.id;
     const head = document.createElement('span');
     head.className = 'label';
-    head.append(document.createTextNode(p.label));
+    const choice = paramChoice(p);
+    head.append(document.createTextNode(choice ? choice.name : p.label));
     const output = document.createElement('output');
     output.id = p.id + 'Out';
     head.append(output);
-    const input = document.createElement('input');
-    Object.assign(input, {
-      type: 'range',
-      id: 'param-' + p.id,
-      min: p.min,
-      max: p.max,
-      step: p.step,
-      value: params[p.id]
-    });
-    input.setAttribute('aria-label', p.label);
-    input.addEventListener('input', () => {
+    let input;
+    if (choice && choice.kind === 'select') {
+      input = document.createElement('select');
+      input.id = 'param-' + p.id;
+      choice.options.forEach((text, k) => {
+        const option = document.createElement('option');
+        option.value = k;
+        option.textContent = text;
+        input.append(option);
+      });
+      input.value = params[p.id];
+      input.setAttribute('aria-label', choice.name);
+      label.classList.add('choice');
+    } else if (choice) {
+      input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = 'param-' + p.id;
+      // 勾選框的 value 對應 checked（0／1），與拉桿、下拉選單同樣以 value 讀寫。
+      Object.defineProperty(input, 'value', {
+        configurable: true,
+        get() {
+          return this.checked ? '1' : '0';
+        },
+        set(v) {
+          this.checked = +v === 1;
+        }
+      });
+      input.value = params[p.id];
+      input.setAttribute('aria-label', choice.name);
+      label.classList.add('toggle');
+    } else {
+      input = document.createElement('input');
+      Object.assign(input, {
+        type: 'range',
+        id: 'param-' + p.id,
+        min: p.min,
+        max: p.max,
+        step: p.step,
+        value: params[p.id]
+      });
+      input.setAttribute('aria-label', p.label);
+    }
+    const onChange = () => {
       params[p.id] = +input.value;
       for (const [key, value] of Object.entries(
         typeof p.setOnInput === 'function' ? p.setOnInput(params[p.id], params) : p.setOnInput || {}
@@ -310,15 +422,21 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
         updateUI();
       } else setup(!!p.refit);
       syncURL();
-    });
-    const limits = document.createElement('span');
-    limits.className = 'limits';
-    for (const v of [p.min, p.max]) {
-      const span = document.createElement('span');
-      span.textContent = v + ' ' + p.unit;
-      limits.append(span);
+    };
+    input.addEventListener('input', onChange);
+    if (choice) input.addEventListener('change', () => +input.value !== params[p.id] && onChange());
+    if (choice && choice.kind === 'toggle') label.append(input, head);
+    else if (choice) label.append(head, input);
+    else {
+      const limits = document.createElement('span');
+      limits.className = 'limits';
+      for (const v of [p.min, p.max]) {
+        const span = document.createElement('span');
+        span.textContent = v + ' ' + p.unit;
+        limits.append(span);
+      }
+      label.append(head, input, limits);
     }
-    label.append(head, input, limits);
     $('controls').append(label);
   }
   setupParamLevel();
@@ -328,7 +446,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   for (const m of plotMetrics()) {
     const option = document.createElement('option');
     option.value = m.key;
-    option.textContent = m.label + '（' + m.unit + '）';
+    option.textContent = m.unit ? m.label + '（' + m.unit + '）' : m.label;
     $('plotMetric').append(option);
   }
   $('plotMetric').value = def.defaultPlotMetric || def.metrics[0].key;
@@ -361,6 +479,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   }
 }
 function setup(fit, preserveAudio = false) {
+  const wasInView = !fit && allInView();
   simulation = def.build(params);
   experimentAudio.setExperiment(simulation, params, { preserveEnabled: preserveAudio });
   for (const p of def.params) showParam(p);
@@ -369,7 +488,13 @@ function setup(fit, preserveAudio = false) {
   const selectedMode = $('plotMode').value,
     modes = [['time', '時間圖']];
   if (simulation.positionPlot)
-    modes.push(['position', simulation.positionPlot.menuLabel || simulation.positionPlot.modeLabel || '位置—能量圖']);
+    modes.push([
+      'position',
+      simulation.positionPlot.menuLabel ||
+        simulation.positionPlot.modeLabel ||
+        simulation.positionPlot.title ||
+        ((simulation.positionPlot.yUnit ?? 'J') === 'J' ? '位置—能量圖' : '對' + simulation.positionPlot.label + '作圖')
+    ]);
   if (simulation.phasePlot) modes.push(['phase', '左右位移相圖']);
   if (simulation.histogramPlot) modes.push(['distribution', '樣本分布與理論']);
   if (simulation.barPlot) modes.push(['bars', '模式能量比較']);
@@ -383,7 +508,8 @@ function setup(fit, preserveAudio = false) {
   $('plotMode').value = modes.some(m => m[0] === selectedMode) ? selectedMode : 'time';
   $('plotModeChoice').hidden = modes.length === 1;
   updatePlotMode();
-  if (fit) fitCamera();
+  if (fit || (wasInView && !allInView())) fitCamera();
+  updateFrontView();
   renderDerivation();
   $('duration').textContent = format(simulation.duration) + ' s';
   $('extraInfo').textContent = '';
@@ -431,26 +557,33 @@ function setup(fit, preserveAudio = false) {
         Math.hypot(s.vx, s.vy, s.vz, s.rdot || 0, s.radius && Number.isFinite(s.omega) ? s.radius * s.omega : 0)
       )
     ),
-    maxF = Math.max(1, ...plotSamples.map(s => Math.hypot(s.fx, s.fy, s.fz)));
+    // 有受力分解箭頭時，合力與各分力共用同一比例，箭頭長度才能直接比較、相加。
+    maxF = Math.max(
+      1,
+      ...plotSamples.map(s => Math.hypot(s.fx, s.fy, s.fz)),
+      ...(def.forceParts ? plotSamples.flatMap(s => def.forceParts(s, params).map(f => Math.hypot(...f.v))) : [])
+    );
   velocityScale = Math.min(0.4, (scale * 0.12) / maxV);
-  forceScale = Math.min(0.25, (scale * 0.12) / maxF);
+  forceScale = Math.min(0.25, (scale * (def.forceParts ? 0.16 : 0.12)) / maxF);
   if (def.kind === 'lever') forceScale = 2 / (Math.max(params.m1, params.m2) * params.g);
   $('scaleNote').textContent =
     '速度箭頭：1 m/s → ' +
     velocityScale.toPrecision(2) +
     ' m；合力箭頭：1 N → ' +
     forceScale.toPrecision(2) +
-    ' m。兩者採不同尺度。改參數不自動改鏡頭；可按「完整取景」。';
+    ' m。兩者採不同尺度。改參數後若裝置跑出畫面會自動重新取景；也可隨時按「完整取景」。';
   if (def.kind === 'orbit') $('scaleNote').textContent += ' 軌道模型合力按 1 kg 測試質點計。';
   if (simulation.scaleNote) $('scaleNote').textContent = simulation.scaleNote;
   if (def.kind === 'bicycle')
-    $('scaleNote').textContent += ' 輪下前後輪摩擦箭頭僅表方向，大小以 N 標示；ΣF 箭頭仍採上列比例。';
+    $('scaleNote').textContent +=
+      ' 輪下前後輪摩擦箭頭畫在觸地點，長度與大小成正比（本次最大摩擦力對應 1.5 m）；ΣF 箭頭仍採上列比例。';
   if (def.kind === 'double-slit')
     $('scaleNote').textContent =
       '狹縫孔徑放大 4000 倍，屏幕橫向／縱向另採示意尺度；屏距與光學計算使用參數中的真實數值。圖表為相對光強對位置，不是光飛行時間。';
   reset();
 }
-function fitCamera() {
+// 取景要包含的世界座標點：整段運動的物體位置加上裝置範圍。
+function framePositions() {
   const positions = plotSamples.flatMap(s => {
     const pts = [point(s)];
     if (Number.isFinite(s.x2)) pts.push([s.x2, s.y2 ?? s.y, s.z2 ?? (def.kind === 'two-carts' ? 2.5 : 0)]);
@@ -481,7 +614,7 @@ function fitCamera() {
     for (const x of [simulation.bounds.min[0], simulation.bounds.max[0]])
       for (const y of [simulation.bounds.min[1], simulation.bounds.max[1]])
         for (const z of [simulation.bounds.min[2], simulation.bounds.max[2]]) positions.push([x, y, z]);
-  if (def.kind === 'belt-wheels') positions.push([-7, 0, -1], [7, 7, 1.5]);
+  if (def.kind === 'belt-wheels') positions.push([-7, 0, -1], [7, 7, 2.2]);
   if (def.kind === 'slip-or-tip') {
     const end = simulation.sample(simulation.duration),
       left = -Math.max(3, params.b * 2),
@@ -511,14 +644,45 @@ function fitCamera() {
   if (def.kind === 'relative-motion')
     for (const s of plotSamples) positions.push([s.cartX - 1.5, s.cartY - 0.5, -1], [s.cartX + 1.5, s.cartY + 1, 1]);
   if (def.kind === 'elevator') for (const s of plotSamples) positions.push([-2, s.floor, 0], [2, s.floor + 7, 0]);
-  if (def.kind === 'table-pulley') positions.push([-7.5, 5.4, -2.5], [3.5, 6, 2.5]);
-  if (['pulley', 'massive-pulley'].includes(def.kind)) positions.push([-3, 10, 0], [3, 0, 0]);
+  if (def.kind === 'table-pulley') positions.push([-7.5, 5.4, -2.5], [3.6, 6, 2.5], [3.1, -0.45, 0]);
+  if (def.kind === 'pulley') positions.push([-3, 12.5, 0], [3, 0, 0]);
+  if (def.kind === 'massive-pulley') positions.push([-3, Math.max(9.5, 8 + params.R) + params.R + 1, 0], [3, 0, 0]);
   if (def.kind === 'skater') {
     const r = Math.max(params.r0, params.r1) + 0.4;
     positions.push([-r, 0, -r], [r, 2, r]);
   }
   if (def.kind === 'lever') positions.push([-params.L1, 3, 0], [params.L2, 3, 0]);
   if (def.kind === 'torque' || def.kind === 'rotor') positions.push([-params.R, 1, -params.R], [params.R, 1, params.R]);
+  return positions;
+}
+// 改參數後：原本整個裝置都在畫面內、改完卻有部分跑出畫面，才自動重新取景；
+// 使用者自行放大觀察細節（原本就有部分在畫面外）或跟隨物體時不動鏡頭。
+function allInView() {
+  if (!simulation || following) return false;
+  updateCamera();
+  const bounds = sceneBounds(),
+    pad = 12;
+  return framePositions().every(q => {
+    const p = project(q);
+    return (
+      p &&
+      p.x >= bounds.left - pad &&
+      p.x <= bounds.right + pad &&
+      p.y >= bounds.top - pad &&
+      p.y <= bounds.bottom + pad
+    );
+  });
+}
+// 運動物體幾乎全在 x–y 平面（z 方向沒有位移）時，「正視」沿 x 軸看只剩一條線：停用並說明。
+function updateFrontView() {
+  const pts = plotSamples.map(point),
+    range = i => Math.max(...pts.map(p => p[i])) - Math.min(...pts.map(p => p[i])),
+    flat = !simulation.allowFrontView && range(2) < 0.05 * Math.max(range(0), range(1));
+  $('front').disabled = flat;
+  $('front').title = flat ? '此實驗裝置位於 x–y 平面，正視只會看到側邊；請用「側視」。' : '沿 x 軸看裝置';
+}
+function fitCamera() {
+  const positions = framePositions();
   const mins = [0, 1, 2].map(i => Math.min(...positions.map(p => p[i]))),
     maxs = [0, 1, 2].map(i => Math.max(...positions.map(p => p[i])));
   camera.target = mins.map((v, i) => (v + maxs[i]) / 2);
@@ -534,12 +698,31 @@ function fitCamera() {
       [p[0], p[1] - margin, p[2]],
       [p[0], p[1] + margin, p[2]]
     ]);
-  for (let i = 0; i < 35; i++) {
+  const fits = () => {
     updateCamera();
-    const points = fitPoints.map(project);
-    if (points.every(p => p && p.x >= bounds.left && p.x <= bounds.right && p.y >= bounds.top && p.y <= bounds.bottom))
+    return fitPoints
+      .map(project)
+      .every(p => p && p.x >= bounds.left && p.x <= bounds.right && p.y >= bounds.top && p.y <= bounds.bottom);
+  };
+  let fitted = false;
+  for (let i = 0; i < 35; i++) {
+    if (fits()) {
+      fitted = true;
       break;
+    }
     camera.zoom *= 0.88;
+  }
+  // 粗調每步縮 12%，再用二分法在最後一步之間細調，讓裝置盡量填滿可用範圍。
+  if (fitted && camera.zoom < 1.25) {
+    let low = camera.zoom,
+      high = Math.min(1.25, camera.zoom / 0.88);
+    for (let i = 0; i < 8; i++) {
+      camera.zoom = (low + high) / 2;
+      if (fits()) low = camera.zoom;
+      else high = camera.zoom;
+    }
+    camera.zoom = low;
+    updateCamera();
   }
   following = false;
   $('follow').setAttribute('aria-pressed', 'false');
@@ -560,8 +743,9 @@ function reset() {
 function updateUI() {
   const s = stateAt(t),
     ended = t >= simulation.duration;
-  $('time').textContent = format(t);
-  def.metrics.forEach((m, i) => ($('m' + i).textContent = format(s[m.key])));
+  // 播放時間與物理時間不同的實驗（例如渦電流、量子井）主讀數顯示物理時間。
+  $('time').textContent = format(Number.isFinite(s.physicalTime) ? s.physicalTime : t);
+  def.metrics.forEach((m, i) => ($('m' + i).textContent = formatMetric(s[m.key], m.unit)));
   updateEnergy(s);
   if (typeof measureUpdate === 'function' && (measureTool || stopwatch.on)) measureUpdate();
   $('timeline').value = simulation.duration ? (t / simulation.duration) * 1000 : 0;
@@ -596,7 +780,7 @@ function updateUI() {
 // 播放中不更新（狀態列已會報「實驗進行中」），避免螢幕閱讀器被數字洗版。
 let sceneSummaryTimer = null;
 function sceneSummaryText(s, ended) {
-  const parts = def.metrics.map(m => m.label + ' ' + format(s[m.key]) + (m.unit ? ' ' + m.unit : ''));
+  const parts = def.metrics.map(m => m.label + ' ' + formatMetric(s[m.key], m.unit) + (m.unit ? ' ' + m.unit : ''));
   if (energyInfo && $('energyToggle').checked) parts.push($('energyText').textContent);
   return (
     def.title +
@@ -632,6 +816,7 @@ function resize() {
   canvas.width = Math.round(W * d);
   canvas.height = Math.round(H * d);
   ctx.setTransform(d, 0, 0, d, 0, 0);
+  measureSceneInsets(r);
   dirty = true;
 }
 function drawPlot() {
@@ -682,7 +867,7 @@ function drawPlot() {
   const px = time => left + (right - left) * (simulation.duration ? time / simulation.duration : 0),
     py = v => bottom - ((v - min) / (max - min)) * (bottom - top);
   const axis = simulation.plotAxis;
-  $('plotLabel').textContent = m.label + ' / ' + m.unit;
+  $('plotLabel').textContent = m.unit ? m.label + ' / ' + m.unit : m.label;
   c.setAttribute(
     'aria-label',
     m.label +

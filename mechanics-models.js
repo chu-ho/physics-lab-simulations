@@ -310,7 +310,18 @@
         duration = Math.min(a < 0 ? -v / a : Infinity, edge);
       return trajectory(duration, t => {
         const d = v * t + 0.5 * a * t * t;
-        return { x: d - 3, y: 6, x2: 3, y2: 5 - d, vx: v + a * t, ax: a, tension: p.m2 * (p.g - a), s: d, fx: p.m * a };
+        return {
+          x: d - 3,
+          y: 6,
+          x2: 3,
+          y2: 5 - d,
+          vx: v + a * t,
+          ax: a,
+          tension: p.m2 * (p.g - a),
+          s: d,
+          fx: p.m * a,
+          groundY: -0.45
+        };
       });
     }
   );
@@ -328,8 +339,18 @@
     p =>
       trajectory(3, t => {
         const a = Math.max(p.a, -p.g),
-          y = 2 + 0.5 * a * t * t;
-        return { y, vy: a * t, a, N: Math.max(0, p.m * (p.g + p.a)), floor: 1 + 0.5 * p.a * t * t, fy: p.m * a };
+          y = 2 + 0.5 * a * t * t,
+          // 地面（井底）固定在電梯 3 秒內最低位置之下，向下加速時平台不會穿過地面。
+          groundY = Math.min(0, 1 + 4.5 * p.a) - 0.3;
+        return {
+          y,
+          vy: a * t,
+          a,
+          N: Math.max(0, p.m * (p.g + p.a)),
+          floor: 1 + 0.5 * p.a * t * t,
+          fy: p.m * a,
+          groundY
+        };
       })
   );
 
@@ -548,7 +569,8 @@
             y: 1 + p.L * (1 - Math.cos(s[0])),
             vx: p.L * Math.cos(s[0]) * s[1],
             vy: p.L * Math.sin(s[0]) * s[1],
-            angle: (s[0] * 180) / Math.PI,
+            // 擺過頂點繞圈時顯示 −180°～180° 的擺角位置，不累加成 506°。
+            angle: (((((s[0] * 180) / Math.PI + 180) % 360) + 360) % 360) - 180,
             rise: p.L * (1 - Math.cos(s[0])),
             loss,
             fx: (p.m + p.M) * (-p.g * Math.sin(s[0]) * Math.cos(s[0]) - p.L * s[1] ** 2 * Math.sin(s[0])),
@@ -1579,6 +1601,80 @@
       );
     }
   );
+
+  // 受力分解箭頭：勾選「合力」時改畫各個個別力（施力、摩擦、正向力、重力、張力）與合力 ΣF，
+  // 讓學生看見合力是由哪些力相加而來。v 單位為 N；net: true 的項目是合力（用合力色），
+  // 由定義自己決定畫在哪裡，避免和同方向的分力疊在一起。
+  const forceColor = { F: '#c0602a', f: '#a76d33', N: '#267b69', W: '#a44e62', T: '#5d6fb0' },
+    // at 只給 [x, y] 時補上 z：箭頭畫在物體朝向預設鏡頭的正面，才不會被方塊擋住。
+    setParts = (id, fn, z = 0.65) =>
+      (defs.find(d => d.id === id).forceParts = (s, p) =>
+        fn(s, p).map(f => (f.at.length === 2 ? { ...f, at: [...f.at, z] } : f))),
+    net = (at, v, label = 'ΣF') => ({ at, v, label, net: true });
+  setParts('friction', (s, p) => {
+    const parts = [
+      { at: [s.x, 1], v: [0, s.N, 0], label: 'N', color: forceColor.N },
+      { at: [s.x, 0], v: [0, -p.m * p.g, 0], label: 'mg', color: forceColor.W },
+      net([s.x, 1.9], [s.fx, 0, 0])
+    ];
+    if (p.F) parts.push({ at: [s.x + 0.9, 0.5], v: [p.F, 0, 0], label: 'F', color: forceColor.F });
+    if (Math.abs(s.friction) > 1e-9)
+      parts.push({ at: [s.x - 0.9, 0.08], v: [s.friction, 0, 0], label: 'f', color: forceColor.f });
+    return parts;
+  });
+  setParts('incline', (s, p) => {
+    const a = rad(p.angle),
+      at = [s.x, s.y],
+      parts = [
+        { at, v: [0, -p.m * p.g, 0], label: 'mg', color: forceColor.W },
+        { at, v: [s.N * Math.sin(a), s.N * Math.cos(a), 0], label: 'N', color: forceColor.N }
+      ];
+    // 摩擦沿斜面向上（與下滑方向相反）；靜止時等於下滑分力，此時合力為零。
+    if (s.friction > 1e-9)
+      parts.push({
+        at,
+        v: [-s.friction * Math.cos(a), s.friction * Math.sin(a), 0],
+        label: 'f',
+        color: forceColor.f
+      });
+    parts.push(net(at, [s.fx, s.fy, 0]));
+    return parts;
+  });
+  setParts('atwood', (s, p) => [
+    { at: [-1.75, s.y + 0.65], v: [0, s.tension, 0], label: 'T', color: forceColor.T },
+    { at: [-2, s.y - 0.65], v: [0, -p.m1 * p.g, 0], label: 'm₁g', color: forceColor.W },
+    net([-3, s.y], [0, p.m1 * s.a, 0], 'ΣF₁'),
+    { at: [2.25, s.y2 + 0.65], v: [0, s.tension, 0], label: 'T', color: forceColor.T },
+    { at: [2, s.y2 - 0.65], v: [0, -p.m2 * p.g, 0], label: 'm₂g', color: forceColor.W },
+    net([3, s.y2], [0, -p.m2 * s.a, 0], 'ΣF₂')
+  ]);
+  setParts('table-pulley', (s, p) => {
+    const parts = [
+      { at: [s.x + 0.5, 6], v: [s.tension, 0, 0], label: 'T', color: forceColor.T },
+      { at: [s.x, 6], v: [0, p.m * p.g, 0], label: 'N', color: forceColor.N },
+      { at: [s.x, 6], v: [0, -p.m * p.g, 0], label: 'mg', color: forceColor.W },
+      net([s.x, 7.6], [s.fx, 0, 0], 'ΣF₁'),
+      { at: [3.1, s.y2 + 0.4], v: [0, s.tension, 0], label: 'T', color: forceColor.T },
+      { at: [3.1, s.y2 - 0.4], v: [0, -p.m2 * p.g, 0], label: 'm₂g', color: forceColor.W },
+      net([3.9, s.y2], [0, -p.m2 * s.ax, 0], 'ΣF₂')
+    ];
+    if (p.mu > 0) parts.push({ at: [s.x - 0.5, 5.65], v: [-p.mu * p.m * p.g, 0, 0], label: 'f', color: forceColor.f });
+    return parts;
+  });
+  setParts(
+    'elevator',
+    (s, p) => {
+      const parts = [
+        { at: [0, s.y - 0.2], v: [0, -p.m * p.g, 0], label: 'mg', color: forceColor.W },
+        net([0.9, s.y], [0, s.fy, 0])
+      ];
+      if (s.N > 1e-9) parts.push({ at: [-0.5, s.y - 0.7], v: [0, s.N, 0], label: 'N', color: forceColor.N });
+      return parts;
+    },
+    0.35
+  );
+  // 光滑面上 F(x) 就是合力（N 與 mg 互相抵消，不畫以免蓋過 F）。
+  setParts('work', s => [{ at: [s.x + 0.9, 0.5], v: [s.fx, 0, 0], label: 'F(x) = ΣF', color: forceColor.F }]);
 
   const api = {
     defs,
