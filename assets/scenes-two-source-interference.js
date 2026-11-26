@@ -14,6 +14,12 @@ function drawTwoSourceInterference(s) {
         z = -7 + (14 * j) / N,
         dx = 14 / N,
         y = height(x + dx / 2, z + dx / 2) - b;
+      // 顏色隨位移連續變化（波峰橘、波谷藍、零位移淡色），不畫格線：
+      // 只分正負兩色又描格線時，網格與波紋會疊出假條紋。描邊用同色，蓋住相鄰格之間的縫。
+      const k = Math.max(-1, Math.min(1, y / (2 * gain * params.A))),
+        ink = k >= 0 ? [217, 150, 102] : [86, 158, 194],
+        mix = Math.abs(k) ** 0.7,
+        rgb = ink.map((c, n) => Math.round([214, 224, 218][n] + (c - [214, 224, 218][n]) * mix));
       polygon(
         [
           [x, height(x, z), z],
@@ -21,8 +27,8 @@ function drawTwoSourceInterference(s) {
           [x + dx, height(x + dx, z + dx), z + dx],
           [x, height(x, z + dx), z + dx]
         ],
-        y >= 0 ? '#d996666b' : '#569ec276',
-        '#82b7b12b'
+        'rgb(' + rgb.join(',') + ')',
+        'rgb(' + rgb.join(',') + ')'
       );
     }
   const drawLines = (lines, color) => {
@@ -57,11 +63,13 @@ function drawTwoSourceInterference(s) {
   }
   sphere(point(s), 0.105, '#f7d279');
   label([s.x, point(s)[1] + 0.4, s.z], '合成追蹤點', '#f7d279', 10);
-  label([-6, 6.3, -6], '等幅徑向相位波；白：節線／金：腹線', '#bcd2cd', 11);
+  // 說明文字放在最大倍率時波面最高處上方，不再固定在 y≈6，取景才不會為了文字留一大段空白。
+  const top = b + 10 * params.A;
+  label([-6, top + 1.1, -6], '等幅徑向相位波；白：節線／金：腹線', '#4f6b73', 11);
   label(
-    [-6, 5.8, -6],
+    [-6, top + 0.6, -6],
     '波面：' + ['兩源合成', '僅源1', '僅源2'][params.sourceView] + '；垂直倍率 ×' + gain,
-    '#bcd2cd',
+    '#4f6b73',
     11
   );
 }

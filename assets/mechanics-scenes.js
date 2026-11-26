@@ -95,7 +95,51 @@ function spectralColor(lambda) {
   if (lambda < 645) return [1, (645 - lambda) / 65, 0];
   return [1, 0, 0];
 }
+// 1 m 棋盤格經寬度 w 的方框濾波後的亮度（0 深、1 淺）。光線追蹤場景用它畫地板：
+// 格線不會鋸齒，遠處（w 大）自然淡成平均色，不會出現疊紋。
+function filteredChecker(x, z, w) {
+  w = Math.max(1e-3, w);
+  const tri = p => {
+    const f = v => Math.abs(((((v * 0.5) % 1) + 1) % 1) - 0.5);
+    return (2 * (f(p - 0.5 * w) - f(p + 0.5 * w))) / w;
+  };
+  return 0.5 - 0.5 * tri(x) * tri(z);
+}
+// 依貼圖在畫面上的大小挑一張逐級減半的縮圖：canvas 縮小繪製不做 mipmap，細環／細紋會出現疊紋。
+const textureMips = new WeakMap();
+function textureForSize(texture, pixels) {
+  let mips = textureMips.get(texture);
+  if (!mips) textureMips.set(texture, (mips = [texture]));
+  let level = 0;
+  while (Math.min(mips[level].width, mips[level].height) > 2 * pixels && mips[level].width > 16) {
+    if (!mips[level + 1]) {
+      const prev = mips[level],
+        next = document.createElement('canvas');
+      next.width = Math.max(1, prev.width >> 1);
+      next.height = Math.max(1, prev.height >> 1);
+      const g = next.getContext('2d');
+      g.imageSmoothingQuality = 'high';
+      g.drawImage(prev, 0, 0, next.width, next.height);
+      mips.push(next);
+    }
+    level++;
+  }
+  return mips[level];
+}
 function texturedScreen(texture, corner, width, height, horizontal = [0, 0, 1]) {
+  const corners = [
+      corner,
+      [corner[0] + horizontal[0] * width, corner[1] + horizontal[1] * width, corner[2] + horizontal[2] * width],
+      [corner[0], corner[1] - height, corner[2]]
+    ].map(project),
+    full = texture;
+  if (corners.every(Boolean)) {
+    const span = Math.max(
+      Math.hypot(corners[1].x - corners[0].x, corners[1].y - corners[0].y),
+      Math.hypot(corners[2].x - corners[0].x, corners[2].y - corners[0].y)
+    );
+    texture = textureForSize(full, span);
+  }
   const mesh = 6,
     tri = (world, uv) => {
       const p = world.map(project);
