@@ -264,7 +264,8 @@ header h1 {
   border-color: #168579;
 }
 
-#referencePanel[hidden] {
+#referencePanel[hidden],
+.checks label[hidden] {
   display: none;
 }
 #referencePanel select {

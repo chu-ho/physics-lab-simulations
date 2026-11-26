@@ -286,6 +286,7 @@ function selectExperiment(id, updateURL = true, overrides = {}) {
   $('controls').replaceChildren();
   $('referencePanel').hidden = def.id !== 'relative-motion';
   $('referenceFrame').value = 'ground';
+  if (typeof resetDisplayOptions === 'function') resetDisplayOptions();
   for (const p of def.params) {
     const label = document.createElement('label');
     label.className = 'control';

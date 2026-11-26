@@ -1239,7 +1239,63 @@ function apparatus(s) {
       break;
   }
 }
+// 顯示選項：記錄場景繪製時實際讀過哪些勾選框；沒讀過的（例如近代物理沒有軌跡、合力）就隱藏，
+// 避免面板列出對這個實驗沒有作用的選項。只在繪製期間記錄，其他程式讀取勾選狀態不算。
+const displayOptionIds = ['trail', 'vectors', 'forces'];
+let displayOptionUse = new Set(),
+  trackDisplayOptions = false,
+  displayOptionsWrapped = false,
+  primaryMotionCache = null,
+  displayOptionsTracked = false;
+// 預設主體全程速度（或合力）都是 0 時（例如只上下振動的追蹤點沒有合力資料），不畫也不列該箭頭選項。
+function primaryMotion() {
+  if (!primaryMotionCache) {
+    const any = key =>
+      plotSamples.some(q => Math.hypot(q[key + 'x'] || 0, q[key + 'y'] || 0, q[key + 'z'] || 0) > 1e-9);
+    primaryMotionCache = { v: any('v'), f: any('f') };
+  }
+  return primaryMotionCache;
+}
+function resetDisplayOptions() {
+  displayOptionUse = new Set();
+  primaryMotionCache = null;
+  if (displayOptionsWrapped) return;
+  displayOptionsWrapped = true;
+  // 非瀏覽器環境（驗證器的簡化 DOM）沒有 HTMLInputElement：不追蹤，選項全部照常顯示。
+  if (typeof HTMLInputElement === 'undefined') return;
+  displayOptionsTracked = true;
+  const base = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'checked');
+  for (const id of displayOptionIds)
+    Object.defineProperty($(id), 'checked', {
+      configurable: true,
+      get() {
+        if (trackDisplayOptions) displayOptionUse.add(id);
+        return base.get.call(this);
+      },
+      set(v) {
+        base.set.call(this, v);
+      }
+    });
+}
+function syncDisplayOptions() {
+  if (!displayOptionsTracked) return;
+  for (const id of displayOptionIds) $(id).parentElement.hidden = !displayOptionUse.has(id);
+  const arrows = displayOptionUse.has('vectors') || displayOptionUse.has('forces');
+  $('helpArrows').hidden = !arrows && !displayOptionUse.has('trail');
+  if ($('scaleNote').textContent.startsWith('速度箭頭：1 m/s')) $('scaleNote').hidden = !arrows;
+  else $('scaleNote').hidden = false;
+}
 function render() {
+  if (!displayOptionsWrapped) resetDisplayOptions();
+  trackDisplayOptions = true;
+  try {
+    renderScene();
+  } finally {
+    trackDisplayOptions = false;
+    syncDisplayOptions();
+  }
+}
+function renderScene() {
   dirty = false;
   if (following) camera.target = point(stateAt(t));
   const grad = ctx.createLinearGradient(0, 0, 0, H);
@@ -1291,7 +1347,7 @@ function render() {
   }
   const hidePrimary =
     simulation.hidePrimary || def.kind === 'belt-wheels' || (def.kind === 'shm-projection' && !params.showX);
-  if ($('trail').checked && t > 0 && !hidePrimary && !['rotor', 'lever', 'skater'].includes(def.kind)) {
+  if (!hidePrimary && !['rotor', 'lever', 'skater'].includes(def.kind) && $('trail').checked && t > 0) {
     const count = 240;
     for (let i = 0; i < count; i++) {
       const a = stateAt((t * i) / count),
@@ -1303,7 +1359,7 @@ function render() {
   apparatus(s);
   if (typeof drawAnnotations === 'function') drawAnnotations();
   const pos = point(s);
-  if ($('vectors').checked && !hidePrimary && !['rotor', 'lever'].includes(def.kind))
+  if (!hidePrimary && !['rotor', 'lever'].includes(def.kind) && primaryMotion().v && $('vectors').checked)
     arrow(
       pos,
       [pos[0] + s.vx * velocityScale, pos[1] + s.vy * velocityScale, pos[2] + s.vz * velocityScale],
@@ -1311,7 +1367,7 @@ function render() {
       'v'
     );
   // 受力分解：定義了 forceParts 的實驗改畫各分力與合力（位置由定義決定），不再畫預設的 ΣF。
-  if ($('forces').checked && def.forceParts)
+  if (def.forceParts && $('forces').checked)
     for (const f of def.forceParts(s, params)) {
       const at = f.at || pos;
       if (Math.hypot(...f.v) * forceScale > 0.05)
@@ -1322,7 +1378,7 @@ function render() {
           f.label
         );
     }
-  else if ($('forces').checked && !hidePrimary && !['rotor', 'lever'].includes(def.kind))
+  else if (!hidePrimary && !['rotor', 'lever'].includes(def.kind) && primaryMotion().f && $('forces').checked)
     arrow(
       pos,
       [pos[0] + s.fx * forceScale, pos[1] + s.fy * forceScale, pos[2] + s.fz * forceScale],
